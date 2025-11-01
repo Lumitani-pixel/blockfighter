@@ -1,26 +1,25 @@
 package net.normalv.util.player;
 
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class FindItemResult {
-    private int slot, count;
-    private Item item;
+    private int slot;
+    private ItemStack itemStack;
 
-    public FindItemResult(int slot, int count, Item item) {
+    public FindItemResult(int slot, ItemStack itemStack) {
         this.slot = slot;
-        this.count = count;
-        this.item = item;
+        this.itemStack = itemStack;
     }
 
     public int getSlot() {
         return slot;
     }
 
-    public int getCount() {
-        return count;
+    public ItemStack getItemStack() {
+        return itemStack;
     }
 
-    public Item getItem() {
-        return item;
+    public boolean wasFound() {
+        return !itemStack.isEmpty();
     }
 }
