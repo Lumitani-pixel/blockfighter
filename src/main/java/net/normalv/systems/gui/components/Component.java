@@ -4,13 +4,16 @@ import net.minecraft.client.gui.DrawContext;
 import net.normalv.util.interfaces.Util;
 
 public class Component implements Util {
-    private int x, y, width, height;
+    protected int x, y, width, height;
 
     public Component(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    protected void init() {
     }
 
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
@@ -38,5 +41,21 @@ public class Component implements Util {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

@@ -11,8 +11,10 @@ public class EventManager extends Manager{
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             handleInput();
             if(BlockFighter.fightBot.isEnabled()) BlockFighter.fightBot.onTick();
-            toolManager.toolTick();
-            targetManager.update();
+            if(BlockFighter.isInGame()) {
+                toolManager.toolTick();
+                targetManager.update();
+            }
         });
     }
 
