@@ -1,13 +1,19 @@
 package net.normalv.systems.tools;
 
 import net.normalv.BlockFighter;
+import net.normalv.systems.tools.setting.Setting;
+import net.normalv.systems.tools.setting.SettingFactory;
 import net.normalv.util.interfaces.Util;
 
-public class Tool implements Util {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Tool implements Util, SettingFactory {
     private String name;
     private String description;
     private Category category;
     private boolean isEnabled;
+    private List<Setting<?>> settings = new ArrayList<>();
 
     public Tool(String name, String description, Category category){
         this.name = name;
@@ -63,6 +69,12 @@ public class Tool implements Util {
 
     public Category getCategory() {
         return category;
+    }
+
+    @Override
+    public <T extends Setting<?>> T register(T setting) {
+        settings.add(setting);
+        return setting;
     }
 
     public enum Category{

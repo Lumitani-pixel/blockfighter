@@ -11,6 +11,8 @@ import java.util.List;
 public class ToolCategoryComponent extends Component{
     private Tool.Category category;
     private List<ToolComponent> toolComponents = new ArrayList<>();
+    private boolean isExpanded = false;
+    private int targetY;
 
     public ToolCategoryComponent(int x, int y, int width, int height, Tool.Category category) {
         super(x, y, width, height);

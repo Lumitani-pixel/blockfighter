@@ -52,9 +52,10 @@ public class BlockFighterGui extends Screen implements Util {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         context.drawCenteredTextWithShadow(mc.textRenderer, title, width/2, 20, Color.WHITE.hashCode());
-        for(CategoryComponent component : categoryComponents) {
-            component.render(context, mouseX, mouseY, deltaTicks);
-        }
+
+        categoryComponents.forEach(categoryComponent -> {
+            categoryComponent.render(context, mouseX, mouseY, deltaTicks);
+        });
         super.render(context, mouseX, mouseY, deltaTicks);
     }
 
@@ -72,6 +73,9 @@ public class BlockFighterGui extends Screen implements Util {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
+        categoryComponents.forEach(categoryComponent -> {
+            categoryComponent.mouseClicked(click.x(), click.y(), click.button());
+        });
         return super.mouseClicked(click, doubled);
     }
 
