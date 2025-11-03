@@ -1,6 +1,9 @@
 package net.normalv.systems.gui.components;
 
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.normalv.util.interfaces.Util;
 
 public class Component implements Util {
@@ -24,6 +27,18 @@ public class Component implements Util {
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return false;
+    }
+
+    public boolean keyPressed(KeyInput input) {
+        return false;
+    }
+
+    public boolean charTyped(CharInput input) {
+        return false;
+    }
+
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         return false;
     }
 

@@ -2,6 +2,7 @@ package net.normalv.systems.managers;
 
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
+import net.normalv.systems.tools.misc.TestTool;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,6 +12,8 @@ public class ToolManager extends Manager{
     private static final List<Tool> tools = new ArrayList<>();
 
     public void init() {
+        tools.add(new TestTool());
+
         if(!tools.isEmpty()) tools.sort(Comparator.comparing(Tool::getName));
     }
 

@@ -20,7 +20,11 @@ public class Tool implements Util, SettingFactory {
         this.description = description;
         this.category = category;
 
+        registerSettings();
         isEnabled = false;
+    }
+
+    public void registerSettings() {
     }
 
     public void onToggle() {
@@ -43,11 +47,13 @@ public class Tool implements Util, SettingFactory {
 
     public void enable() {
         BlockFighter.textManager.sendTextClientSide(BlockFighter.textManager.getToggleMsg(this, true));
+        isEnabled = true;
         onEnabled();
     }
 
     public void disable() {
         BlockFighter.textManager.sendTextClientSide(BlockFighter.textManager.getToggleMsg(this, false));
+        isEnabled = false;
         onDisabled();
     }
 
@@ -71,6 +77,10 @@ public class Tool implements Util, SettingFactory {
         return category;
     }
 
+    public List<Setting<?>> getSettings() {
+        return settings;
+    }
+
     @Override
     public <T extends Setting<?>> T register(T setting) {
         settings.add(setting);
@@ -81,7 +91,8 @@ public class Tool implements Util, SettingFactory {
         COMBAT("Combat"),
         MOVEMENT("Movement"),
         PLAYER("Player"),
-        CLIENT("Client");
+        CLIENT("Client"),
+        MISC("Misc");
 
         private final String name;
 

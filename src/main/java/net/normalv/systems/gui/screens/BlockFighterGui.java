@@ -3,10 +3,12 @@ package net.normalv.systems.gui.screens;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.CharInput;
 import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.normalv.BlockFighter;
 import net.normalv.systems.gui.components.CategoryComponent;
+import net.normalv.systems.gui.components.Component;
 import net.normalv.systems.tools.Tool;
 import net.normalv.util.enums.ComponentCategory;
 import net.normalv.util.interfaces.Util;
@@ -42,7 +44,7 @@ public class BlockFighterGui extends Screen implements Util {
             categoryComponents.add(new CategoryComponent(startX,
                     50,
                     categoryWidth,
-                    category == ComponentCategory.TOOLS ? Tool.Category.values().length*25+25 : 140,
+                    category == ComponentCategory.TOOLS ? Tool.Category.values().length*20-50 : 140,
                     category)
             );
             startX += categoryWidth + 25;
@@ -68,7 +70,26 @@ public class BlockFighterGui extends Screen implements Util {
             close();
             return true;
         }
+        for(CategoryComponent component : categoryComponents) {
+            if(component.keyPressed(input)) return true;
+        }
         return super.keyPressed(input);
+    }
+
+    @Override
+    public boolean mouseReleased(Click click) {
+        for(CategoryComponent categoryComponent : categoryComponents) {
+            if(categoryComponent.mouseReleased(click.x(), click.y(), click.button())) return true;
+        }
+        return super.mouseReleased(click);
+    }
+
+    @Override
+    public boolean charTyped(CharInput input) {
+        for(CategoryComponent categoryComponent : categoryComponents) {
+            if(categoryComponent.charTyped(input)) return true;
+        }
+        return super.charTyped(input);
     }
 
     @Override
