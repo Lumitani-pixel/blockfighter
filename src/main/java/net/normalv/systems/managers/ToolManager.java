@@ -2,6 +2,7 @@ package net.normalv.systems.managers;
 
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
+import net.normalv.systems.tools.client.HudTool;
 import net.normalv.systems.tools.misc.TestTool;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class ToolManager extends Manager{
 
     public void init() {
         tools.add(new TestTool());
+        tools.add(new HudTool());
 
         if(!tools.isEmpty()) tools.sort(Comparator.comparing(Tool::getName));
     }
@@ -40,6 +42,24 @@ public class ToolManager extends Manager{
             toolsInCategory.add(tool);
         }
         return toolsInCategory;
+    }
+
+    public List<Tool> getActivatedTools(boolean sortedByLength) {
+        List<Tool> activatedTools = new ArrayList<>();
+        for(Tool tool : tools) {
+            if(!tool.isEnabled()) continue;
+            activatedTools.add(tool);
+        }
+        return sortedByLength ? getSortedByLength(activatedTools) : activatedTools;
+    }
+
+    public List<Tool> getSortedByLength(List<Tool> unsortedTools) {
+        unsortedTools.sort(Comparator.comparingInt(tool -> mc.textRenderer.getWidth(tool.getDisplayName())));
+        return unsortedTools;
+    }
+
+    public List<Tool> getTools() {
+        return tools;
     }
 
     public void toolTick() {

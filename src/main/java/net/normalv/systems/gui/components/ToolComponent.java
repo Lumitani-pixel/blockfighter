@@ -76,7 +76,10 @@ public class ToolComponent extends Component{
             return true;
         }
         for(Button button : buttons) {
-            if(button.mouseClicked(mouseX, mouseY, mouseButton)) return true;
+            if(button.mouseClicked(mouseX, mouseY, mouseButton)){
+                tool.onSettingChange();
+                return true;
+            }
         }
         return false;
     }

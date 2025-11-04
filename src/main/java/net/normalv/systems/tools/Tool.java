@@ -6,11 +6,13 @@ import net.normalv.systems.tools.setting.SettingFactory;
 import net.normalv.util.interfaces.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Tool implements Util, SettingFactory {
     private String name;
     private String description;
+    private String displayName;
     private Category category;
     private boolean isEnabled;
     private List<Setting<?>> settings = new ArrayList<>();
@@ -18,6 +20,7 @@ public class Tool implements Util, SettingFactory {
     public Tool(String name, String description, Category category){
         this.name = name;
         this.description = description;
+        this.displayName = name;
         this.category = category;
 
         registerSettings();
@@ -37,6 +40,13 @@ public class Tool implements Util, SettingFactory {
     }
 
     public void onTick() {
+    }
+
+    public void onSettingChange() {
+    }
+
+    public void addDisplayInfo(String... strings) {
+        this.displayName = name + " : " + Arrays.asList(strings);
     }
 
     public void toggle() {
@@ -71,6 +81,10 @@ public class Tool implements Util, SettingFactory {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public Category getCategory() {

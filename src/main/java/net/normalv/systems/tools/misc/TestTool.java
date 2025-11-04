@@ -23,6 +23,8 @@ public class TestTool extends Tool {
         coolStringSetting = str("TestString", "LMAFO");
         coolDoubleSetting = num("DoubleTest", 5.0, 0.0, 10.0);
         coolIntegerSetting = num("IntegerTest", 1, -10, 10);
+
+        addDisplayInfo(coolDoubleSetting.getValue().toString(), coolEnumSetting.getValue().toString());
     }
 
     @Override
