@@ -36,6 +36,11 @@ public class TestTool extends Tool {
         BlockFighter.textManager.sendTextClientSide(Text.literal("Integer is turned to: "+coolIntegerSetting.getValue()));
     }
 
+    @Override
+    public void onSettingChange() {
+        addDisplayInfo(coolDoubleSetting.getValue().toString(), coolEnumSetting.getValue().toString());
+    }
+
     public enum TestModuleEnum{
         TEST,
         NORMALV,

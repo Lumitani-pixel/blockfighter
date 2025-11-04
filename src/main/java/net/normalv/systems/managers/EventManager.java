@@ -1,6 +1,9 @@
 package net.normalv.systems.managers;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.minecraft.util.ActionResult;
 import net.normalv.BlockFighter;
 import net.normalv.systems.gui.screens.BlockFighterGui;
 
@@ -15,6 +18,19 @@ public class EventManager extends Manager{
                 toolManager.toolTick();
                 targetManager.update();
             }
+        });
+
+        //TODO: Find better options for ActionResult return
+        AttackBlockCallback.EVENT.register((playerEntity, world, hand, blockPos, direction) -> {
+            if(BlockFighter.fightBot.isEnabled()) BlockFighter.fightBot.onAttackBlock(playerEntity, world, hand, blockPos, direction);
+            toolManager.onAttackBlock(playerEntity, world, hand, blockPos, direction);
+            return ActionResult.PASS;
+        });
+
+        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            if(BlockFighter.fightBot.isEnabled()) BlockFighter.fightBot.onAttackEntity(player, world, hand, entity, hitResult);
+            toolManager.onAttackEntity(player, world, hand, entity, hitResult);
+            return ActionResult.PASS;
         });
     }
 
