@@ -8,6 +8,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 import net.normalv.systems.fightbot.FightBot;
+import net.normalv.systems.hud.HudRegistry;
 import net.normalv.systems.managers.*;
 import net.normalv.util.interfaces.Util;
 import org.lwjgl.glfw.GLFW;
@@ -33,6 +34,8 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
 
     public static FightBot fightBot;
 
+    private static HudRegistry hudRegistry;
+
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Welcome to "+MOD_ID+" a not so friendly bot!");
@@ -45,6 +48,8 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
         eventManager = new EventManager();
 
         fightBot = new FightBot();
+
+        hudRegistry = new HudRegistry();
 	}
 
     @Override
@@ -62,8 +67,9 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
                 CATEGORY
         ));
 
-        BlockFighter.eventManager.registerEvents();
-        BlockFighter.toolManager.init();
+        eventManager.registerEvents();
+        toolManager.init();
+        hudRegistry.register();
     }
 
     public static boolean isInGame() {
