@@ -56,8 +56,10 @@ public class ToolCategoryComponent extends Component{
             return true;
         }
 
-        for(ToolComponent toolComponent : toolComponents) {
-            if(toolComponent.mouseClicked(mouseX, mouseY, button)) return true;
+        if(isExpanded) {
+            for(ToolComponent toolComponent : toolComponents) {
+                if(toolComponent.mouseClicked(mouseX, mouseY, button)) return true;
+            }
         }
         return false;
     }

@@ -75,10 +75,13 @@ public class ToolComponent extends Component{
             isExpanded = false;
             return true;
         }
-        for(Button button : buttons) {
-            if(button.mouseClicked(mouseX, mouseY, mouseButton)){
-                tool.onSettingChange();
-                return true;
+
+        if(isExpanded) {
+            for(Button button : buttons) {
+                if(button.mouseClicked(mouseX, mouseY, mouseButton)){
+                    tool.onSettingChange();
+                    return true;
+                }
             }
         }
         return false;
