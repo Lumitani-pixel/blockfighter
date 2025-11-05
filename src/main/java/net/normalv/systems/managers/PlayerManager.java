@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
 import net.normalv.util.player.FindItemResult;
+import net.normalv.util.player.SlotUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +18,21 @@ public class PlayerManager extends Manager{
     private static float minHealth = 5.0f;
 
     public FindItemResult findItem(Item item) {
-        for(int i = 0; i<46; i++) {
+        for(int i = SlotUtils.HOTBAR_START; i<SlotUtils.MAIN_END; i++) {
             ItemStack itemStack = mc.player.getInventory().getStack(i);
             if(itemStack.getItem()==item) {
                 return new FindItemResult(i, itemStack);
             }
         }
         return null;
+    }
+
+    public int hasEmptyHotBarSlot() {
+        for(int i = SlotUtils.HOTBAR_START; i<=SlotUtils.HOTBAR_END; i++) {
+            if(!mc.player.getInventory().getStack(i).isEmpty()) continue;
+            return i;
+        }
+        return -1;
     }
 
     public boolean moveItem(int itemSlot, int targetSlot) {

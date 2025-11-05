@@ -13,11 +13,11 @@ public class EventManager extends Manager{
     public void registerEvents() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             handleInput();
+            if(!BlockFighter.isInGame()) return;
             if(BlockFighter.fightBot.isEnabled()) BlockFighter.fightBot.onTick();
-            if(BlockFighter.isInGame()) {
-                toolManager.toolTick();
-                targetManager.update();
-            }
+            toolManager.toolTick();
+            targetManager.update();
+            worldManager.onTick();
         });
 
         //TODO: Find better options for ActionResult return

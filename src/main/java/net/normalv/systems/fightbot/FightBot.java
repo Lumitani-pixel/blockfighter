@@ -2,9 +2,7 @@ package net.normalv.systems.fightbot;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -13,11 +11,8 @@ import net.minecraft.world.World;
 import net.normalv.BlockFighter;
 import net.normalv.util.interfaces.Util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class FightBot implements Util {
-    public static final List<Item> swordItems = new ArrayList<>();
+    private double maxReach = 3.0;
     private boolean isEnabled = false;
 
     public void onTick() {
@@ -47,5 +42,13 @@ public class FightBot implements Util {
 
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public double getMaxReach() {
+        return maxReach;
+    }
+
+    public void setMaxReach(double maxReach) {
+        this.maxReach = Math.min(maxReach, 5.9);
     }
 }
