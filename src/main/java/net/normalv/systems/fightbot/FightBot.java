@@ -16,7 +16,6 @@ public class FightBot implements Util {
     private boolean isEnabled = false;
 
     public void onTick() {
-        if(!BlockFighter.isInGame()) return;
     }
 
     public void onAttackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {

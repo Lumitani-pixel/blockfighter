@@ -5,11 +5,13 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 import net.normalv.systems.fightbot.FightBot;
 import net.normalv.systems.hud.HudRegistry;
 import net.normalv.systems.managers.*;
+import net.normalv.util.client.SoundUtils;
 import net.normalv.util.interfaces.Util;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
@@ -70,6 +72,7 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
         eventManager.registerEvents();
         toolManager.init();
         hudRegistry.register();
+        SoundUtils.initialize();
     }
 
     public static boolean isInGame() {

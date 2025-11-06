@@ -1,0 +1,22 @@
+{
+  "boowomp": {
+    "sounds": [
+      "blockfighter:boowomp"
+    ]
+  },
+  "skeethit": {
+    "sounds": [
+      "blockfighter:skeethitsound"
+    ]
+  },
+  "deathbell": {
+    "sounds": [
+      "blockfighter:deathbell"
+    ]
+  },
+  "spongewalk": {
+    "sounds": [
+      "blockfighter:spongebobwalk"
+    ]
+  }
+}
