@@ -7,6 +7,7 @@ import net.minecraft.util.ActionResult;
 import net.normalv.BlockFighter;
 import net.normalv.systems.gui.screens.BlockFighterGui;
 
+// TODO MAKE EVENTS USING EVENTBUS AND MIXINS FASTER MORE RELIABLE AND CLEANER
 public class EventManager extends Manager{
     private boolean wasPressed = false;
 

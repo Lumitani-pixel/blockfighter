@@ -2,14 +2,12 @@ package net.normalv.systems.tools.client;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.setting.Setting;
 import net.normalv.util.client.SoundUtils;
-import net.normalv.util.player.SlotUtils;
 
 public class SoundTool extends Tool {
     Setting<Boolean> customHitSound;
@@ -49,6 +47,7 @@ public class SoundTool extends Tool {
             playedDeathSound = false;
             return;
         }
+        if(playedDeathSound) return;
         playedDeathSound = true;
         SoundUtils.playSound(SoundUtils.BOO_WOMP);
     }
