@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
+import net.normalv.systems.tools.client.SoundTool;
 import net.normalv.systems.tools.misc.TestTool;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class ToolManager extends Manager{
     public void init() {
         tools.add(new TestTool());
         tools.add(new HudTool());
+        tools.add(new SoundTool());
 
         if(!tools.isEmpty()) tools.sort(Comparator.comparing(Tool::getName));
     }

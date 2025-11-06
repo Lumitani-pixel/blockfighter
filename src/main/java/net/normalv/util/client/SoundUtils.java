@@ -1,8 +1,8 @@
 package net.normalv.util.client;
 
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.normalv.BlockFighter;
@@ -13,7 +13,7 @@ public class SoundUtils implements Util {
     }
 
     public static void initialize() {
-        BlockFighter.LOGGER.info("Registering " + BlockFighter.MOD_NAME + " Sounds");
+        BlockFighter.LOGGER.info("Registering {} Sounds", BlockFighter.MOD_NAME);
     }
 
     public static final SoundEvent BOO_WOMP = registerSound("boowomp");
@@ -27,7 +27,14 @@ public class SoundUtils implements Util {
     }
 
     public static void playSound(SoundEvent sound) {
-        if (mc.player != null && mc.world != null)
-            mc.world.playSound(mc.player, mc.player.getBlockPos(), sound, SoundCategory.BLOCKS, 1f, 1f);
+        playSound(sound, 1, 1);
+    }
+
+    public static void playSound(SoundEvent sound, float volume) {
+        playSound(sound, volume, 1);
+    }
+
+    public static void playSound(SoundEvent sound, float volume, float pitch) {
+        mc.getSoundManager().play(PositionedSoundInstance.master(sound, pitch, volume));
     }
 }
