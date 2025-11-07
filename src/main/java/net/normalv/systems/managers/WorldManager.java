@@ -24,7 +24,7 @@ public class WorldManager extends Manager{
         return false;
     }
 
-    public static boolean placeBlock(BlockPos base, Direction face) {
+    public boolean placeBlock(BlockPos base, Direction face) {
         if (mc.player == null || mc.interactionManager == null) return false;
 
         Vec3d hitVec = Vec3d.ofCenter(base).add(Vec3d.of(face.getVector()).multiply(0.5));

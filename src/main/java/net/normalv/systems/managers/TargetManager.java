@@ -12,17 +12,21 @@ public class TargetManager extends Manager{
     private List<Class<Entity>> permittedEntities = new ArrayList<>();
 
     public void update() {
-        mc.world.getEntities().forEach(entity -> {
+        for(Entity entity : mc.world.getEntities()) {
+
+            if(entity==mc.player) continue;
             if(currentTarget==null) currentTarget=entity;
 
             else if(targetSorting==TargetSorting.DISTANCE
                     && (permittedEntities.contains(entity.getClass()) || permittedEntities.contains(LivingEntity.class))
-                    && mc.player.distanceTo(entity) < mc.player.distanceTo(currentTarget)) currentTarget = entity;
+                    && mc.player.distanceTo(entity) < mc.player.distanceTo(currentTarget))
+                currentTarget = entity;
 
             else if(targetSorting==TargetSorting.HEALTH
                     && (permittedEntities.contains(entity.getClass()) || permittedEntities.contains(LivingEntity.class))
-                    && ((LivingEntity) entity).getHealth() < currentTarget.getEntity().getHealth()) currentTarget = entity;
-        });
+                    && ((LivingEntity) entity).getHealth() < currentTarget.getEntity().getHealth())
+                currentTarget = entity;
+        }
     }
 
     public float getHealthDifference(Entity target) {

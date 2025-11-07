@@ -8,12 +8,16 @@ import net.minecraft.util.math.ColorHelper;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
+import net.normalv.util.interfaces.Util;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToolHud extends HudComponent{
+public class ToolHud implements Util {
+    private static final Identifier hudElement = VanillaHudElements.MISC_OVERLAYS;
+    private static final Identifier hudId = Identifier.of(BlockFighter.MOD_ID, "tool_hud");
+
     private static float colorCycleSpeed = 0.3f;
     private static boolean rainbow = false;
     private static final int TOOL_SPACING = 10;
@@ -28,10 +32,6 @@ public class ToolHud extends HudComponent{
             Color.RED, Color.ORANGE, Color.YELLOW,
             Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA
     };
-
-    public ToolHud() {
-        super(VanillaHudElements.MISC_OVERLAYS, Identifier.of(BlockFighter.MOD_ID, "tool_hud"));
-    }
 
     private static void updateTools() {
         long now = System.currentTimeMillis();
@@ -54,7 +54,7 @@ public class ToolHud extends HudComponent{
         if (activatedTools.isEmpty()) return;
 
         int startY = 10;
-        int color = getCurrentColor();
+        int color = getCurrentColor(tickCounter);
 
         for (Tool tool : activatedTools) {
             context.drawText(mc.textRenderer, tool.getDisplayName(), 10, startY, rainbow ? color : Color.WHITE.getRGB(), true);
@@ -62,7 +62,7 @@ public class ToolHud extends HudComponent{
         }
     }
 
-    private static int getCurrentColor() {
+    private static int getCurrentColor(RenderTickCounter tickCounter) {
         if (!rainbow) return Color.WHITE.getRGB();
 
         float progress = (System.currentTimeMillis() / 1000f) * colorCycleSpeed;
@@ -79,5 +79,13 @@ public class ToolHud extends HudComponent{
 
     public static void setColorCycleSpeed(float colorCycleSpeed) {
         ToolHud.colorCycleSpeed = colorCycleSpeed;
+    }
+
+    public static Identifier getHudElement() {
+        return hudElement;
+    }
+
+    public static Identifier getHudId() {
+        return hudId;
     }
 }

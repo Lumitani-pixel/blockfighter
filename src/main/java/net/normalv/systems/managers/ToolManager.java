@@ -12,6 +12,7 @@ import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
 import net.normalv.systems.tools.client.SoundTool;
 import net.normalv.systems.tools.misc.TestTool;
+import net.normalv.systems.tools.render.TargetHudTool;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ public class ToolManager extends Manager{
         tools.add(new TestTool());
         tools.add(new HudTool());
         tools.add(new SoundTool());
+        tools.add(new TargetHudTool());
 
         if(!tools.isEmpty()) tools.sort(Comparator.comparing(Tool::getName));
     }

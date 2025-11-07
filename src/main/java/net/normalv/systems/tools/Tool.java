@@ -119,6 +119,7 @@ public class Tool implements Util, SettingFactory {
         MOVEMENT("Movement"),
         PLAYER("Player"),
         CLIENT("Client"),
+        RENDER("Render"),
         MISC("Misc");
 
         private final String name;
