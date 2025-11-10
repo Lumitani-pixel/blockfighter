@@ -12,6 +12,8 @@ public class EventManager extends Manager{
     private boolean wasPressed = false;
 
     public void registerEvents() {
+        EVENT_BUS.register(this);
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             handleInput();
             if(!BlockFighter.isInGame()) return;

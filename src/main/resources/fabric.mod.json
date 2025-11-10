@@ -8,8 +8,7 @@
 		"NormalV"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"repo": "https://github.com/Lumitani-pixel/blockfighter"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/blockfighter/icon.png",

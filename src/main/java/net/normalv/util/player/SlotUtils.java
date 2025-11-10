@@ -5,7 +5,7 @@ import net.minecraft.entity.mob.SkeletonHorseEntity;
 import net.minecraft.entity.mob.ZombieHorseEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.screen.*;
-import net.normalv.mixin.HorseScreenHandlerAccessor;
+import net.normalv.mixin.accessor.HorseScreenHandlerAccessor;
 import net.normalv.util.interfaces.Util;
 
 public class SlotUtils implements Util {

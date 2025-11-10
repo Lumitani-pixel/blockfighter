@@ -1,4 +1,4 @@
-package net.normalv.mixin;
+package net.normalv.mixin.accessor;
 
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.screen.HorseScreenHandler;
