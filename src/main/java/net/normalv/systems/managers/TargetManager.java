@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 public class TargetManager extends Manager {
     private Entity currentTarget;
     private TargetSorting targetSorting = TargetSorting.DISTANCE;
-    private final List<Class<? extends Entity>> permittedEntities = new ArrayList<>();
+    private List<Class<? extends Entity>> permittedEntities = new ArrayList<>();
 
     /**
      * Called every tick to update the current target.
@@ -109,6 +109,10 @@ public class TargetManager extends Manager {
 
     public void addToPermittedEntityList(Class<? extends Entity> entityClass) {
         permittedEntities.add(entityClass);
+    }
+
+    public void setPermittedEntities(List<Class<? extends  Entity>> permittedEntities) {
+        this.permittedEntities = permittedEntities;
     }
 
     public void removeFromPermittedEntityList(Class<? extends Entity> entityClass) {

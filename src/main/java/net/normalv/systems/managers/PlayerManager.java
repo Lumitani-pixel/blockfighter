@@ -3,11 +3,16 @@ package net.normalv.systems.managers;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.normalv.util.player.FindItemResult;
 import net.normalv.util.player.SlotUtils;
 import org.slf4j.Logger;
@@ -70,6 +75,34 @@ public class PlayerManager extends Manager{
         if (stack == null || stack.isEmpty()) return false;
         return stack.isSuitableFor(state);
     }
+
+    public static Direction getDirectionToEntity(Entity target) {
+        if (mc.player == null || target == null) return Direction.NORTH;
+
+        Vec3d diff = target.getEntityPos().subtract(mc.player.getEntityPos());
+
+        double absX = Math.abs(diff.x);
+        double absZ = Math.abs(diff.z);
+
+        if (absX > absZ) {
+            return diff.x > 0 ? Direction.EAST : Direction.WEST;
+        } else {
+            return diff.z > 0 ? Direction.SOUTH : Direction.NORTH;
+        }
+    }
+
+    public BlockPos getOffsetBlockToEntity(Entity target, double distance) {
+        Direction dirFromTarget = getDirectionToEntity(target).getOpposite();
+        return target.getBlockPos().offset(dirFromTarget, (int) distance);
+    }
+
+    boolean canStandOn(World world, BlockPos pos) {
+        BlockPos below = pos.down();
+        return world.getBlockState(below).isSolidBlock(world, below)
+                && world.getBlockState(pos).isAir()
+                && world.getBlockState(pos.up()).isAir();
+    }
+
 
     public boolean shouldHeal() {
         return mc.player.getHealth()<=minHealth;
