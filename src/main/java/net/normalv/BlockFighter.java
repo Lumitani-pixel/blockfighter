@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
+import net.normalv.systems.command.CommandExecutor;
 import net.normalv.systems.fightbot.FightBot;
 import net.normalv.systems.hud.HudRegistry;
 import net.normalv.systems.managers.*;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 public class BlockFighter implements ModInitializer, ClientModInitializer, Util {
 	public static final String MOD_ID = "blockfighter";
     public static final String MOD_NAME = "["+ BlockFighter.MOD_ID.toUpperCase()+"]";
+    public static final char PREFIX = '$';
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(Identifier.of(BlockFighter.MOD_ID, "binds"));
@@ -35,6 +37,8 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
 
     public static FightBot fightBot;
 
+    public static CommandExecutor commandExecutor;
+
     private static HudRegistry hudRegistry;
 
 	@Override
@@ -49,6 +53,8 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
         eventManager = new EventManager();
 
         fightBot = new FightBot();
+
+        commandExecutor = new CommandExecutor();
 
         hudRegistry = new HudRegistry();
 	}
