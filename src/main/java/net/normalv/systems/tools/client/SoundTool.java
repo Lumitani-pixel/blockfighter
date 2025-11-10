@@ -1,10 +1,7 @@
 package net.normalv.systems.tools.client;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
+import net.normalv.event.events.impl.AttackEntityEvent;
+import net.normalv.event.system.Subscribe;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.setting.Setting;
 import net.normalv.util.client.SoundUtils;
@@ -35,6 +32,13 @@ public class SoundTool extends Tool {
         handleDeathSound();
     }
 
+    @Subscribe
+    public void onAttackEntity(AttackEntityEvent event) {
+        if(customHitSound.getValue()) {
+            SoundUtils.playSound(SoundUtils.SKEET_HIT);
+        }
+    }
+
     private void handleWalkSound() {
         soundDelay--;
         if(!mc.player.isOnGround() || soundDelay>0 || !customWalkSound.getValue() || mc.player.getVelocity().lengthSquared()<0.01) return;
@@ -50,12 +54,5 @@ public class SoundTool extends Tool {
         if(playedDeathSound) return;
         playedDeathSound = true;
         SoundUtils.playSound(SoundUtils.BOO_WOMP);
-    }
-
-    @Override
-    public void onAttackEntity(PlayerEntity player, World world, Hand hand, Entity entity, HitResult hitResult) {
-        if(customHitSound.getValue()) {
-            SoundUtils.playSound(SoundUtils.SKEET_HIT);
-        }
     }
 }

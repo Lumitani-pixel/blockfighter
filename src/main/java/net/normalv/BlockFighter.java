@@ -68,7 +68,6 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
                 CATEGORY
         ));
 
-        eventManager.registerEvents();
         toolManager.init();
         hudRegistry.register();
         SoundUtils.initialize();

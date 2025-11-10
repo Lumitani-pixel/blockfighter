@@ -80,18 +80,4 @@ public class ToolManager extends Manager{
             tool.onTick();
         }
     }
-
-    public void onAttackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
-        for(Tool tool : tools){
-            if(!tool.isEnabled()) continue;
-            tool.onAttackBlock(player, world, hand, pos, direction);
-        }
-    }
-
-    public void onAttackEntity(PlayerEntity player, World world, Hand hand, Entity entity, HitResult hitResult) {
-        for(Tool tool : tools) {
-            if(!tool.isEnabled()) continue;
-            tool.onAttackEntity(player, world, hand, entity, hitResult);
-        }
-    }
 }

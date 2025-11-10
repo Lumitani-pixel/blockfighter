@@ -49,12 +49,6 @@ public class Tool implements Util, SettingFactory {
     public void onTick() {
     }
 
-    public void onAttackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
-    }
-
-    public void onAttackEntity(PlayerEntity player, World world, Hand hand, Entity entity, HitResult hitResult) {
-    }
-
     public void onSettingChange() {
     }
 

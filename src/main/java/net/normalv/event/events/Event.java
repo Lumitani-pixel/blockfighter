@@ -1,4 +1,4 @@
-package net.normalv.event;
+package net.normalv.event.events;
 
 public class Event{
     private boolean cancelled = false;

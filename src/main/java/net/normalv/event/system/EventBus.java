@@ -1,6 +1,6 @@
 package net.normalv.event.system;
 
-import net.normalv.event.Event;
+import net.normalv.event.events.Event;
 
 import java.lang.reflect.Method;
 import java.util.*;

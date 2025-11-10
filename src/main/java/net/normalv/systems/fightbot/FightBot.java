@@ -1,27 +1,29 @@
 package net.normalv.systems.fightbot;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import net.normalv.BlockFighter;
+import net.normalv.event.events.impl.AttackBlockEvent;
+import net.normalv.event.events.impl.AttackEntityEvent;
+import net.normalv.event.system.Subscribe;
 import net.normalv.util.interfaces.Util;
 
 public class FightBot implements Util {
     private double maxReach = 3.0;
     private boolean isEnabled = false;
 
+    public FightBot() {
+        EVENT_BUS.register(this);
+    }
+
     public void onTick() {
     }
 
-    public void onAttackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
+    @Subscribe
+    public void onAttackBlock(AttackBlockEvent event) {
     }
 
-    public void onAttackEntity(PlayerEntity player, World world, Hand hand, Entity entity, HitResult hitResult) {
+    @Subscribe
+    public void onAttackEntity(AttackEntityEvent event) {
     }
 
     private void enable(){

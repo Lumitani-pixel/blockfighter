@@ -1,6 +1,6 @@
-package net.normalv.event.events;
+package net.normalv.event.events.impl;
 
-import net.normalv.event.Event;
+import net.normalv.event.events.Event;
 
 public class TestEvent extends Event {
     private String msg;
