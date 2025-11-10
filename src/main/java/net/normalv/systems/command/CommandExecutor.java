@@ -6,6 +6,8 @@ import net.normalv.event.events.impl.ChatEvent;
 import net.normalv.event.system.Subscribe;
 import net.normalv.systems.command.commands.Command;
 import net.normalv.systems.command.commands.impl.HelpCommand;
+import net.normalv.systems.command.commands.impl.SayCommand;
+import net.normalv.systems.command.commands.impl.ToggleCommand;
 import net.normalv.util.interfaces.Util;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class CommandExecutor implements Util {
 
     private void registerCommands() {
         commands.add(new HelpCommand());
+        commands.add(new ToggleCommand());
+        commands.add(new SayCommand());
     }
 
     @Subscribe

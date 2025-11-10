@@ -20,10 +20,12 @@ public class FightBot implements Util {
 
     @Subscribe
     public void onAttackBlock(AttackBlockEvent event) {
+        if(!isEnabled) return;
     }
 
     @Subscribe
     public void onAttackEntity(AttackEntityEvent event) {
+        if(!isEnabled) return;
     }
 
     private void enable(){
