@@ -1,13 +1,16 @@
 package net.normalv.systems.managers;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -103,6 +106,30 @@ public class PlayerManager extends Manager{
                 && world.getBlockState(pos.up()).isAir();
     }
 
+    //TODO implement yaw aiming (I'm too bad at maths)
+    public boolean aim(Entity target) {
+        if(!mc.player.getInventory().getSelectedStack().isOf(Items.BOW)) return false;
+        float velocity = BowItem.getPullProgress(mc.player.getItemUseTime());
+        Vec3d pos = target.getEntityPos();
+
+        double relativeX = pos.x - mc.player.getX();
+        double relativeY = pos.y + (target.getHeight() / 2) - mc.player.getEyeY();
+        double relativeZ = pos.z - mc.player.getZ();
+
+        double hDistance = Math.sqrt(relativeX * relativeX + relativeZ * relativeZ);
+        double hDistanceSq = hDistance * hDistance;
+        float g = 0.006f;
+        float velocitySq = velocity * velocity;
+        float pitch = (float) -Math.toDegrees(Math.atan((velocitySq - Math.sqrt(velocitySq * velocitySq - g * (g * hDistanceSq + 2 * relativeY * velocitySq))) / (g * hDistance)));
+
+        if (Float.isNaN(pitch)) {
+            return false;
+        } else {
+            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, new Vec3d(pos.x, pos.y, pos.z));
+            mc.player.setPitch(pitch);
+            return true;
+        }
+    }
 
     public boolean shouldHeal() {
         return mc.player.getHealth()<=minHealth;

@@ -2,6 +2,7 @@ package net.normalv.systems.fightbot;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.normalv.BlockFighter;
@@ -29,11 +30,13 @@ public class FightBot implements Util {
     public void onTick() {
         if(target==null || !target.isAlive()) {
             target = BlockFighter.targetManager.getCurrentTarget();
-            BlockFighter.textManager.sendTextClientSide(Text.literal("No target found assigning new").formatted(Formatting.RED));
+            BlockFighter.textManager.sendTextClientSide(Text.literal("Invalid target assigning new").formatted(Formatting.RED));
             return;
         }
 
-        double distanceToTarget = mc.player.distanceTo(target);
+        if(mc.player.getInventory().getSelectedStack().isOf(Items.BOW)) {
+            BlockFighter.playerManager.aim(target);
+        }
     }
 
     @Subscribe
