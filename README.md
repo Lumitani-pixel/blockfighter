@@ -1,3 +1,5 @@
+### I will have to put a temporary stop on this project as I need to focus on my studies (you can still work on this project and contribute)
+
 ## BlockFighter
 
 An experimental combat and AI mod for Minecraft built with Fabric
