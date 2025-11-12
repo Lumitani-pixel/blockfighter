@@ -35,7 +35,9 @@ public class FightBot implements Util {
         }
 
         if(mc.player.getInventory().getSelectedStack().isOf(Items.BOW)) {
-            BlockFighter.playerManager.aim(target);
+            float[] rotationsToTarget = BlockFighter.playerManager.getBowRotationsTo(target);
+            mc.player.setYaw(rotationsToTarget[0]);
+            mc.player.setPitch(rotationsToTarget[1]);
         }
     }
 

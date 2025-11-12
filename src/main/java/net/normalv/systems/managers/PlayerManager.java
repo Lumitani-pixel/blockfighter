@@ -106,29 +106,50 @@ public class PlayerManager extends Manager{
                 && world.getBlockState(pos.up()).isAir();
     }
 
-    //TODO implement yaw aiming (I'm too bad at maths)
-    public boolean aim(Entity target) {
-        if(!mc.player.getInventory().getSelectedStack().isOf(Items.BOW)) return false;
-        float velocity = BowItem.getPullProgress(mc.player.getItemUseTime());
-        Vec3d pos = target.getEntityPos();
+    public float[] getBowRotationsTo(Entity entity) {
+        float duration = (float) (mc.player.getActiveItem().getMaxUseTime(mc.player) - mc.player.getItemUseTime()) / 20.0f;
+        duration = (duration * duration + duration * 2.0f) / 3.0f;
 
-        double relativeX = pos.x - mc.player.getX();
-        double relativeY = pos.y + (target.getHeight() / 2) - mc.player.getEyeY();
-        double relativeZ = pos.z - mc.player.getZ();
-
-        double hDistance = Math.sqrt(relativeX * relativeX + relativeZ * relativeZ);
-        double hDistanceSq = hDistance * hDistance;
-        float g = 0.006f;
-        float velocitySq = velocity * velocity;
-        float pitch = (float) -Math.toDegrees(Math.atan((velocitySq - Math.sqrt(velocitySq * velocitySq - g * (g * hDistanceSq + 2 * relativeY * velocitySq))) / (g * hDistance)));
-
-        if (Float.isNaN(pitch)) {
-            return false;
-        } else {
-            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, new Vec3d(pos.x, pos.y, pos.z));
-            mc.player.setPitch(pitch);
-            return true;
+        if (duration >= 1.0f) {
+            duration = 1.0f;
         }
+
+        double duration1 = duration * 3.0f;
+        double coeff = 0.05000000074505806;
+        float pitch = (float) (-Math.toDegrees(calculateArc(entity, duration1, coeff)));
+        double ix = entity.getX() - entity.lastX;
+        double iz = entity.getZ() - entity.lastZ;
+        double d = mc.player.distanceTo(entity);
+
+        d -= d % 2.0;
+        ix = d / 2.0 * ix * (mc.player.isSprinting() ? 1.3 : 1.1);
+        iz = d / 2.0 * iz * (mc.player.isSprinting() ? 1.3 : 1.1);
+
+        float yaw = (float) Math.toDegrees(Math.atan2(entity.getZ() + iz - mc.player.getZ(), entity.getX() + ix - mc.player.getX())) - 90.0f;
+
+        return new float[]{yaw, pitch};
+    }
+
+    public float calculateArc(Entity target, double duration, double coeff) {
+        double yArc = target.getY() + (double) (target.getStandingEyeHeight() / 2.0f) - (mc.player.getY() + (double) mc.player.getStandingEyeHeight());
+        double dX = target.getX() - mc.player.getX();
+        double dZ = target.getZ() - mc.player.getZ();
+        double dirRoot = Math.sqrt(dX * dX + dZ * dZ);
+
+        return calculateArc(duration, coeff, dirRoot, yArc);
+    }
+
+    public float calculateArc(double duration, double coeff, double root, double yArc) {
+        double dirCoeff = coeff * (root * root);
+
+        yArc = 2.0 * yArc * (duration * duration);
+        yArc = coeff * (dirCoeff + yArc);
+        yArc = Math.sqrt(duration * duration * duration * duration - yArc);
+        duration = duration * duration - yArc;
+        yArc = Math.atan2(duration * duration + yArc, coeff * root);
+        duration = Math.atan2(duration, coeff * root);
+
+        return (float) Math.min(yArc, duration);
     }
 
     public boolean shouldHeal() {
