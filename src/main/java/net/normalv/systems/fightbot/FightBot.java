@@ -23,8 +23,6 @@ public class FightBot implements Util {
 
     public FightBot() {
         EVENT_BUS.register(this);
-        // THIS IS FOR TESTING ONLY AND WONT BE IN ANY RELEASE
-        BlockFighter.targetManager.setPermittedEntities(List.of(HostileEntity.class));
     }
 
     public void onTick() {

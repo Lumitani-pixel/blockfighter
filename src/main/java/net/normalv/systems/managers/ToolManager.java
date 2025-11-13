@@ -11,6 +11,7 @@ import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
 import net.normalv.systems.tools.client.SoundTool;
+import net.normalv.systems.tools.combat.TargetFilteringTool;
 import net.normalv.systems.tools.misc.TestTool;
 import net.normalv.systems.tools.render.TargetHudTool;
 
@@ -26,8 +27,9 @@ public class ToolManager extends Manager{
         tools.add(new HudTool());
         tools.add(new SoundTool());
         tools.add(new TargetHudTool());
+        tools.add(new TargetFilteringTool());
 
-        if(!tools.isEmpty()) tools.sort(Comparator.comparing(Tool::getName));
+        tools.sort(Comparator.comparing(Tool::getName));
     }
 
     public Tool getToolByName(String name) {
