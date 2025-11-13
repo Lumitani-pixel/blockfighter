@@ -1,13 +1,20 @@
 package net.normalv.systems.fightbot.pathing;
 
-import net.minecraft.util.math.BlockPos;
+import baritone.api.BaritoneAPI;
+import net.minecraft.entity.Entity;
+import net.normalv.BlockFighter;
 
-//TODO: Tidy up and optimize the whole class
 public class PathingHelper {
     private double baritoneUseDistance = 20;
     private boolean onlyUseBaritone = true;
-    private BlockPos currentGoal;
     private int goalCooldown = 0;
+
+    public void goToEntity(Entity target) {
+        goalCooldown++;
+        if(goalCooldown!=5) return;
+        goalCooldown=0;
+        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new FollowEntityGoal(target, BlockFighter.fightBot.getMaxReach()));
+    }
 
     public boolean shouldUseBaritone(double distance) {
         if(onlyUseBaritone) return true;

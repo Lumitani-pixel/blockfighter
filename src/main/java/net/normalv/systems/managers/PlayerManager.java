@@ -106,6 +106,7 @@ public class PlayerManager extends Manager{
                 && world.getBlockState(pos.up()).isAir();
     }
 
+    //This math looks a bit overkill I'm not sure if we need coefficient for MINECRAFT CALCULATIONS
     public float[] getBowRotationsTo(Entity entity) {
         float duration = (float) (mc.player.getActiveItem().getMaxUseTime(mc.player) - mc.player.getItemUseTime()) / 20.0f;
         duration = (duration * duration + duration * 2.0f) / 3.0f;

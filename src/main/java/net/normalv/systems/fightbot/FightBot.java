@@ -1,7 +1,6 @@
 package net.normalv.systems.fightbot;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -11,8 +10,6 @@ import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.event.system.Subscribe;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
 import net.normalv.util.interfaces.Util;
-
-import java.util.List;
 
 public class FightBot implements Util {
     private Entity target;
@@ -25,6 +22,7 @@ public class FightBot implements Util {
         EVENT_BUS.register(this);
     }
 
+    //TODO we might need some actual bot in a fighting bot not just a hold item to action system
     public void onTick() {
         if(target==null || !target.isAlive()) {
             target = BlockFighter.targetManager.getCurrentTarget();
@@ -36,6 +34,8 @@ public class FightBot implements Util {
             float[] rotationsToTarget = BlockFighter.playerManager.getBowRotationsTo(target);
             mc.player.setYaw(rotationsToTarget[0]);
             mc.player.setPitch(rotationsToTarget[1]);
+        } else if(mc.player.getInventory().getSelectedStack().isOf(Items.STICK)) {
+            pathingHelper.goToEntity(target);
         }
     }
 
