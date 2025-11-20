@@ -7,7 +7,6 @@ import net.minecraft.util.Formatting;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
-import net.normalv.event.system.Subscribe;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
 import net.normalv.util.interfaces.Util;
 
@@ -39,12 +38,10 @@ public class FightBot implements Util {
         }
     }
 
-    @Subscribe
     public void onAttackBlock(AttackBlockEvent event) {
         if(!isEnabled) return;
     }
 
-    @Subscribe
     public void onAttackEntity(AttackEntityEvent event) {
         if(!isEnabled) return;
     }

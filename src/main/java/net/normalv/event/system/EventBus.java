@@ -3,44 +3,61 @@ package net.normalv.event.system;
 import net.normalv.event.events.Event;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class EventBus {
-    private final Map<Class<?>, List<ListenerMethod>> listeners = new HashMap<>();
+    private final Map<Class<?>, CopyOnWriteArrayList<Listener>> listeners = new ConcurrentHashMap<>();
 
-    public void register(Object listener) {
-        for (Method method : listener.getClass().getDeclaredMethods()) {
-            if (method.isAnnotationPresent(Subscribe.class)) {
-                Class<?>[] params = method.getParameterTypes();
-                if (params.length == 1) {
-                    Class<?> eventType = params[0];
-                    listeners.computeIfAbsent(eventType, k -> new ArrayList<>())
-                            .add(new ListenerMethod(listener, method));
-                }
-            }
-        }
+    public void register(Object host) {
+        register(host, host.getClass());
     }
 
-    public void unregister(Object listener) {
-        for (List<ListenerMethod> list : listeners.values()) {
-            list.removeIf(lm -> lm.owner.equals(listener));
+    public void unregister(Object host) {
+        for (CopyOnWriteArrayList<Listener> list : listeners.values()) {
+            list.removeIf(listener -> listener.getHost().equals(host));
         }
     }
 
     public void post(Event event) {
-        List<ListenerMethod> list = listeners.get(event.getClass());
+        List<Listener> list = listeners.get(event.getClass());
         if (list == null) return;
 
-        for (ListenerMethod lm : list) {
-            if(event.isCancelled()) return;
-            try {
-                lm.method.setAccessible(true);
-                lm.method.invoke(lm.owner, event);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        for (Listener listener : list) {
+            if (event.isCancelled()) return;
+            listener.invoke(event);
         }
     }
 
-    private record ListenerMethod(Object owner, Method method) {}
+    private void register(Object host, Class<?> klass) {
+        for (Method method : klass.getDeclaredMethods()) {
+            Subscribe subscribe = method.getAnnotation(Subscribe.class);
+            if (subscribe == null) continue;
+
+            Class<?>[] params = method.getParameterTypes();
+            if (params.length == 1) {
+                Class<?> eventType = params[0];
+
+                Listener listener = Listener.of(host, subscribe.priority(), method);
+                List<Listener> registry = listeners.computeIfAbsent(eventType,
+                        k -> new CopyOnWriteArrayList<>());
+
+                register(registry, listener);
+            }
+        }
+
+        if (klass.getSuperclass() != null)
+            register(host, klass.getSuperclass());
+    }
+
+    private void register(List<Listener> registry, Listener target) {
+        int i = 0;
+        for (Listener listener : registry) {
+            i++;
+            if (target.priority() > listener.priority()) break;
+        }
+        registry.add(i, target);
+    }
 }

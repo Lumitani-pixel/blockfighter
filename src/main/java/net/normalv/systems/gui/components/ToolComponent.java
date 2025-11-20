@@ -1,6 +1,5 @@
 package net.normalv.systems.gui.components;
 
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.input.CharInput;
 import net.minecraft.client.input.KeyInput;

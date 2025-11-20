@@ -3,7 +3,6 @@ package net.normalv.systems.command;
 import net.minecraft.text.Text;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.ChatEvent;
-import net.normalv.event.system.Subscribe;
 import net.normalv.systems.command.commands.Command;
 import net.normalv.systems.command.commands.impl.HelpCommand;
 import net.normalv.systems.command.commands.impl.SayCommand;
@@ -28,7 +27,6 @@ public class CommandExecutor implements Util {
         commands.add(new SayCommand());
     }
 
-    @Subscribe
     public void onChatEvent(ChatEvent event) {
         String content = event.getContent();
         if (content.charAt(0) != BlockFighter.PREFIX) return;
