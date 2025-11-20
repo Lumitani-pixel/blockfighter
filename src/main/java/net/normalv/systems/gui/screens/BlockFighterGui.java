@@ -35,7 +35,8 @@ public class BlockFighterGui extends Screen implements Util {
     protected void init() {
         super.init();
 
-        categoryComponents.clear(); // rebuild if needed
+        // rebuild if needed
+        categoryComponents.clear();
 
         categoryWidth = (width / ComponentCategory.values().length) - 40;
         int startX = 25;

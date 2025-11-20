@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
+import net.normalv.pathing.PathFinder;
 import net.normalv.systems.command.CommandExecutor;
 import net.normalv.systems.fightbot.FightBot;
 import net.normalv.systems.hud.HudRegistry;
@@ -36,6 +37,7 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
     public static EventManager eventManager;
 
     public static FightBot fightBot;
+    public static PathFinder pathFinder;
 
     public static CommandExecutor commandExecutor;
 
@@ -53,6 +55,7 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
         eventManager = new EventManager();
 
         fightBot = new FightBot();
+        pathFinder = new PathFinder();
 
         commandExecutor = new CommandExecutor();
 

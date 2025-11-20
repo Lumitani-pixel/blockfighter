@@ -20,6 +20,7 @@ public class EventManager extends Manager{
         toolManager.toolTick();
         targetManager.update();
         worldManager.onTick();
+        BlockFighter.pathFinder.update();
     }
 
     //TODO: Find a better way to listen to key input
