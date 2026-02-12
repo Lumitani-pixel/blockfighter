@@ -19,10 +19,7 @@
 		],
       "client": [
         "net.normalv.BlockFighter"
-      ],
-		"fabric-datagen": [
-          "net.normalv.BlockFighterDataGenerator"
-		]
+      ]
 	},
 	"mixins": [
       "blockfighter.mixins.json"
