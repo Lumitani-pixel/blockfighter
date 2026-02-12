@@ -24,11 +24,6 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
     public static final char PREFIX = '$';
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(Identifier.of(BlockFighter.MOD_ID, "binds"));
-
-    public static KeyBinding guiBinding;
-    public static KeyBinding toggleBinding;
-
     public static TextManager textManager;
     public static PlayerManager playerManager;
     public static TargetManager targetManager;
@@ -64,19 +59,6 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
 
     @Override
     public void onInitializeClient() {
-        guiBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key."+ BlockFighter.MOD_ID+".gui",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_RIGHT_SHIFT,
-                CATEGORY
-        ));
-        toggleBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key."+ BlockFighter.MOD_ID+".toggle",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_COMMA,
-                CATEGORY
-        ));
-
         toolManager.init();
         hudRegistry.register();
         SoundUtils.initialize();
