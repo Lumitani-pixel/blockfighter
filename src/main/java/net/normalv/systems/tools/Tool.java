@@ -1,16 +1,9 @@
 package net.normalv.systems.tools;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.setting.Setting;
 import net.normalv.systems.tools.setting.SettingFactory;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

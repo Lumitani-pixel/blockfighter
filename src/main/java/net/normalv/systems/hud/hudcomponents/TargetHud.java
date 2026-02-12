@@ -9,7 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.render.TargetHudTool;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 import java.awt.*;
 

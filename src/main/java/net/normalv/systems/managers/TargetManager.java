@@ -70,18 +70,6 @@ public class TargetManager extends Manager {
         this.targetSorting = targetSorting;
     }
 
-    public void addToPermittedEntityList(Class<? extends Entity> entityClass) {
-        permittedEntities.add(entityClass);
-    }
-
-    public void setPermittedEntities(List<Class<? extends  Entity>> permittedEntities) {
-        this.permittedEntities = permittedEntities;
-    }
-
-    public void removeFromPermittedEntityList(Class<? extends Entity> entityClass) {
-        permittedEntities.remove(entityClass);
-    }
-
     public enum TargetSorting {
         DISTANCE,
         HEALTH

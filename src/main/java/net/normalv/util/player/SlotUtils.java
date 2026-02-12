@@ -7,7 +7,7 @@ import net.minecraft.entity.mob.ZombieHorseEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.screen.*;
 import net.normalv.mixin.accessor.MountScreenHandlerAccessor;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 public class SlotUtils implements Util {
     public static final int HOTBAR_START = 0;

@@ -3,7 +3,7 @@ package net.normalv.pathing.goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 public abstract class Goal implements Util {
     protected BlockPos blockPos;

@@ -1,4 +1,4 @@
-package net.normalv.util.interfaces;
+package net.normalv.util;
 
 import net.minecraft.client.MinecraftClient;
 import net.normalv.event.system.EventBus;

@@ -3,18 +3,13 @@ package net.normalv;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
 import net.normalv.pathing.PathFinder;
 import net.normalv.systems.command.CommandExecutor;
 import net.normalv.systems.fightbot.FightBot;
 import net.normalv.systems.hud.HudRegistry;
 import net.normalv.systems.managers.*;
 import net.normalv.util.client.SoundUtils;
-import net.normalv.util.interfaces.Util;
-import org.lwjgl.glfw.GLFW;
+import net.normalv.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

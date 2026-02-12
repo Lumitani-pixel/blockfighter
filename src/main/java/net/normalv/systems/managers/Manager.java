@@ -1,7 +1,7 @@
 package net.normalv.systems.managers;
 
 import net.normalv.BlockFighter;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 public class Manager implements Util {
     EventManager eventManager = BlockFighter.eventManager;

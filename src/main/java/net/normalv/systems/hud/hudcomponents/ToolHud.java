@@ -8,7 +8,7 @@ import net.minecraft.util.math.ColorHelper;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 import java.awt.*;
 import java.util.ArrayList;

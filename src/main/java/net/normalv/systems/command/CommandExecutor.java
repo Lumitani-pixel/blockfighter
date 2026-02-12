@@ -8,7 +8,7 @@ import net.normalv.systems.command.commands.Command;
 import net.normalv.systems.command.commands.impl.HelpCommand;
 import net.normalv.systems.command.commands.impl.SayCommand;
 import net.normalv.systems.command.commands.impl.ToggleCommand;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

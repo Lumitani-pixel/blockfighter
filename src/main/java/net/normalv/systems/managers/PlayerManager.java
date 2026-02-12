@@ -1,16 +1,9 @@
 package net.normalv.systems.managers;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -18,11 +11,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.normalv.util.player.FindItemResult;
 import net.normalv.util.player.SlotUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PlayerManager extends Manager{
-    private static final Logger log = LoggerFactory.getLogger(PlayerManager.class);
     private static float minHealth = 5.0f;
 
     public FindItemResult findItem(Item item) {

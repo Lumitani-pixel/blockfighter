@@ -2,14 +2,12 @@ package net.normalv.systems.fightbot;
 
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 public class FightBot implements Util {
     private Entity target;

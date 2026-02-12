@@ -6,7 +6,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.normalv.BlockFighter;
-import net.normalv.util.interfaces.Util;
+import net.normalv.util.Util;
 
 public class SoundUtils implements Util {
     private SoundUtils() {
