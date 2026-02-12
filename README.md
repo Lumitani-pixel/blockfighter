@@ -10,25 +10,25 @@ Built with Fabric, it allows players and developers to create, customize, and op
 The project aims to combine technical development and gameplay experimentation, giving both modders and players the ability to tweak combat styles, add new techniques, and test different AI behaviors.
 
 ### Goal
-- The goal is to build a system where players can:
-- Customize their bot’s fighting style via an intuitive GUI
-- Implement or improve internal classes for optimization and performance
-- Experiment with different combat strategies and behaviors
-- Analyze PvP interactions through real-time rendering and feedback
+- The goal is to build a system where players can:\
+- Customize their bot’s fighting style via an intuitive GUI\
+- Implement or improve internal classes for optimization and performance\
+- Experiment with different combat strategies and behaviors\
+- Analyze PvP interactions through real-time rendering and feedback\
 In short: How strong, smart, and efficient can you make your bot?
 
 ### Planned & Current Features
-- Customizable Combat AI — Create or tune your bot’s fighting logic
-- GUI-based configuration — Adjust behavior and style in-game
-- Combat Techniques — Sword, combo, axe, mace, and crystal fighting
-- In-game Rendering Tools — ESP, PvP info overlays, hit indicators, etc.
-- Extensible Codebase — Add your own fighting methods or internal optimizations
+- Customizable Combat AI — Create or tune your bot’s fighting logic\
+- GUI-based configuration — Adjust behavior and style in-game\
+- Combat Techniques — Sword, combo, axe, mace, and crystal fighting\
+- In-game Rendering Tools — ESP, PvP info overlays, hit indicators, etc.\
+- Extensible Codebase — Add your own fighting methods or internal optimizations\
 Future updates will continue refining AI behavior, visuals, and integration between gameplay and development tools.
 
 ### Development Goals
-BlockFighter serves two main communities:
-**Developers** — Experiment with Fabric, AI logic, rendering, and optimization
-**Players** — Test and challenge custom bots in PvP environments
+BlockFighter serves two main communities:\
+**Developers** — Experiment with Fabric, AI logic, rendering, and optimization\
+**Players** — Test and challenge custom bots in PvP environments\
 It’s designed to be open, flexible, and a great playground for anyone interested in Minecraft combat, AI, or modding technology.
 
 ### Getting Started
