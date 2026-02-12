@@ -55,21 +55,6 @@ public class PlayerManager extends Manager{
         mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, itemSlot, 1, SlotActionType.QUICK_MOVE, mc.player);
     }
 
-    public double getAttackDamage(ItemStack stack) {
-        AttributeModifiersComponent modifiers = stack.get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
-        if (modifiers==null) return 0.0;
-
-        return modifiers.applyOperations(0.0, EquipmentSlot.MAINHAND);
-    }
-
-    public double getGenericProtection(ItemStack stack, EquipmentSlot slot) {
-        AttributeModifiersComponent component = stack.get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
-        if(component==null) return 0.0;
-
-        return component.applyOperations(EntityAttributes.ARMOR.value().getDefaultValue(), slot)
-                - EntityAttributes.ARMOR.value().getDefaultValue();
-    }
-
     public float getMiningSpeed(ItemStack stack, BlockState state) {
         return stack.getMiningSpeedMultiplier(state);
     }

@@ -1,12 +1,14 @@
 package net.normalv.mixin.accessor;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.screen.HorseScreenHandler;
+import net.minecraft.screen.MountScreenHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(HorseScreenHandler.class)
-public interface HorseScreenHandlerAccessor {
-    @Accessor("entity")
-    AbstractHorseEntity getEntity();
+@Mixin(MountScreenHandler.class)
+public interface MountScreenHandlerAccessor {
+    @Accessor("mount")
+    LivingEntity getMount();
 }

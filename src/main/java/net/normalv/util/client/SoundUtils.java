@@ -35,6 +35,6 @@ public class SoundUtils implements Util {
     }
 
     public static void playSound(SoundEvent sound, float volume, float pitch) {
-        mc.getSoundManager().play(PositionedSoundInstance.master(sound, pitch, volume));
+        mc.getSoundManager().play(PositionedSoundInstance.ui(sound, pitch, volume));
     }
 }

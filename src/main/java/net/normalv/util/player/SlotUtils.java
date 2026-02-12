@@ -1,11 +1,12 @@
 package net.normalv.util.player;
 
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.SkeletonHorseEntity;
 import net.minecraft.entity.mob.ZombieHorseEntity;
 import net.minecraft.entity.passive.*;
 import net.minecraft.screen.*;
-import net.normalv.mixin.accessor.HorseScreenHandlerAccessor;
+import net.normalv.mixin.accessor.MountScreenHandlerAccessor;
 import net.normalv.util.interfaces.Util;
 
 public class SlotUtils implements Util {
@@ -121,7 +122,7 @@ public class SlotUtils implements Util {
     }
 
     private static int horse(ScreenHandler handler, int i) {
-        AbstractHorseEntity entity = ((HorseScreenHandlerAccessor) handler).getEntity();
+        LivingEntity entity = ((MountScreenHandlerAccessor) handler).getMount();
 
         if (entity instanceof LlamaEntity llamaEntity) {
             int strength = llamaEntity.getStrength();

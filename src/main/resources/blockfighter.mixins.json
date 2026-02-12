@@ -3,7 +3,7 @@
   "package": "net.normalv.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "accessor.HorseScreenHandlerAccessor"
+    "accessor.MountScreenHandlerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
