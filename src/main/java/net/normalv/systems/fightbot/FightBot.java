@@ -1,5 +1,6 @@
 package net.normalv.systems.fightbot;
 
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -25,16 +26,14 @@ public class FightBot implements Util {
     public void onTick() {
         if(target==null || !target.isAlive()) {
             target = BlockFighter.targetManager.getCurrentTarget();
-            BlockFighter.textManager.sendTextClientSide(Text.literal("Invalid target assigning new").formatted(Formatting.RED));
             return;
         }
 
-        if(mc.player.getInventory().getSelectedStack().isOf(Items.BOW)) {
-            float[] rotationsToTarget = BlockFighter.playerManager.getBowRotationsTo(target);
-            mc.player.setYaw(rotationsToTarget[0]);
-            mc.player.setPitch(rotationsToTarget[1]);
-        } else if(mc.player.getInventory().getSelectedStack().isOf(Items.STICK)) {
-            pathingHelper.goToEntity(target);
+        pathingHelper.goToEntity(target);
+
+        if(mc.player.distanceTo(target) <= maxReach && mc.player.getAttackCooldownProgress(0.5f) >= 1) {
+            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+            mc.interactionManager.attackEntity(mc.player, target);
         }
     }
 

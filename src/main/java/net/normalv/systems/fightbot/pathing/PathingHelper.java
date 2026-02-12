@@ -13,7 +13,7 @@ public class PathingHelper {
         goalCooldown++;
         if(goalCooldown!=5) return;
         goalCooldown=0;
-        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new FollowEntityGoal(target, BlockFighter.fightBot.getMaxReach()));
+        BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new FollowEntityGoal(target, BlockFighter.fightBot.getMaxReach()-0.1));
     }
 
     public boolean shouldUseBaritone(double distance) {
