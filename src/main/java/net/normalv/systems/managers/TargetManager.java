@@ -18,7 +18,7 @@ public class TargetManager extends Manager {
     private List<Class<? extends Entity>> permittedEntities = new ArrayList<>();
 
     public boolean allowPlayer = true;
-    public boolean allowHostiles = true;
+    public boolean allowHostiles = false;
     public boolean allowAnimals = false;
 
     /**
@@ -26,15 +26,18 @@ public class TargetManager extends Manager {
      * @param sorting What to sort by
      * @return List of targets sorted by TargetSorting
      */
+    //FIXME: lets all other entities through check (bats, viligers)
     public List<Entity> getEntities(TargetSorting sorting) {
         List<LivingEntity> targets = new ArrayList<>();
 
         for (Entity entity : mc.world.getEntities()) {
             if (entity == mc.player) continue;
-            if (!(entity instanceof LivingEntity living) ||
-                    (!allowAnimals && entity instanceof AnimalEntity) ||
-                    (!allowHostiles && entity instanceof HostileEntity) ||
-                    (!allowPlayer && entity instanceof PlayerEntity)) continue;
+//            if (!(entity instanceof LivingEntity living) ||
+//                    (!allowAnimals && entity instanceof AnimalEntity) ||
+//                    (!allowHostiles && entity instanceof HostileEntity) ||
+//                    (!allowPlayer && entity instanceof PlayerEntity)) continue;
+
+            if (!(entity instanceof PlayerEntity living)) continue;
 
             targets.add(living);
         }

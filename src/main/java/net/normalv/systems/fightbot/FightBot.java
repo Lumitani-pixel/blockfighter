@@ -2,17 +2,22 @@ package net.normalv.systems.fightbot;
 
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
+import net.normalv.systems.tools.combat.AutoShieldTool;
 import net.normalv.util.Util;
 
 public class FightBot implements Util {
     private Entity target;
     private double maxReach = 3.0;
     private boolean isEnabled = false;
+    boolean isBlocking = false;
+    boolean targetIsBlocking = false;
 
     private PathingHelper pathingHelper = new PathingHelper();
 
@@ -20,18 +25,32 @@ public class FightBot implements Util {
         EVENT_BUS.register(this);
     }
 
-    //TODO we might need some actual bot in a fighting bot not just a hold item to action system
     public void onTick() {
         if(target==null || !target.isAlive()) {
             target = BlockFighter.targetManager.getCurrentTarget();
             return;
         }
 
+        isBlocking = mc.player.isUsingItem() && mc.player.getActiveItem().isOf(Items.SHIELD);
+        if(target instanceof PlayerEntity targetPlayer) {
+            targetIsBlocking = targetPlayer.isUsingItem() && targetPlayer.getActiveItem().isOf(Items.SHIELD);
+        }
+
         pathingHelper.goToEntity(target);
 
-        if(mc.player.distanceTo(target) <= maxReach && mc.player.getAttackCooldownProgress(0.5f) >= 1) {
-            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
-            mc.interactionManager.attackEntity(mc.player, target);
+        if(mc.player.distanceTo(target) <= maxReach) {
+            if(targetIsBlocking) {
+                mc.player.stopUsingItem();
+                mc.player.getInventory().setSelectedSlot(1);
+                mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+                mc.interactionManager.attackEntity(mc.player, target);
+                mc.player.getInventory().setSelectedSlot(0);
+            }
+
+            if(mc.player.getAttackCooldownProgress(0.5f) >= 1) {
+                mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+                mc.interactionManager.attackEntity(mc.player, target);
+            }
         }
     }
 
@@ -43,14 +62,23 @@ public class FightBot implements Util {
         if(!isEnabled) return;
     }
 
+    private void onEnable() {
+        BlockFighter.toolManager.getToolByClass(AutoShieldTool.class).enable();
+    }
+
+    private void onDisable() {
+    }
+
     private void enable(){
         BlockFighter.textManager.sendTextClientSide(Text.literal("FightBot enabled"));
         isEnabled = true;
+        onEnable();
     }
 
     private void disable() {
         BlockFighter.textManager.sendTextClientSide(Text.literal("FightBot disabled"));
         isEnabled = false;
+        onDisable();
     }
 
     public void toggle() {
@@ -60,6 +88,10 @@ public class FightBot implements Util {
 
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public Entity getTarget() {
+        return target;
     }
 
     public double getMaxReach() {
