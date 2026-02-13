@@ -12,6 +12,7 @@ import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
 import net.normalv.systems.tools.Tool;
+import net.normalv.systems.tools.combat.AuraTool;
 import net.normalv.systems.tools.combat.AutoShieldTool;
 import net.normalv.util.Util;
 
@@ -19,78 +20,108 @@ import net.normalv.util.Util;
 public class FightBot implements Util {
     private Entity target;
     private double maxReach = 3.0;
-    private boolean isEnabled = false;
-    boolean isBlocking = false;
-    boolean targetIsBlocking = false;
+    private boolean enabled = false;
+    private boolean healing = false;
+
+    public static final int SWORD_SLOT = 0;
+    public static final int AXE_SLOT = 1;
+    public static final int GAPPLE_SLOT = 8;
+
+    private AuraTool auraTool;
+    private AutoShieldTool autoShieldTool;
 
     private PathingHelper pathingHelper = new PathingHelper();
+    private FightState state = FightState.IDLE;
 
     public FightBot() {
         EVENT_BUS.register(this);
     }
 
     public void onTick() {
-        if(target==null || !target.isAlive()) {
+        if (!enabled) return;
+
+        updateTarget();
+        if (target == null) {
+            state = FightState.IDLE;
+            return;
+        }
+
+        updateState();
+        tickState();
+    }
+
+    private void updateTarget() {
+        if (target == null || !target.isAlive()) {
             target = BlockFighter.targetManager.getCurrentTarget();
+        }
+    }
+
+    private void updateState() {
+        if (BlockFighter.playerManager.shouldHeal()) {
+            state = FightState.HEALING;
             return;
         }
 
-        isBlocking = mc.player.isUsingItem() && mc.player.getActiveItem().isOf(Items.SHIELD);
-        if(target instanceof PlayerEntity targetPlayer) {
-            targetIsBlocking = targetPlayer.isUsingItem() && targetPlayer.getActiveItem().isOf(Items.SHIELD);
+        if (mc.player.distanceTo(target) > maxReach) {
+            state = FightState.CHASING;
+            return;
         }
 
-        if(BlockFighter.playerManager.shouldHeal()) {
-            pathingHelper.stopPathing();
-
-            if(isBlocking) mc.player.stopUsingItem();
-            mc.player.getInventory().setSelectedSlot(8);
-            if(!mc.player.isUsingItem() || !mc.player.getActiveItem().isOf(Items.GOLDEN_APPLE)) {
-                mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
-            }
-            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
-            mc.options.backKey.setPressed(true);
+        if (target instanceof PlayerEntity player
+                && BlockFighter.playerManager.isBlocking(player)) {
+            state = FightState.SHIELD_BREAK;
             return;
-        } else if(mc.player.isUsingItem() && mc.player.getActiveItem().isOf(Items.GOLDEN_APPLE)) {
+        }
+
+        state = FightState.ATTACKING;
+    }
+
+    private void tickState() {
+        switch (state) {
+            case HEALING -> tickHealing();
+            case CHASING -> pathingHelper.goToEntity(target);
+            case ATTACKING -> tickCombat();
+            case IDLE -> pathingHelper.stopPathing();
+        }
+    }
+
+    private void tickHealing() {
+        pathingHelper.stopPathing();
+
+        if(autoShieldTool.isEnabled()) autoShieldTool.disable();
+        if(auraTool.isEnabled()) auraTool.disable();
+
+        if (BlockFighter.playerManager.isBlocking(mc.player)) {
             mc.player.stopUsingItem();
-            mc.player.getInventory().setSelectedSlot(0);
         }
 
+        BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
+
+        if (!BlockFighter.playerManager.isEatingGapple()) {
+            mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
+        }
+
+        BlockFighter.playerManager.lookAt(target);
+        mc.options.backKey.setPressed(true);
+    }
+
+    private void tickCombat() {
         pathingHelper.goToEntity(target);
-
-        if(mc.player.distanceTo(target) <= maxReach) {
-            if(targetIsBlocking) {
-                mc.player.stopUsingItem();
-
-                if(mc.player.getInventory().getSelectedSlot() != 1) {
-                    mc.player.getInventory().setSelectedSlot(1);
-                    return;
-                }
-
-                mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
-                mc.interactionManager.attackEntity(mc.player, target);
-                return;
-            } else if(mc.player.getInventory().getSelectedSlot() != 0) {
-                mc.player.getInventory().setSelectedSlot(0);
-            }
-
-            if(mc.player.getAttackCooldownProgress(0.5f) >= 1) {
-                mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
-                mc.interactionManager.attackEntity(mc.player, target);
-            }
-        }
+        if(!auraTool.isEnabled()) auraTool.enable();
+        if(!autoShieldTool.isEnabled()) autoShieldTool.enable();
     }
 
     public void onAttackBlock(AttackBlockEvent event) {
-        if(!isEnabled) return;
+        if(!enabled) return;
     }
 
     public void onAttackEntity(AttackEntityEvent event) {
-        if(!isEnabled) return;
+        if(!enabled) return;
     }
 
     private void onEnable() {
-        BlockFighter.toolManager.getToolByClass(AutoShieldTool.class).enable();
+        auraTool = BlockFighter.toolManager.getToolByClass(AuraTool.class);
+        autoShieldTool = BlockFighter.toolManager.getToolByClass(AutoShieldTool.class);
     }
 
     private void onDisable() {
@@ -100,23 +131,27 @@ public class FightBot implements Util {
 
     private void enable(){
         BlockFighter.textManager.sendTextClientSide(Text.literal("FightBot enabled"));
-        isEnabled = true;
+        enabled = true;
         onEnable();
     }
 
     private void disable() {
         BlockFighter.textManager.sendTextClientSide(Text.literal("FightBot disabled"));
-        isEnabled = false;
+        enabled = false;
         onDisable();
     }
 
     public void toggle() {
-        if(!isEnabled) enable();
+        if(!enabled) enable();
         else disable();
     }
 
+    public boolean isHealing() {
+        return healing;
+    }
+
     public boolean isEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
     public Entity getTarget() {
@@ -129,5 +164,13 @@ public class FightBot implements Util {
 
     public void setMaxReach(double maxReach) {
         this.maxReach = Math.min(maxReach, 5.9);
+    }
+
+    public enum FightState {
+        IDLE,
+        HEALING,
+        CHASING,
+        ATTACKING,
+        SHIELD_BREAK
     }
 }

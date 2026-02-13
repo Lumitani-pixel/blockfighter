@@ -1,8 +1,12 @@
 package net.normalv.systems.managers;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -10,6 +14,23 @@ import net.minecraft.world.World;
 
 public class PlayerManager extends Manager{
     private static float minHealth = 10.0f;
+
+    public boolean isBlocking(PlayerEntity player) {
+        return player.isUsingItem() && player.getActiveItem().isOf(Items.SHIELD);
+    }
+
+    public boolean isEatingGapple() {
+        return mc.player.isUsingItem() && mc.player.getActiveItem().isOf(Items.GOLDEN_APPLE);
+    }
+
+    public void lookAt(Entity target) {
+        mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+    }
+
+    public void switchSlot(int to) {
+        mc.player.getInventory().setSelectedSlot(to);
+        mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().getSelectedSlot()));
+    }
 
     public float getMiningSpeed(ItemStack stack, BlockState state) {
         return stack.getMiningSpeedMultiplier(state);
