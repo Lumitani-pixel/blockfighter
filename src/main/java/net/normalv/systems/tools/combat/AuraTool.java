@@ -29,6 +29,8 @@ public class AuraTool extends Tool {
 
         if (mc.player.distanceTo(target) > maxReach) return;
 
+        if(!mc.options.jumpKey.isPressed()) mc.options.jumpKey.setPressed(true);
+
         if (target instanceof PlayerEntity targetPlayer
                 && BlockFighter.playerManager.isBlocking(targetPlayer)) {
             handleShieldBreak(target);

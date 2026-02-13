@@ -9,6 +9,7 @@ import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -66,6 +67,14 @@ public class PlayerManager extends Manager{
         return world.getBlockState(below).isSolidBlock(world, below)
                 && world.getBlockState(pos).isAir()
                 && world.getBlockState(pos.up()).isAir();
+    }
+
+    public float[] calcAngle(Vec3d from, Vec3d to) {
+        double difX = to.x - from.x;
+        double difY = (to.y - from.y) * -1.0;
+        double difZ = to.z - from.z;
+        double dist = Math.sqrt(difX * difX + difZ * difZ);
+        return new float[]{(float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0), (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
     }
 
     //This math looks a bit overkill I'm not sure if we need coefficient for MINECRAFT CALCULATIONS
