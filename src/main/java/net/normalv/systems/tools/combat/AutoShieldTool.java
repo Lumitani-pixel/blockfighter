@@ -4,7 +4,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
-import net.normalv.util.player.SlotUtils;
 
 public class AutoShieldTool extends Tool {
     public AutoShieldTool() {
@@ -13,9 +12,11 @@ public class AutoShieldTool extends Tool {
 
     @Override
     public void onTick() {
-        if(!mc.player.getInventory().getStack(SlotUtils.OFFHAND).isOf(Items.SHIELD) ||
-                mc.player.distanceTo(BlockFighter.fightBot.getTarget()) > 3.1 ||
-                mc.player.getAttackCooldownProgress(0.5f) < 1.0) return;
+        if(BlockFighter.fightBot.getTarget() == null) return;
+        else if(!mc.player.getInventory().getStack(40).isOf(Items.SHIELD) ||
+                mc.player.distanceTo(BlockFighter.fightBot.getTarget()) > 3.9 ||
+                mc.player.getAttackCooldownProgress(0.5f) < 1.0 ||
+                BlockFighter.playerManager.shouldHeal()) return;
 
         mc.interactionManager.interactItem(mc.player, Hand.OFF_HAND);
     }

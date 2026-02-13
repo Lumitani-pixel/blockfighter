@@ -21,6 +21,10 @@ public class PathingHelper {
         return distance>=baritoneUseDistance;
     }
 
+    public void stopPathing() {
+        BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+    }
+
     public boolean onlyUseBaritone() {
         return onlyUseBaritone;
     }

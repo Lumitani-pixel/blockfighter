@@ -1,4 +1,4 @@
-package net.normalv.util.player;
+package net.normalv.util.player.inventory;
 
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.entity.LivingEntity;

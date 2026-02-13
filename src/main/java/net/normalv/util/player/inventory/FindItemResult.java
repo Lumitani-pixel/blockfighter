@@ -1,4 +1,4 @@
-package net.normalv.util.player;
+package net.normalv.util.player.inventory;
 
 import net.minecraft.item.ItemStack;
 

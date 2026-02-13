@@ -4,14 +4,18 @@ import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
+import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.combat.AutoShieldTool;
 import net.normalv.util.Util;
 
+//TODO: REFACTOR ALL COMBAT FEATURES ITS BAD AND MESSY RIGHT NOW
 public class FightBot implements Util {
     private Entity target;
     private double maxReach = 3.0;
@@ -36,14 +40,37 @@ public class FightBot implements Util {
             targetIsBlocking = targetPlayer.isUsingItem() && targetPlayer.getActiveItem().isOf(Items.SHIELD);
         }
 
+        if(BlockFighter.playerManager.shouldHeal()) {
+            pathingHelper.stopPathing();
+
+            if(isBlocking) mc.player.stopUsingItem();
+            mc.player.getInventory().setSelectedSlot(8);
+            if(!mc.player.isUsingItem() || !mc.player.getActiveItem().isOf(Items.GOLDEN_APPLE)) {
+                mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
+            }
+            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+            mc.options.backKey.setPressed(true);
+            return;
+        } else if(mc.player.isUsingItem() && mc.player.getActiveItem().isOf(Items.GOLDEN_APPLE)) {
+            mc.player.stopUsingItem();
+            mc.player.getInventory().setSelectedSlot(0);
+        }
+
         pathingHelper.goToEntity(target);
 
         if(mc.player.distanceTo(target) <= maxReach) {
             if(targetIsBlocking) {
                 mc.player.stopUsingItem();
-                mc.player.getInventory().setSelectedSlot(1);
+
+                if(mc.player.getInventory().getSelectedSlot() != 1) {
+                    mc.player.getInventory().setSelectedSlot(1);
+                    return;
+                }
+
                 mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
                 mc.interactionManager.attackEntity(mc.player, target);
+                return;
+            } else if(mc.player.getInventory().getSelectedSlot() != 0) {
                 mc.player.getInventory().setSelectedSlot(0);
             }
 
@@ -67,6 +94,8 @@ public class FightBot implements Util {
     }
 
     private void onDisable() {
+        pathingHelper.stopPathing();
+        BlockFighter.toolManager.getTools().forEach(Tool::disable);
     }
 
     private void enable(){
