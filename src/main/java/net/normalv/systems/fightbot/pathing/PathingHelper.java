@@ -9,6 +9,7 @@ public class PathingHelper implements Util {
     private double baritoneUseDistance = 20;
     private boolean onlyUseBaritone = false;
     private boolean pathing = false;
+    private boolean allowJumping = true;
 
     public void goToEntity(Entity target) {
         pathing = true;
@@ -31,7 +32,7 @@ public class PathingHelper implements Util {
         if(mc.player.distanceTo(target) > 3.1) {
             mc.options.sprintKey.setPressed(true);
             mc.options.forwardKey.setPressed(true);
-            mc.options.jumpKey.setPressed(true);
+            mc.options.jumpKey.setPressed(allowJumping);
             mc.options.backKey.setPressed(false);
         } else if(mc.player.distanceTo(target) < 2.9) {
             mc.options.sprintKey.setPressed(false);

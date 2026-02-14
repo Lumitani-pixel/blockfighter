@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class PlayerManager extends Manager{
-    private static float minHealth = 10.0f;
+    private static float minHealth = 8.0f;
 
     public boolean isBlocking(PlayerEntity player) {
         return player.isUsingItem() && player.getActiveItem().isOf(Items.SHIELD);

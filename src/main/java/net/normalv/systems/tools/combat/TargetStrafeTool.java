@@ -9,6 +9,7 @@ import java.util.Random;
 public class TargetStrafeTool extends Tool {
     private final Random random = new Random();
     private boolean strafeLeft = true;
+    private boolean allowJump = true;
     private int switchTicks = 0;
 
     public TargetStrafeTool() {
@@ -36,7 +37,7 @@ public class TargetStrafeTool extends Tool {
         mc.options.forwardKey.setPressed(true);
 
         // Occasional hop for crit chaining
-        if (mc.player.isOnGround() && random.nextFloat() < 0.02f) {
+        if (allowJump && mc.player.isOnGround() && random.nextFloat() < 0.02f) {
             mc.options.jumpKey.setPressed(true);
         }
     }
