@@ -12,9 +12,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.normalv.BlockFighter;
 
 public class PlayerManager extends Manager{
-    private static float minHealth = 8.0f;
+    private static float minHealth = 9.0f;
+    private static float secondaryHealth = 12.0f;
 
     public boolean isBlocking(PlayerEntity player) {
         return player.isUsingItem() && player.getActiveItem().isOf(Items.SHIELD);
@@ -139,7 +141,9 @@ public class PlayerManager extends Manager{
     }
 
     public boolean shouldHeal() {
-        return mc.player.getHealth()<=minHealth;
+        if(mc.player.getHealth()<=minHealth ||
+                (BlockFighter.fightBot.getTarget() instanceof PlayerEntity player && player.getActiveItem().isOf(Items.GOLDEN_APPLE) && player.isUsingItem() && mc.player.getHealth() < secondaryHealth)) return true;
+        return false;
     }
 
     public void setMinHealth(float newMin) {

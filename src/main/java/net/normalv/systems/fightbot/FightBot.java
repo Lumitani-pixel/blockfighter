@@ -12,6 +12,7 @@ import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.combat.AuraTool;
 import net.normalv.systems.tools.combat.AutoShieldTool;
 import net.normalv.systems.tools.combat.TargetStrafeTool;
+import net.normalv.systems.tools.misc.AutoInvSortTool;
 import net.normalv.util.Util;
 
 import java.util.Random;
@@ -30,6 +31,7 @@ public class FightBot implements Util {
     public AuraTool auraTool;
     public AutoShieldTool autoShieldTool;
     public TargetStrafeTool targetStrafeTool;
+    public AutoInvSortTool autoInvSortTool;
 
     private PathingHelper pathingHelper = new PathingHelper();
     private FightState state = FightState.IDLE;
@@ -134,6 +136,9 @@ public class FightBot implements Util {
         auraTool = BlockFighter.toolManager.getToolByClass(AuraTool.class);
         autoShieldTool = BlockFighter.toolManager.getToolByClass(AutoShieldTool.class);
         targetStrafeTool = BlockFighter.toolManager.getToolByClass(TargetStrafeTool.class);
+        autoInvSortTool = BlockFighter.toolManager.getToolByClass(AutoInvSortTool.class);
+
+        autoInvSortTool.enable();
     }
 
     private void onDisable() {
