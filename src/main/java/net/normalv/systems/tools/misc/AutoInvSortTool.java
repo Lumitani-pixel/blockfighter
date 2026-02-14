@@ -10,9 +10,15 @@ import java.util.List;
 public class AutoInvSortTool extends Tool {
 
     private final InventorySortPlanner planner = new InventorySortPlanner();
+    private int rerunCounter = 5;
 
     public AutoInvSortTool() {
         super("AutoInvSort", "Sorts inventory for bot to properly use", Category.MISC);
+    }
+
+    @Override
+    public void onEnabled() {
+        rerunCounter = 5;
     }
 
     @Override
@@ -37,6 +43,7 @@ public class AutoInvSortTool extends Tool {
             }
         });
 
+        if(--rerunCounter > 0) return;
         disable();
     }
 }
