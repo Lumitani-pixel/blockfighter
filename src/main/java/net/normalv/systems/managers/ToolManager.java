@@ -4,10 +4,7 @@ import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
 import net.normalv.systems.tools.client.SoundTool;
-import net.normalv.systems.tools.combat.AuraTool;
-import net.normalv.systems.tools.combat.AutoShieldTool;
-import net.normalv.systems.tools.combat.TargetFilteringTool;
-import net.normalv.systems.tools.combat.TargetStrafeTool;
+import net.normalv.systems.tools.combat.*;
 import net.normalv.systems.tools.misc.AutoInvSortTool;
 import net.normalv.systems.tools.misc.TestTool;
 import net.normalv.systems.tools.render.TargetHudTool;
@@ -29,6 +26,7 @@ public class ToolManager extends Manager{
         tools.add(new AuraTool());
         tools.add(new TargetStrafeTool());
         tools.add(new AutoInvSortTool());
+        tools.add(new AutoBowTool());
 
         tools.sort(Comparator.comparing(Tool::getName));
     }

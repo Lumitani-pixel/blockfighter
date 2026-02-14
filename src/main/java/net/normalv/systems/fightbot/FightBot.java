@@ -10,6 +10,7 @@ import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.combat.AuraTool;
+import net.normalv.systems.tools.combat.AutoBowTool;
 import net.normalv.systems.tools.combat.AutoShieldTool;
 import net.normalv.systems.tools.combat.TargetStrafeTool;
 import net.normalv.systems.tools.misc.AutoInvSortTool;
@@ -17,7 +18,6 @@ import net.normalv.util.Util;
 
 import java.util.Random;
 
-//TODO: REFACTOR ALL COMBAT FEATURES ITS BAD AND MESSY RIGHT NOW
 public class FightBot implements Util {
     private Entity target;
     private double maxReach = 3.0;
@@ -26,10 +26,12 @@ public class FightBot implements Util {
 
     public static final int SWORD_SLOT = 0;
     public static final int AXE_SLOT = 1;
+    public static final int BOW_SLOT = 4;
     public static final int GAPPLE_SLOT = 8;
 
     public AuraTool auraTool;
     public AutoShieldTool autoShieldTool;
+    public AutoBowTool autoBowTool;
     public TargetStrafeTool targetStrafeTool;
     public AutoInvSortTool autoInvSortTool;
 
@@ -67,7 +69,7 @@ public class FightBot implements Util {
             return;
         }
 
-        if (mc.player.distanceTo(target) > maxReach) {
+        if (mc.player.distanceTo(target) > maxReach && target.getEntity().getHealth() > 10.0f) {
             state = FightState.CHASING;
             return;
         }
@@ -78,7 +80,7 @@ public class FightBot implements Util {
     private void tickState() {
         switch (state) {
             case HEALING -> tickHealing();
-            case CHASING -> pathingHelper.goToEntity(target);
+            case CHASING -> tickChasing();
             case ATTACKING -> tickCombat();
             case RUNNING -> tickRunning();
             case IDLE -> pathingHelper.stopPathing();
@@ -88,12 +90,10 @@ public class FightBot implements Util {
     private void tickHealing() {
         pathingHelper.stopPathing();
 
-        if(autoShieldTool.isEnabled()) autoShieldTool.disable();
-        if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
-        if(auraTool.isEnabled()) auraTool.disable();
+        disableAllCombatModules();
 
         if (BlockFighter.playerManager.isBlocking(mc.player)) {
-            mc.player.stopUsingItem();
+            mc.interactionManager.stopUsingItem(mc.player);
         }
 
         BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
@@ -114,14 +114,37 @@ public class FightBot implements Util {
         mc.options.backKey.setPressed(false);
     }
 
+    private void tickChasing() {
+        if(autoBowTool.isEnabled()) autoBowTool.disable();
+        pathingHelper.goToEntity(target);
+    }
+
     private void tickRunning() {
     }
 
     private void tickCombat() {
         pathingHelper.stopPathing();
+
+        if(mc.player.distanceTo(target) > maxReach) {
+            if(!autoBowTool.isEnabled()) autoBowTool.enable();
+            if(auraTool.isEnabled()) auraTool.disable();
+            if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
+            if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.disable();
+
+            return;
+        }
+
+        if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(!auraTool.isEnabled()) auraTool.enable();
         if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
         if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.enable();
+    }
+
+    private void disableAllCombatModules() {
+        if(autoBowTool.isEnabled()) autoBowTool.disable();
+        if(auraTool.isEnabled()) auraTool.disable();
+        if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
+        if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.disable();
     }
 
     public void onAttackBlock(AttackBlockEvent event) {
@@ -135,6 +158,7 @@ public class FightBot implements Util {
     private void onEnable() {
         auraTool = BlockFighter.toolManager.getToolByClass(AuraTool.class);
         autoShieldTool = BlockFighter.toolManager.getToolByClass(AutoShieldTool.class);
+        autoBowTool = BlockFighter.toolManager.getToolByClass(AutoBowTool.class);
         targetStrafeTool = BlockFighter.toolManager.getToolByClass(TargetStrafeTool.class);
         autoInvSortTool = BlockFighter.toolManager.getToolByClass(AutoInvSortTool.class);
 

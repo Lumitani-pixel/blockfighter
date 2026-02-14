@@ -24,7 +24,7 @@ public class AuraTool extends Tool {
         double maxReach = BlockFighter.fightBot.getMaxReach();
 
         if (BlockFighter.playerManager.isEatingGapple()) {
-            mc.player.stopUsingItem();
+            mc.interactionManager.stopUsingItem(mc.player);
             BlockFighter.playerManager.switchSlot(SWORD_SLOT);
         }
 
@@ -48,7 +48,7 @@ public class AuraTool extends Tool {
     }
 
     private void handleShieldBreak(Entity target) {
-        mc.player.stopUsingItem();
+        mc.interactionManager.stopUsingItem(mc.player);
 
         BlockFighter.playerManager.switchSlot(AXE_SLOT);
         BlockFighter.playerManager.lookAt(target);

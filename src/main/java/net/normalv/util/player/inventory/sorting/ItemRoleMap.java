@@ -26,6 +26,9 @@ public class ItemRoleMap {
             case SHIELD -> Set.of(
                     Items.SHIELD
             );
+            case BOW -> Set.of(
+                    Items.BOW
+            );
             case HELMET -> Set.of(
                     Items.NETHERITE_HELMET,
                     Items.DIAMOND_HELMET

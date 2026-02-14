@@ -10,6 +10,7 @@ public class InventoryLayouts {
             new SlotAssignment(SlotRoles.SWORD, 0),
             new SlotAssignment(SlotRoles.AXE, 1),
             new SlotAssignment(SlotRoles.PICKAXE, 2),
+            new SlotAssignment(SlotRoles.BOW, 4),
             new SlotAssignment(SlotRoles.GAPPLE, 8),
             new SlotAssignment(SlotRoles.SHIELD, 40),
             new SlotAssignment(SlotRoles.HELMET, 39),

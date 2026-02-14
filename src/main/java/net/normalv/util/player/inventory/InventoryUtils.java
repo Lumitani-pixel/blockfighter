@@ -16,6 +16,7 @@ public class InventoryUtils {
         PEARL,
         POTION,
         FOOD,
+        BOW,
         HELMET,
         CHESTPLATE,
         LEGGINGS,
