@@ -17,12 +17,10 @@ public class AutoShieldTool extends Tool {
         if (target == null) return;
 
         if (!mc.player.getInventory().getStack(40).isOf(Items.SHIELD)) return;
-        if (mc.player.distanceTo(target) > 3.9) {
+        if (mc.player.distanceTo(target) > 3.9 || BlockFighter.playerManager.shouldHeal() || mc.player.getAttackCooldownProgress(0.5f) >= 0.99f) {
             if(BlockFighter.playerManager.isBlocking(mc.player)) mc.player.stopUsingItem();
             return;
         }
-        if (mc.player.getAttackCooldownProgress(0.5f) < 1.0f) return;
-        if (BlockFighter.playerManager.shouldHeal()) return;
 
         mc.interactionManager.interactItem(mc.player, Hand.OFF_HAND);
     }

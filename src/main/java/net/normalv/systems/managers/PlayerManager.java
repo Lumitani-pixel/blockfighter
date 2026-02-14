@@ -77,6 +77,20 @@ public class PlayerManager extends Manager{
         return new float[]{(float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0), (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
     }
 
+    public float[] invertRotation(float[] rotation) {
+        float invertedYaw = wrapYaw(rotation[0] + 180.0f);
+        float invertedPitch = -rotation[1];
+
+        return new float[]{invertedYaw, invertedPitch};
+    }
+
+    public float wrapYaw(float yaw) {
+        yaw %= 360.0f;
+        if (yaw >= 180.0f) yaw -= 360.0f;
+        if (yaw < -180.0f) yaw += 360.0f;
+        return yaw;
+    }
+
     //This math looks a bit overkill I'm not sure if we need coefficient for MINECRAFT CALCULATIONS
     public float[] getBowRotationsTo(Entity entity) {
         float duration = (float) (mc.player.getActiveItem().getMaxUseTime(mc.player) - mc.player.getItemUseTime()) / 20.0f;

@@ -2,6 +2,7 @@ package net.normalv.systems.tools.combat;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -29,8 +30,6 @@ public class AuraTool extends Tool {
 
         if (mc.player.distanceTo(target) > maxReach) return;
 
-        if(!mc.options.jumpKey.isPressed()) mc.options.jumpKey.setPressed(true);
-
         if (target instanceof PlayerEntity targetPlayer
                 && BlockFighter.playerManager.isBlocking(targetPlayer)) {
             handleShieldBreak(target);
@@ -42,6 +41,7 @@ public class AuraTool extends Tool {
         if (mc.player.getAttackCooldownProgress(0.5f) >= 1.0f) {
             BlockFighter.playerManager.lookAt(target);
             mc.interactionManager.attackEntity(mc.player, target);
+            mc.player.swingHand(Hand.MAIN_HAND);
         }
     }
 
@@ -51,5 +51,6 @@ public class AuraTool extends Tool {
         BlockFighter.playerManager.switchSlot(AXE_SLOT);
         BlockFighter.playerManager.lookAt(target);
         mc.interactionManager.attackEntity(mc.player, target);
+        mc.player.swingHand(Hand.MAIN_HAND);
     }
 }

@@ -8,8 +8,11 @@ import net.normalv.util.Util;
 public class PathingHelper implements Util {
     private double baritoneUseDistance = 20;
     private boolean onlyUseBaritone = false;
+    private boolean pathing = false;
 
     public void goToEntity(Entity target) {
+        pathing = true;
+
         if(shouldUseBaritone(target)) {
             BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new FollowEntityGoal(target, BlockFighter.fightBot.getMaxReach()-0.1));
             return;
@@ -17,6 +20,10 @@ public class PathingHelper implements Util {
         else if(BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) stopPathing();
 
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), target.getEyePos());
+        manualPathing(rotation, target);
+    }
+
+    public void manualPathing(float[] rotation, Entity target) {
         mc.player.setYaw(rotation[0]);
         mc.player.setPitch(rotation[1]);
         mc.player.setHeadYaw(rotation[0]);
@@ -41,6 +48,11 @@ public class PathingHelper implements Util {
 
     public void stopPathing() {
         BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+        pathing = false;
+    }
+
+    public boolean isPathing() {
+        return pathing;
     }
 
     public boolean onlyUseBaritone() {

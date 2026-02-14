@@ -1,10 +1,7 @@
 package net.normalv.systems.fightbot;
 
-import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
@@ -27,8 +24,8 @@ public class FightBot implements Util {
     public static final int AXE_SLOT = 1;
     public static final int GAPPLE_SLOT = 8;
 
-    private AuraTool auraTool;
-    private AutoShieldTool autoShieldTool;
+    public AuraTool auraTool;
+    public AutoShieldTool autoShieldTool;
 
     private PathingHelper pathingHelper = new PathingHelper();
     private FightState state = FightState.IDLE;
@@ -67,12 +64,6 @@ public class FightBot implements Util {
             return;
         }
 
-        if (target instanceof PlayerEntity player
-                && BlockFighter.playerManager.isBlocking(player)) {
-            state = FightState.SHIELD_BREAK;
-            return;
-        }
-
         state = FightState.ATTACKING;
     }
 
@@ -81,6 +72,7 @@ public class FightBot implements Util {
             case HEALING -> tickHealing();
             case CHASING -> pathingHelper.goToEntity(target);
             case ATTACKING -> tickCombat();
+            case RUNNING -> tickRunning();
             case IDLE -> pathingHelper.stopPathing();
         }
     }
@@ -101,14 +93,18 @@ public class FightBot implements Util {
             mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
         }
 
-        BlockFighter.playerManager.lookAt(target);
-        mc.options.backKey.setPressed(true);
+        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), target.getEyePos());
+        rotation[0] = BlockFighter.playerManager.wrapYaw(rotation[0] + 180.0f);
+        pathingHelper.manualPathing(rotation, target);
+    }
+
+    private void tickRunning() {
     }
 
     private void tickCombat() {
         pathingHelper.goToEntity(target);
         if(!auraTool.isEnabled()) auraTool.enable();
-        if(!autoShieldTool.isEnabled()) autoShieldTool.enable();
+        if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.enable();
     }
 
     public void onAttackBlock(AttackBlockEvent event) {
@@ -171,6 +167,6 @@ public class FightBot implements Util {
         HEALING,
         CHASING,
         ATTACKING,
-        SHIELD_BREAK
+        RUNNING
     }
 }
