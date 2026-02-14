@@ -7,6 +7,7 @@ import net.normalv.systems.tools.client.SoundTool;
 import net.normalv.systems.tools.combat.AuraTool;
 import net.normalv.systems.tools.combat.AutoShieldTool;
 import net.normalv.systems.tools.combat.TargetFilteringTool;
+import net.normalv.systems.tools.combat.TargetStrafeTool;
 import net.normalv.systems.tools.misc.TestTool;
 import net.normalv.systems.tools.render.TargetHudTool;
 
@@ -25,6 +26,7 @@ public class ToolManager extends Manager{
         tools.add(new TargetFilteringTool());
         tools.add(new AutoShieldTool());
         tools.add(new AuraTool());
+        tools.add(new TargetStrafeTool());
 
         tools.sort(Comparator.comparing(Tool::getName));
     }

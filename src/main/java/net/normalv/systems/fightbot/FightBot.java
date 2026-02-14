@@ -11,7 +11,10 @@ import net.normalv.systems.fightbot.pathing.PathingHelper;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.combat.AuraTool;
 import net.normalv.systems.tools.combat.AutoShieldTool;
+import net.normalv.systems.tools.combat.TargetStrafeTool;
 import net.normalv.util.Util;
+
+import java.util.Random;
 
 //TODO: REFACTOR ALL COMBAT FEATURES ITS BAD AND MESSY RIGHT NOW
 public class FightBot implements Util {
@@ -26,9 +29,12 @@ public class FightBot implements Util {
 
     public AuraTool auraTool;
     public AutoShieldTool autoShieldTool;
+    public TargetStrafeTool targetStrafeTool;
 
     private PathingHelper pathingHelper = new PathingHelper();
     private FightState state = FightState.IDLE;
+
+    private Random random = new Random();
 
     public FightBot() {
         EVENT_BUS.register(this);
@@ -81,6 +87,7 @@ public class FightBot implements Util {
         pathingHelper.stopPathing();
 
         if(autoShieldTool.isEnabled()) autoShieldTool.disable();
+        if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
         if(auraTool.isEnabled()) auraTool.disable();
 
         if (BlockFighter.playerManager.isBlocking(mc.player)) {
@@ -94,16 +101,24 @@ public class FightBot implements Util {
         }
 
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), target.getEyePos());
-        rotation[0] = BlockFighter.playerManager.wrapYaw(rotation[0] + 180.0f);
-        pathingHelper.manualPathing(rotation, target);
+        rotation[0] = BlockFighter.playerManager.wrapYaw(rotation[0] + 180 + random.nextFloat(-20f, 20f));
+
+        mc.player.setYaw(rotation[0]);
+        mc.player.setPitch(rotation[1]);
+        mc.player.setHeadYaw(rotation[0]);
+        mc.options.sprintKey.setPressed(true);
+        mc.options.forwardKey.setPressed(true);
+        mc.options.jumpKey.setPressed(true);
+        mc.options.backKey.setPressed(false);
     }
 
     private void tickRunning() {
     }
 
     private void tickCombat() {
-        pathingHelper.goToEntity(target);
+        pathingHelper.stopPathing();
         if(!auraTool.isEnabled()) auraTool.enable();
+        if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
         if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.enable();
     }
 
@@ -118,6 +133,7 @@ public class FightBot implements Util {
     private void onEnable() {
         auraTool = BlockFighter.toolManager.getToolByClass(AuraTool.class);
         autoShieldTool = BlockFighter.toolManager.getToolByClass(AutoShieldTool.class);
+        targetStrafeTool = BlockFighter.toolManager.getToolByClass(TargetStrafeTool.class);
     }
 
     private void onDisable() {
