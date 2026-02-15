@@ -1,5 +1,6 @@
 package net.normalv.systems.fightbot;
 
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -104,6 +105,10 @@ public class FightBot implements Util {
         if(mc.player.getInventory().getSelectedSlot() != GAPPLE_SLOT) BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
 
         if (!BlockFighter.playerManager.isEatingGapple()) {
+            if(mc.player.distanceTo(target) < maxReach) {
+                mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+                mc.interactionManager.attackEntity(mc.player, target);
+            }
             mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
         }
 
