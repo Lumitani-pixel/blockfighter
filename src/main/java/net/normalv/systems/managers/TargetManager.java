@@ -37,7 +37,7 @@ public class TargetManager extends Manager {
 //                    (!allowHostiles && entity instanceof HostileEntity) ||
 //                    (!allowPlayer && entity instanceof PlayerEntity)) continue;
 
-            if (!(entity instanceof PlayerEntity living)) continue;
+            if (!(entity instanceof PlayerEntity living) || living.isSpectator() || living.isCreative()) continue;
 
             targets.add(living);
         }
