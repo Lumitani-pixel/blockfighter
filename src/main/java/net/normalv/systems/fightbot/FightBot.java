@@ -8,11 +8,11 @@ import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
-import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
 import net.normalv.systems.tools.client.SoundTool;
 import net.normalv.systems.tools.combat.*;
 import net.normalv.systems.tools.misc.AutoInvSortTool;
+import net.normalv.systems.tools.player.AntiWebTool;
 import net.normalv.systems.tools.render.TargetHudTool;
 import net.normalv.util.Util;
 
@@ -29,12 +29,14 @@ public class FightBot implements Util {
     public static final int AXE_SLOT = 1;
     public static final int BOW_SLOT = 4;
     public static final int WEB_SLOT = 5;
+    public static final int WATER_SLOT = 6;
     public static final int GAPPLE_SLOT = 8;
 
     public AuraTool auraTool;
     public AutoShieldTool autoShieldTool;
     public AutoBowTool autoBowTool;
     public AutoWebTool autoWebTool;
+    public AntiWebTool antiWebTool;
     public TargetStrafeTool targetStrafeTool;
     public AutoInvSortTool autoInvSortTool;
 
@@ -142,6 +144,7 @@ public class FightBot implements Util {
         if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
         if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.enable();
         if(!autoWebTool.isEnabled()) autoWebTool.enable();
+        if(!antiWebTool.isEnabled()) antiWebTool.enable();
     }
 
     private void disableAllCombatModules() {
@@ -150,6 +153,7 @@ public class FightBot implements Util {
         if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
         if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.disable();
         if(autoWebTool.isEnabled()) autoWebTool.disable();
+        if(antiWebTool.isEnabled()) antiWebTool.disable();
     }
 
     private void releaseAllKeys() {
@@ -172,6 +176,7 @@ public class FightBot implements Util {
         auraTool = BlockFighter.toolManager.getToolByClass(AuraTool.class);
         autoShieldTool = BlockFighter.toolManager.getToolByClass(AutoShieldTool.class);
         autoBowTool = BlockFighter.toolManager.getToolByClass(AutoBowTool.class);
+        antiWebTool = BlockFighter.toolManager.getToolByClass(AntiWebTool.class);
         autoWebTool = BlockFighter.toolManager.getToolByClass(AutoWebTool.class);
         targetStrafeTool = BlockFighter.toolManager.getToolByClass(TargetStrafeTool.class);
         autoInvSortTool = BlockFighter.toolManager.getToolByClass(AutoInvSortTool.class);

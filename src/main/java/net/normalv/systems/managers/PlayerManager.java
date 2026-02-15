@@ -19,6 +19,7 @@ public class PlayerManager extends Manager{
     private static float secondaryHealth = 12.0f;
 
     public boolean isBlocking(PlayerEntity player) {
+        if(player == null) return false;
         return player.isUsingItem() && player.getActiveItem().isOf(Items.SHIELD);
     }
 

@@ -32,6 +32,9 @@ public class ItemRoleMap {
             case WEB -> Set.of(
                     Items.COBWEB
             );
+            case WATER -> Set.of(
+                    Items.WATER_BUCKET
+            );
             case HELMET -> Set.of(
                     Items.NETHERITE_HELMET,
                     Items.DIAMOND_HELMET

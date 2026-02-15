@@ -18,6 +18,7 @@ public class InventoryUtils {
         FOOD,
         BOW,
         WEB,
+        WATER,
         HELMET,
         CHESTPLATE,
         LEGGINGS,
