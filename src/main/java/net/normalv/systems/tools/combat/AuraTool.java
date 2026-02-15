@@ -25,7 +25,7 @@ public class AuraTool extends Tool {
 
         if (BlockFighter.playerManager.isEatingGapple()) {
             mc.interactionManager.stopUsingItem(mc.player);
-            BlockFighter.playerManager.switchSlot(SWORD_SLOT);
+            if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
         }
 
         if (mc.player.distanceTo(target) > maxReach) return;
@@ -36,7 +36,7 @@ public class AuraTool extends Tool {
             return;
         }
 
-        BlockFighter.playerManager.switchSlot(SWORD_SLOT);
+        if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
 
         if (mc.player.getAttackCooldownProgress(0.5f) >= 1.0f) {
             BlockFighter.playerManager.lookAt(target);
@@ -50,7 +50,7 @@ public class AuraTool extends Tool {
     private void handleShieldBreak(Entity target) {
         mc.interactionManager.stopUsingItem(mc.player);
 
-        BlockFighter.playerManager.switchSlot(AXE_SLOT);
+        if(mc.player.getInventory().getSelectedSlot() != AXE_SLOT) BlockFighter.playerManager.switchSlot(AXE_SLOT);
         BlockFighter.playerManager.lookAt(target);
         mc.interactionManager.attackEntity(mc.player, target);
         mc.player.swingHand(Hand.MAIN_HAND);

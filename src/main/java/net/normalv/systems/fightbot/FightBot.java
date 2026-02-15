@@ -18,6 +18,7 @@ import net.normalv.util.Util;
 
 import java.util.Random;
 
+//TODO: Implement POST movementpacket fixes so bot can play on real server without flags (movement packets are always the last ones send in vanilla each tick)
 public class FightBot implements Util {
     private Entity target;
     private double maxReach = 3.0;
@@ -96,7 +97,7 @@ public class FightBot implements Util {
             mc.interactionManager.stopUsingItem(mc.player);
         }
 
-        BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
+        if(mc.player.getInventory().getSelectedSlot() != GAPPLE_SLOT) BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
 
         if (!BlockFighter.playerManager.isEatingGapple()) {
             mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);

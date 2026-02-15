@@ -37,7 +37,7 @@ public class AutoBowTool extends Tool {
         }
 
         // Switch to bow
-        BlockFighter.playerManager.switchSlot(BOW_SLOT);
+        if(mc.player.getInventory().getSelectedSlot() != BOW_SLOT) BlockFighter.playerManager.switchSlot(BOW_SLOT);
 
         // Aim
         float[] bowRotations = BlockFighter.playerManager.getBowRotationsTo(target);
