@@ -46,6 +46,8 @@ public class FightBot implements Util {
 
     private Random random = new Random();
 
+    private int ticksTillInventoryRefresh = 500;
+
     public FightBot() {
         EVENT_BUS.register(this);
     }
@@ -57,6 +59,11 @@ public class FightBot implements Util {
         if (target == null) {
             state = FightState.IDLE;
             return;
+        }
+
+        if(--ticksTillInventoryRefresh <= 0) {
+            if(!autoInvSortTool.isEnabled()) autoInvSortTool.enable();
+            ticksTillInventoryRefresh = 500;
         }
 
         updateState();
@@ -186,7 +193,7 @@ public class FightBot implements Util {
         targetStrafeTool = BlockFighter.toolManager.getToolByClass(TargetStrafeTool.class);
         autoInvSortTool = BlockFighter.toolManager.getToolByClass(AutoInvSortTool.class);
 
-        autoInvSortTool.enable();
+        if(!autoInvSortTool.isEnabled()) autoInvSortTool.enable();
 
         BlockFighter.toolManager.getToolByClass(HudTool.class).enable();
         BlockFighter.toolManager.getToolByClass(TargetHudTool.class).enable();
