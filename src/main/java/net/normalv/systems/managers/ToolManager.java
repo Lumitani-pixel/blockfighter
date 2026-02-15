@@ -27,6 +27,7 @@ public class ToolManager extends Manager{
         tools.add(new TargetStrafeTool());
         tools.add(new AutoInvSortTool());
         tools.add(new AutoBowTool());
+        tools.add(new AutoWebTool());
 
         tools.sort(Comparator.comparing(Tool::getName));
     }

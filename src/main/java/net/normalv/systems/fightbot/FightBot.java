@@ -9,11 +9,11 @@ import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
 import net.normalv.systems.tools.Tool;
-import net.normalv.systems.tools.combat.AuraTool;
-import net.normalv.systems.tools.combat.AutoBowTool;
-import net.normalv.systems.tools.combat.AutoShieldTool;
-import net.normalv.systems.tools.combat.TargetStrafeTool;
+import net.normalv.systems.tools.client.HudTool;
+import net.normalv.systems.tools.client.SoundTool;
+import net.normalv.systems.tools.combat.*;
 import net.normalv.systems.tools.misc.AutoInvSortTool;
+import net.normalv.systems.tools.render.TargetHudTool;
 import net.normalv.util.Util;
 
 import java.util.Random;
@@ -28,11 +28,13 @@ public class FightBot implements Util {
     public static final int SWORD_SLOT = 0;
     public static final int AXE_SLOT = 1;
     public static final int BOW_SLOT = 4;
+    public static final int WEB_SLOT = 5;
     public static final int GAPPLE_SLOT = 8;
 
     public AuraTool auraTool;
     public AutoShieldTool autoShieldTool;
     public AutoBowTool autoBowTool;
+    public AutoWebTool autoWebTool;
     public TargetStrafeTool targetStrafeTool;
     public AutoInvSortTool autoInvSortTool;
 
@@ -139,6 +141,7 @@ public class FightBot implements Util {
         if(!auraTool.isEnabled()) auraTool.enable();
         if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
         if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.enable();
+        if(!autoWebTool.isEnabled()) autoWebTool.enable();
     }
 
     private void disableAllCombatModules() {
@@ -146,6 +149,15 @@ public class FightBot implements Util {
         if(auraTool.isEnabled()) auraTool.disable();
         if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
         if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.disable();
+        if(autoWebTool.isEnabled()) autoWebTool.disable();
+    }
+
+    private void releaseAllKeys() {
+        mc.options.backKey.setPressed(false);
+        mc.options.forwardKey.setPressed(false);
+        mc.options.jumpKey.setPressed(false);
+        mc.options.leftKey.setPressed(false);
+        mc.options.rightKey.setPressed(false);
     }
 
     public void onAttackBlock(AttackBlockEvent event) {
@@ -160,15 +172,21 @@ public class FightBot implements Util {
         auraTool = BlockFighter.toolManager.getToolByClass(AuraTool.class);
         autoShieldTool = BlockFighter.toolManager.getToolByClass(AutoShieldTool.class);
         autoBowTool = BlockFighter.toolManager.getToolByClass(AutoBowTool.class);
+        autoWebTool = BlockFighter.toolManager.getToolByClass(AutoWebTool.class);
         targetStrafeTool = BlockFighter.toolManager.getToolByClass(TargetStrafeTool.class);
         autoInvSortTool = BlockFighter.toolManager.getToolByClass(AutoInvSortTool.class);
 
         autoInvSortTool.enable();
+
+        BlockFighter.toolManager.getToolByClass(HudTool.class).enable();
+        BlockFighter.toolManager.getToolByClass(TargetHudTool.class).enable();
+        BlockFighter.toolManager.getToolByClass(SoundTool.class).enable();
     }
 
     private void onDisable() {
         pathingHelper.stopPathing();
-        BlockFighter.toolManager.getTools().forEach(Tool::disable);
+        disableAllCombatModules();
+        releaseAllKeys();
     }
 
     private void enable(){

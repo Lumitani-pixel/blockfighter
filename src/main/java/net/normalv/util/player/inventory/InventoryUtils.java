@@ -17,6 +17,7 @@ public class InventoryUtils {
         POTION,
         FOOD,
         BOW,
+        WEB,
         HELMET,
         CHESTPLATE,
         LEGGINGS,
