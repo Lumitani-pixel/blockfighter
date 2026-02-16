@@ -18,8 +18,8 @@ public class TargetManager extends Manager {
     private List<Class<? extends Entity>> permittedEntities = new ArrayList<>();
 
     public boolean allowPlayer = true;
-    public boolean allowHostiles = false;
-    public boolean allowAnimals = true;
+    public boolean allowHostiles = true;
+    public boolean allowAnimals = false;
 
     /**
      * Gets all allowed targets and returns them in a list

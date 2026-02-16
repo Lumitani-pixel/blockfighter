@@ -22,6 +22,8 @@ public class AutoShieldTool extends Tool {
             return;
         }
 
-        mc.interactionManager.interactItem(mc.player, Hand.OFF_HAND);
+        if (!mc.player.isUsingItem()) {
+            mc.interactionManager.interactItem(mc.player, Hand.OFF_HAND);
+        }
     }
 }

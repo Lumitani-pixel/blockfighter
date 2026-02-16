@@ -20,7 +20,7 @@ import net.normalv.util.Util;
 
 import java.util.Random;
 
-//TODO: Implement POST movementpacket fixes so bot can play on real server without flags (movement packets are always the last ones send in vanilla each tick)
+//TODO: Implement POST movementpacket fixes so bot can play on real server without flags (GRIM POST FLAGS)
 public class FightBot implements Util {
     private Entity target;
     private double maxReach = 3.0;
@@ -69,7 +69,6 @@ public class FightBot implements Util {
 
         updateState();
         tickState();
-        mc.player.tickMovement();
     }
 
     private void updateTarget() {
@@ -148,7 +147,7 @@ public class FightBot implements Util {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
             if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
-            if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.disable();
+            if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((LivingEntity) target)) autoShieldTool.disable();
 
             return;
         }
