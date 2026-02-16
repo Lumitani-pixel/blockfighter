@@ -3,7 +3,7 @@ package net.normalv.systems.fightbot;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
@@ -15,6 +15,7 @@ import net.normalv.systems.tools.client.SoundTool;
 import net.normalv.systems.tools.combat.*;
 import net.normalv.systems.tools.misc.AutoInvSortTool;
 import net.normalv.systems.tools.player.AntiWebTool;
+import net.normalv.systems.tools.player.AutoWindChargeTool;
 import net.normalv.systems.tools.render.TargetHudTool;
 import net.normalv.util.Util;
 
@@ -26,9 +27,12 @@ public class FightBot implements Util {
     private double maxReach = 3.0;
     private boolean enabled = false;
     private boolean healing = false;
+    private boolean macing = false;
 
     public static final int SWORD_SLOT = 0;
     public static final int AXE_SLOT = 1;
+    public static final int MACE_SLOT = 2;
+    public static final int WIND_CHARGE_SLOT = 3;
     public static final int BOW_SLOT = 4;
     public static final int WEB_SLOT = 5;
     public static final int WATER_SLOT = 6;
@@ -41,6 +45,7 @@ public class FightBot implements Util {
     public AntiWebTool antiWebTool;
     public TargetStrafeTool targetStrafeTool;
     public AutoInvSortTool autoInvSortTool;
+    public AutoWindChargeTool autoWindChargeTool;
 
     private PathingHelper pathingHelper = new PathingHelper();
     private FightState state = FightState.IDLE;
@@ -65,6 +70,11 @@ public class FightBot implements Util {
         if(--ticksTillInventoryRefresh <= 0) {
             if(!autoInvSortTool.isEnabled()) autoInvSortTool.enable();
             ticksTillInventoryRefresh = 500;
+        }
+
+        // Ensure we can mace when falling a greater distance then 3 blocks
+        if (!mc.player.isOnGround() && mc.player.getVelocity().y < 0 && mc.player.fallDistance > 3) {
+            macing = true;
         }
 
         updateState();
@@ -133,7 +143,7 @@ public class FightBot implements Util {
     }
 
     private void tickChasing() {
-        if(autoBowTool.isEnabled()) autoBowTool.disable();
+        disableAllCombatModules();
         pathingHelper.goToEntity(target);
     }
 
@@ -143,14 +153,17 @@ public class FightBot implements Util {
     private void tickCombat() {
         pathingHelper.stopPathing();
 
-        if(mc.player.distanceTo(target) > maxReach) {
+        if(mc.player.distanceTo(target) > maxReach && !macing) {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
             if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
             if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((LivingEntity) target)) autoShieldTool.disable();
+            if(autoWindChargeTool.isEnabled()) autoWindChargeTool.disable();
 
             return;
         }
+
+        if(mc.player.getInventory().getStack(MACE_SLOT).isOf(Items.MACE) && !autoWindChargeTool.isEnabled()) autoWindChargeTool.enable();
 
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(!auraTool.isEnabled()) auraTool.enable();
@@ -167,6 +180,9 @@ public class FightBot implements Util {
         if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((LivingEntity) target)) autoShieldTool.disable();
         if(autoWebTool.isEnabled()) autoWebTool.disable();
         if(antiWebTool.isEnabled()) antiWebTool.disable();
+        if(autoWindChargeTool.isEnabled()) autoWindChargeTool.disable();
+
+        macing = false;
     }
 
     private void releaseAllKeys() {
@@ -193,6 +209,7 @@ public class FightBot implements Util {
         autoWebTool = BlockFighter.toolManager.getToolByClass(AutoWebTool.class);
         targetStrafeTool = BlockFighter.toolManager.getToolByClass(TargetStrafeTool.class);
         autoInvSortTool = BlockFighter.toolManager.getToolByClass(AutoInvSortTool.class);
+        autoWindChargeTool = BlockFighter.toolManager.getToolByClass(AutoWindChargeTool.class);
 
         if(!autoInvSortTool.isEnabled()) autoInvSortTool.enable();
 
@@ -224,8 +241,16 @@ public class FightBot implements Util {
         else disable();
     }
 
+    public void setMacing(boolean macing) {
+        this.macing = macing;
+    }
+
     public boolean isHealing() {
         return healing;
+    }
+
+    public boolean isMacing() {
+        return macing;
     }
 
     public boolean isEnabled() {

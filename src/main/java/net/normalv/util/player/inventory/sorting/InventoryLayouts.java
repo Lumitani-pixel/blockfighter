@@ -9,7 +9,8 @@ public class InventoryLayouts {
     public static final List<SlotAssignment> DEFAULT_LAYOUT = List.of(
             new SlotAssignment(SlotRoles.SWORD, 0),
             new SlotAssignment(SlotRoles.AXE, 1),
-            new SlotAssignment(SlotRoles.PICKAXE, 2),
+            new SlotAssignment(SlotRoles.MACE, 2),
+            new SlotAssignment(SlotRoles.WIND_CHARGE, 3),
             new SlotAssignment(SlotRoles.BOW, 4),
             new SlotAssignment(SlotRoles.WEB, 5),
             new SlotAssignment(SlotRoles.WATER, 6),

@@ -35,6 +35,12 @@ public class ItemRoleMap {
             case WATER -> Set.of(
                     Items.WATER_BUCKET
             );
+            case WIND_CHARGE -> Set.of(
+                    Items.WIND_CHARGE
+            );
+            case MACE -> Set.of(
+                    Items.MACE
+            );
             case HELMET -> Set.of(
                     Items.NETHERITE_HELMET,
                     Items.DIAMOND_HELMET

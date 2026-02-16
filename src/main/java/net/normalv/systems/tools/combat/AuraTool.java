@@ -2,12 +2,12 @@ package net.normalv.systems.tools.combat;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
-import static net.normalv.systems.fightbot.FightBot.AXE_SLOT;
-import static net.normalv.systems.fightbot.FightBot.SWORD_SLOT;
+import static net.normalv.systems.fightbot.FightBot.*;
 
 public class AuraTool extends Tool {
     private Entity target;
@@ -30,9 +30,17 @@ public class AuraTool extends Tool {
 
         if (mc.player.distanceTo(target) > maxReach) return;
 
-        if (target instanceof PlayerEntity targetPlayer
-                && BlockFighter.playerManager.isBlocking(targetPlayer)) {
+        if (target instanceof PlayerEntity targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer)) {
             handleShieldBreak(target);
+            if(!BlockFighter.fightBot.isMacing()) return;
+        }
+
+        if(BlockFighter.fightBot.isMacing() && mc.player.getInventory().getStack(MACE_SLOT).isOf(Items.MACE) && mc.player.fallDistance > 3 && mc.player.getVelocity().getY() < 0.0) {
+            if(mc.player.getInventory().getSelectedSlot() != MACE_SLOT) BlockFighter.playerManager.switchSlot(MACE_SLOT);
+
+            BlockFighter.playerManager.lookAt(target);
+            mc.interactionManager.attackEntity(mc.player, target);
+            mc.player.swingHand(Hand.MAIN_HAND);
             return;
         }
 
