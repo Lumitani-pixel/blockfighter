@@ -3,6 +3,7 @@ package net.normalv.systems.managers;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -18,9 +19,9 @@ public class PlayerManager extends Manager{
     private static float minHealth = 9.0f;
     private static float secondaryHealth = 12.0f;
 
-    public boolean isBlocking(PlayerEntity player) {
-        if(player == null) return false;
-        return player.isUsingItem() && player.getActiveItem().isOf(Items.SHIELD);
+    public boolean isBlocking(LivingEntity livingEntity) {
+        if(livingEntity == null) return false;
+        return livingEntity.isUsingItem() && livingEntity.getActiveItem().isOf(Items.SHIELD);
     }
 
     public boolean isEatingGapple() {

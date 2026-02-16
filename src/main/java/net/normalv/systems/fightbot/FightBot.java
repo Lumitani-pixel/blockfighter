@@ -2,6 +2,7 @@ package net.normalv.systems.fightbot;
 
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -68,6 +69,7 @@ public class FightBot implements Util {
 
         updateState();
         tickState();
+        mc.player.tickMovement();
     }
 
     private void updateTarget() {
@@ -154,7 +156,7 @@ public class FightBot implements Util {
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(!auraTool.isEnabled()) auraTool.enable();
         if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
-        if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.enable();
+        if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((LivingEntity) target)) autoShieldTool.enable();
         if(!autoWebTool.isEnabled()) autoWebTool.enable();
         if(!antiWebTool.isEnabled()) antiWebTool.enable();
     }
@@ -163,7 +165,7 @@ public class FightBot implements Util {
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(auraTool.isEnabled()) auraTool.disable();
         if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
-        if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((PlayerEntity) target)) autoShieldTool.disable();
+        if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((LivingEntity) target)) autoShieldTool.disable();
         if(autoWebTool.isEnabled()) autoWebTool.disable();
         if(antiWebTool.isEnabled()) antiWebTool.disable();
     }

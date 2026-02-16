@@ -19,25 +19,31 @@ public class TargetManager extends Manager {
 
     public boolean allowPlayer = true;
     public boolean allowHostiles = false;
-    public boolean allowAnimals = false;
+    public boolean allowAnimals = true;
 
     /**
      * Gets all allowed targets and returns them in a list
      * @param sorting What to sort by
      * @return List of targets sorted by TargetSorting
      */
-    //FIXME: lets all other entities through check (bats, viligers)
     public List<Entity> getEntities(TargetSorting sorting) {
         List<LivingEntity> targets = new ArrayList<>();
 
         for (Entity entity : mc.world.getEntities()) {
             if (entity == mc.player) continue;
-//            if (!(entity instanceof LivingEntity living) ||
-//                    (!allowAnimals && entity instanceof AnimalEntity) ||
-//                    (!allowHostiles && entity instanceof HostileEntity) ||
-//                    (!allowPlayer && entity instanceof PlayerEntity)) continue;
+            if (!(entity instanceof LivingEntity living)) continue;
 
-            if (!(entity instanceof PlayerEntity living) || living.isSpectator() || living.isCreative()) continue;
+            boolean allowed = false;
+
+            if (allowPlayer && entity instanceof PlayerEntity) {
+                allowed = true;
+            } else if (allowHostiles && entity instanceof HostileEntity) {
+                allowed = true;
+            } else if (allowAnimals && entity instanceof AnimalEntity) {
+                allowed = true;
+            }
+
+            if (!allowed) continue;
 
             targets.add(living);
         }
