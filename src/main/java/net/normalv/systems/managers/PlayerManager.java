@@ -8,10 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.normalv.BlockFighter;
 
@@ -46,6 +43,40 @@ public class PlayerManager extends Manager{
         float dx = (float) (mc.player.getX() - entity.getX());
         float dz = (float) (mc.player.getZ() - entity.getZ());
         return MathHelper.sqrt(dx * dx + dz * dz);
+    }
+
+    public boolean isWithinHitboxRange(Entity entity, double range) {
+        Box box = entity.getBoundingBox();
+
+        double px = mc.player.getX();
+        double py = mc.player.getY();
+        double pz = mc.player.getZ();
+
+        // Closest point on hitbox to player
+        double cx = MathHelper.clamp(px, box.minX, box.maxX);
+        double cy = MathHelper.clamp(py, box.minY, box.maxY);
+        double cz = MathHelper.clamp(pz, box.minZ, box.maxZ);
+
+        double dx = px - cx;
+        double dy = py - cy;
+        double dz = pz - cz;
+
+        return (dx * dx + dy * dy + dz * dz) <= (range * range);
+    }
+
+    public boolean isWithinHitboxRangeHorizontal(Entity entity, double range) {
+        Box box = entity.getBoundingBox();
+
+        double px = mc.player.getX();
+        double pz = mc.player.getZ();
+
+        double cx = MathHelper.clamp(px, box.minX, box.maxX);
+        double cz = MathHelper.clamp(pz, box.minZ, box.maxZ);
+
+        double dx = px - cx;
+        double dz = pz - cz;
+
+        return (dx * dx + dz * dz) <= (range * range);
     }
 
     public float getMiningSpeed(ItemStack stack, BlockState state) {

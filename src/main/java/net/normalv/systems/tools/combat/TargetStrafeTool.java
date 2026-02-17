@@ -24,9 +24,8 @@ public class TargetStrafeTool extends Tool {
         target = BlockFighter.targetManager.getCurrentTarget();
         if (target == null) return;
 
-        double dist = mc.player.distanceTo(target);
-        if (dist > 4.2) return;
-        else if(dist < BlockFighter.fightBot.getMaxReach()-0.1) mc.options.backKey.setPressed(true);
+        if (!BlockFighter.playerManager.isWithinHitboxRange(target, 4.2)) return;
+        else if(BlockFighter.playerManager.isWithinHitboxRange(target, BlockFighter.fightBot.getMaxReach() - 0.1)) mc.options.backKey.setPressed(true);
         else if(mc.options.backKey.isPressed()) mc.options.backKey.setPressed(false);
 
         // Randomly swap strafe direction

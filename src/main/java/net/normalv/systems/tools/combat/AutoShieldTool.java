@@ -1,6 +1,5 @@
 package net.normalv.systems.tools.combat;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
@@ -18,7 +17,7 @@ public class AutoShieldTool extends Tool {
         if (target == null) return;
 
         if (!mc.player.getInventory().getStack(40).isOf(Items.SHIELD)) return;
-        if (mc.player.distanceTo(target) > BlockFighter.fightBot.getMaxReach() + 0.9 ||
+        if (!BlockFighter.playerManager.isWithinHitboxRange(target, BlockFighter.fightBot.getMaxReach()+0.9) ||
                 BlockFighter.playerManager.shouldHeal() ||
                 (mc.player.getAttackCooldownProgress(0.5f) >= 0.99f && !BlockFighter.playerManager.isMacing(target)) ||
                 BlockFighter.fightBot.isMacing()) {

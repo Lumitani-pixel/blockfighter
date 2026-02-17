@@ -64,6 +64,7 @@ public class FightBot implements Util {
         updateTarget();
         if (target == null) {
             disableAllCombatModules();
+            releaseAllKeys();
             state = FightState.IDLE;
             return;
         }
@@ -94,7 +95,7 @@ public class FightBot implements Util {
             return;
         }
 
-        if (mc.player.distanceTo(target) > maxReach && target.getEntity().getHealth() > 10.0f) {
+        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) && target.getEntity().getHealth() > 10.0f) {
             state = FightState.CHASING;
             return;
         }
@@ -124,7 +125,7 @@ public class FightBot implements Util {
         if(mc.player.getInventory().getSelectedSlot() != GAPPLE_SLOT) BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
 
         if (!BlockFighter.playerManager.isEatingGapple()) {
-            if(mc.player.distanceTo(target) < maxReach) {
+            if(BlockFighter.playerManager.isWithinHitboxRange(target, maxReach)) {
                 mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
                 mc.interactionManager.attackEntity(mc.player, target);
             }
@@ -154,7 +155,7 @@ public class FightBot implements Util {
     private void tickCombat() {
         pathingHelper.stopPathing();
 
-        if(mc.player.distanceTo(target) > maxReach && !macing) {
+        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach)) {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
             if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
