@@ -12,6 +12,11 @@ public class AutoShieldTool extends Tool {
     }
 
     @Override
+    public void onDisabled() {
+        if(BlockFighter.playerManager.isBlocking(mc.player)) mc.interactionManager.stopUsingItem(mc.player);
+    }
+
+    @Override
     public void onTick() {
         LivingEntity target = BlockFighter.fightBot.getTarget();
         if (target == null) return;
