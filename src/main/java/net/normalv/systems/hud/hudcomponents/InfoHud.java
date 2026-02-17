@@ -22,14 +22,14 @@ public class InfoHud implements Util {
 
     public static void render(DrawContext ctx, RenderTickCounter counter) {
         FightBot bot = BlockFighter.fightBot;
-        if (bot == null || !bot.isEnabled()) return;
+        if (bot == null || !bot.isEnabled() || bot.infoHudTool == null || !bot.infoHudTool.isEnabled()) return;
 
         int sw = ctx.getScaledWindowWidth();
         int sh = ctx.getScaledWindowHeight();
 
         Color accent = stateColor(bot);
 
-        drawTopStatus(ctx, sw / 2 - 70, 72, bot, accent);
+        drawTopStatus(ctx, sw / 2 - 70, 52, bot, accent);
         drawVitals(ctx, 12, sh / 2 - 40, accent);
         drawCombat(ctx, sw - 140, sh / 2 - 40, bot, accent);
         drawMotion(ctx, sw / 2 - 90, sh - 42, bot, accent);

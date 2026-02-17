@@ -11,6 +11,7 @@ import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
 import net.normalv.systems.tools.client.HudTool;
+import net.normalv.systems.tools.client.InfoHudTool;
 import net.normalv.systems.tools.client.SoundTool;
 import net.normalv.systems.tools.combat.*;
 import net.normalv.systems.tools.misc.AutoInvSortTool;
@@ -46,6 +47,8 @@ public class FightBot implements Util {
     public TargetStrafeTool targetStrafeTool;
     public AutoInvSortTool autoInvSortTool;
     public AutoWindChargeTool autoWindChargeTool;
+
+    public InfoHudTool infoHudTool;
 
     private PathingHelper pathingHelper = new PathingHelper();
     public FightState state = FightState.IDLE;
@@ -213,11 +216,14 @@ public class FightBot implements Util {
         autoInvSortTool = BlockFighter.toolManager.getToolByClass(AutoInvSortTool.class);
         autoWindChargeTool = BlockFighter.toolManager.getToolByClass(AutoWindChargeTool.class);
 
+        infoHudTool = BlockFighter.toolManager.getToolByClass(InfoHudTool.class);
+
         if(!autoInvSortTool.isEnabled()) autoInvSortTool.enable();
 
         BlockFighter.toolManager.getToolByClass(HudTool.class).enable();
         BlockFighter.toolManager.getToolByClass(TargetHudTool.class).enable();
         BlockFighter.toolManager.getToolByClass(SoundTool.class).enable();
+        infoHudTool.enable();
     }
 
     private void onDisable() {
