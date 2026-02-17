@@ -48,7 +48,7 @@ public class FightBot implements Util {
     public AutoWindChargeTool autoWindChargeTool;
 
     private PathingHelper pathingHelper = new PathingHelper();
-    private FightState state = FightState.IDLE;
+    public FightState state = FightState.IDLE;
 
     private Random random = new Random();
 
