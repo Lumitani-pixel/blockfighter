@@ -4,6 +4,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -21,13 +23,13 @@ public class AntiWebTool extends Tool {
     public void onTick() {
         if(--delay > 0) return;
         if((!mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.WATER_BUCKET) && (!mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.BUCKET)) ||
-                (!mc.world.getBlockState(mc.player.getBlockPos()).isOf(Blocks.COBWEB) && (!mc.world.getBlockState(mc.player.getBlockPos()).isOf(Blocks.WATER))))) return;
+                (findIntersectingCobweb() == null && (!mc.world.getBlockState(mc.player.getBlockPos()).isOf(Blocks.WATER))))) return;
 
-        if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.WATER_BUCKET) && !mc.world.getBlockState(mc.player.getBlockPos()).isOf(Blocks.COBWEB)) return;
+        if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.WATER_BUCKET) && findIntersectingCobweb() == null) return;
 
         if(mc.player.getInventory().getSelectedSlot() != WATER_SLOT) BlockFighter.playerManager.switchSlot(WATER_SLOT);
 
-        BlockPos blockPos = waterPlacePos == null ? mc.player.getBlockPos() : waterPlacePos;
+        BlockPos blockPos = waterPlacePos == null ? findIntersectingCobweb() : waterPlacePos;
 
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), blockPos.toCenterPos());
         mc.player.setYaw(rotation[0]);
@@ -41,5 +43,28 @@ public class AntiWebTool extends Tool {
         else waterPlacePos = null;
 
         delay = 5;
+    }
+
+    private BlockPos findIntersectingCobweb() {
+        Box box = mc.player.getBoundingBox();
+
+        int minX = MathHelper.floor(box.minX);
+        int minY = MathHelper.floor(box.minY);
+        int minZ = MathHelper.floor(box.minZ);
+        int maxX = MathHelper.floor(box.maxX);
+        int maxY = MathHelper.floor(box.maxY);
+        int maxZ = MathHelper.floor(box.maxZ);
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    if (mc.world.getBlockState(pos).isOf(Blocks.COBWEB)) {
+                        return pos;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
