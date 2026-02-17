@@ -2,6 +2,7 @@ package net.normalv.systems.tools.combat;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -14,7 +15,7 @@ import net.normalv.systems.tools.Tool;
 import static net.normalv.systems.fightbot.FightBot.WEB_SLOT;
 
 public class AutoWebTool extends Tool {
-    private Entity target;
+    private LivingEntity target;
 
     public AutoWebTool() {
         super("AutoWeb", "Webs enemies when possible", Category.COMBAT);

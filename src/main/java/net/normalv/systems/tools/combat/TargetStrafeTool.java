@@ -1,6 +1,7 @@
 package net.normalv.systems.tools.combat;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -12,13 +13,15 @@ public class TargetStrafeTool extends Tool {
     private boolean allowJump = true;
     private int switchTicks = 0;
 
+    private LivingEntity target;
+
     public TargetStrafeTool() {
         super("TargetStrafe", "Circles target", Category.COMBAT);
     }
 
     @Override
     public void onTick() {
-        Entity target = BlockFighter.targetManager.getCurrentTarget();
+        target = BlockFighter.targetManager.getCurrentTarget();
         if (target == null) return;
 
         double dist = mc.player.distanceTo(target);

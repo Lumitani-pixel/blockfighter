@@ -1,6 +1,7 @@
 package net.normalv.systems.tools.combat;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
@@ -10,7 +11,7 @@ import static net.normalv.systems.fightbot.FightBot.BOW_SLOT;
 
 public class AutoBowTool extends Tool {
 
-    private Entity target;
+    private LivingEntity target;
     private int drawTicks = 0;
 
     private static final int MAX_DRAW_TICKS = 20;

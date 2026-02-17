@@ -24,6 +24,11 @@ public class PlayerManager extends Manager{
         return livingEntity.isUsingItem() && livingEntity.getActiveItem().isOf(Items.SHIELD);
     }
 
+    public boolean isMacing(LivingEntity livingEntity) {
+        if(livingEntity == null) return false;
+        return !livingEntity.isOnGround() && livingEntity.fallDistance > 3 && livingEntity.getVelocity().getY() < 0.0f;
+    }
+
     public boolean isEatingGapple() {
         return mc.player.isUsingItem() && mc.player.getActiveItem().isOf(Items.GOLDEN_APPLE);
     }
@@ -35,6 +40,12 @@ public class PlayerManager extends Manager{
     public void switchSlot(int to) {
         mc.player.getInventory().setSelectedSlot(to);
         mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().getSelectedSlot()));
+    }
+
+    public float getHDistanceTo(Entity entity) {
+        float dx = (float) (mc.player.getX() - entity.getX());
+        float dz = (float) (mc.player.getZ() - entity.getZ());
+        return MathHelper.sqrt(dx * dx + dz * dz);
     }
 
     public float getMiningSpeed(ItemStack stack, BlockState state) {

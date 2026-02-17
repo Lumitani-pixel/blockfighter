@@ -1,6 +1,7 @@
 package net.normalv.systems.tools.combat;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
@@ -10,7 +11,7 @@ import net.normalv.systems.tools.Tool;
 import static net.normalv.systems.fightbot.FightBot.*;
 
 public class AuraTool extends Tool {
-    private Entity target;
+    private LivingEntity target;
 
     public AuraTool() {
         super("Aura", "Hits enemies", Category.COMBAT);

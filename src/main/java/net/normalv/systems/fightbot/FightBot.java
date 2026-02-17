@@ -23,7 +23,7 @@ import java.util.Random;
 
 //TODO: Implement POST movementpacket fixes so bot can play on real server without flags (GRIM POST FLAGS)
 public class FightBot implements Util {
-    private Entity target;
+    private LivingEntity target;
     private double maxReach = 3.0;
     private boolean enabled = false;
     private boolean healing = false;
@@ -63,6 +63,7 @@ public class FightBot implements Util {
 
         updateTarget();
         if (target == null) {
+            disableAllCombatModules();
             state = FightState.IDLE;
             return;
         }
@@ -157,7 +158,7 @@ public class FightBot implements Util {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
             if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
-            if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((LivingEntity) target)) autoShieldTool.disable();
+            if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking(target)) autoShieldTool.disable();
             if(autoWindChargeTool.isEnabled()) autoWindChargeTool.disable();
 
             return;
@@ -168,7 +169,7 @@ public class FightBot implements Util {
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(!auraTool.isEnabled()) auraTool.enable();
         if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
-        if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((LivingEntity) target)) autoShieldTool.enable();
+        if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking(target)) autoShieldTool.enable();
         if(!autoWebTool.isEnabled()) autoWebTool.enable();
         if(!antiWebTool.isEnabled()) antiWebTool.enable();
     }
@@ -177,7 +178,7 @@ public class FightBot implements Util {
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(auraTool.isEnabled()) auraTool.disable();
         if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
-        if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking((LivingEntity) target)) autoShieldTool.disable();
+        if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking(target)) autoShieldTool.disable();
         if(autoWebTool.isEnabled()) autoWebTool.disable();
         if(antiWebTool.isEnabled()) antiWebTool.disable();
         if(autoWindChargeTool.isEnabled()) autoWindChargeTool.disable();
@@ -257,7 +258,7 @@ public class FightBot implements Util {
         return enabled;
     }
 
-    public Entity getTarget() {
+    public LivingEntity getTarget() {
         return target;
     }
 

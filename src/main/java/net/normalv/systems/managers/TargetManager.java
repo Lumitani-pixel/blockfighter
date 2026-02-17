@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class TargetManager extends Manager {
-    private Entity currentTarget;
+    private LivingEntity currentTarget;
     private TargetSorting targetSorting = TargetSorting.DISTANCE;
     private List<Class<? extends Entity>> permittedEntities = new ArrayList<>();
 
@@ -65,13 +65,13 @@ public class TargetManager extends Manager {
         List<Entity> targets = getEntities(targetSorting);
 
         if (!targets.isEmpty()) {
-            currentTarget = targets.getFirst();
+            currentTarget = (LivingEntity) targets.getFirst();
         } else {
             currentTarget = null;
         }
     }
 
-    public Entity getCurrentTarget() {
+    public LivingEntity getCurrentTarget() {
         return currentTarget;
     }
 
