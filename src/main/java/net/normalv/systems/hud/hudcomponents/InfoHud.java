@@ -14,8 +14,7 @@ import java.awt.*;
 public class InfoHud implements Util {
 
     private static final Identifier HUD_ELEMENT = VanillaHudElements.MISC_OVERLAYS;
-    private static final Identifier HUD_ID =
-            Identifier.of(BlockFighter.MOD_ID, "info_hud");
+    private static final Identifier HUD_ID = Identifier.of(BlockFighter.MOD_ID, "info_hud");
 
     // smooth values
     private static float healthAnim = 0;
@@ -41,7 +40,7 @@ public class InfoHud implements Util {
 
         ctx.drawTextWithShadow(
                 mc.textRenderer,
-                "FIGHTBOT // " + bot.state,
+                "FIGHTBOT / " + bot.state,
                 x + 6,
                 y + 6,
                 Color.WHITE.hashCode()
@@ -65,19 +64,18 @@ public class InfoHud implements Util {
     }
 
     private static void drawCombat(DrawContext ctx, int x, int y, FightBot bot, Color accent) {
-        panel(ctx, x, y, 120, 48, accent);
+        panel(ctx, x, y, 120, 70, accent);
 
         float cd = mc.player.getAttackCooldownProgress(0);
         cooldownAnim += (cd - cooldownAnim) * 0.25f;
-
-        boolean canCrit =
-                !mc.player.isOnGround() && mc.player.getVelocity().y < -0.08;
+        boolean canCrit = !mc.player.isOnGround() && mc.player.getVelocity().y < -0.08;
 
         ctx.drawTextWithShadow(mc.textRenderer,
                 "CD",
                 x + 6,
                 y + 6,
-                Color.LIGHT_GRAY.hashCode());
+                Color.LIGHT_GRAY.hashCode()
+        );
 
         drawBar(ctx, x + 6, y + 16, 90, cooldownAnim, new Color(80, 160, 255));
 
@@ -87,6 +85,14 @@ public class InfoHud implements Util {
                 x + 6,
                 y + 28,
                 canCrit ? Color.GREEN.hashCode() : Color.GRAY.hashCode()
+        );
+
+        ctx.drawTextWithShadow(
+                mc.textRenderer,
+                "DISTANCE " + format(mc.player.distanceTo(bot.getTarget()))  + " / " + bot.getMaxReach(),
+                x + 6,
+                y + 50,
+                mc.player.distanceTo(bot.getTarget()) > bot.getMaxReach() ? Color.LIGHT_GRAY.hashCode() : Color.GREEN.hashCode()
         );
     }
 
