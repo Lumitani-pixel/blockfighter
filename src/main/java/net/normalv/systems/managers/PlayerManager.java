@@ -23,7 +23,7 @@ public class PlayerManager extends Manager{
 
     public boolean isMacing(LivingEntity livingEntity) {
         if(livingEntity == null) return false;
-        return !livingEntity.isOnGround() && livingEntity.fallDistance > 3 && livingEntity.getVelocity().getY() < 0.0f;
+        return !livingEntity.isOnGround() && livingEntity.fallDistance > 3 && livingEntity.getVelocity().getY() < -0.08f;
     }
 
     public boolean isEatingGapple() {

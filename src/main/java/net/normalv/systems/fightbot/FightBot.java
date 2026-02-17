@@ -170,7 +170,7 @@ public class FightBot implements Util {
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(!auraTool.isEnabled()) auraTool.enable();
         if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
-        if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking(target)) autoShieldTool.enable();
+        if(!autoShieldTool.isEnabled()) autoShieldTool.enable();
         if(!autoWebTool.isEnabled()) autoWebTool.enable();
         if(!antiWebTool.isEnabled()) antiWebTool.enable();
     }
@@ -179,7 +179,7 @@ public class FightBot implements Util {
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(auraTool.isEnabled()) auraTool.disable();
         if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
-        if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking(target)) autoShieldTool.disable();
+        if(autoShieldTool.isEnabled()) autoShieldTool.disable();
         if(autoWebTool.isEnabled()) autoWebTool.disable();
         if(antiWebTool.isEnabled()) antiWebTool.disable();
         if(autoWindChargeTool.isEnabled()) autoWindChargeTool.disable();

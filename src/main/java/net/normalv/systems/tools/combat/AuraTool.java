@@ -29,7 +29,7 @@ public class AuraTool extends Tool {
             if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
         }
 
-        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach)) return;
+        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) || BlockFighter.playerManager.isMacing(target)) return;
 
         if (target instanceof PlayerEntity targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer)) {
             handleShieldBreak(target);
