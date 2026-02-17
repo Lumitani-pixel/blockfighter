@@ -50,6 +50,8 @@ public class AuraTool extends Tool {
         if (mc.player.getAttackCooldownProgress(0.5f) >= 1.0f) {
             BlockFighter.playerManager.lookAt(target);
 
+            if(shouldCrit() && !canCrit()) return;
+
             startWTap();
             mc.interactionManager.attackEntity(mc.player, target);
             mc.player.swingHand(Hand.MAIN_HAND);
@@ -71,5 +73,13 @@ public class AuraTool extends Tool {
         mc.options.forwardKey.setPressed(false);
         mc.options.sprintKey.setPressed(true);
         mc.options.forwardKey.setPressed(true);
+    }
+
+    private boolean shouldCrit() {
+        return !mc.player.isOnGround() && !BlockFighter.playerManager.isBlocking(target);
+    }
+
+    private boolean canCrit() {
+        return !mc.player.isOnGround() && mc.player.getVelocity().getY() < -0.08;
     }
 }
