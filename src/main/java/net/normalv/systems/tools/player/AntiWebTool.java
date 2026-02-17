@@ -42,7 +42,7 @@ public class AntiWebTool extends Tool {
         if(waterPlacePos == null) waterPlacePos = blockPos.up();
         else waterPlacePos = null;
 
-        delay = 5;
+        delay = 6;
     }
 
     private BlockPos findIntersectingCobweb() {
