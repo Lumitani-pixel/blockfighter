@@ -31,6 +31,8 @@ public class AntiWebTool extends Tool {
 
         BlockPos blockPos = waterPlacePos == null ? findIntersectingCobweb() : waterPlacePos;
 
+        if(blockPos == null) return;
+
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), blockPos.toCenterPos());
         mc.player.setYaw(rotation[0]);
         mc.player.setPitch(rotation[1]);

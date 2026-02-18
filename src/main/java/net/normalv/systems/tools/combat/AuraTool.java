@@ -1,10 +1,12 @@
 package net.normalv.systems.tools.combat;
 
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -26,10 +28,11 @@ public class AuraTool extends Tool {
 
         if (BlockFighter.playerManager.isEatingGapple()) {
             mc.interactionManager.stopUsingItem(mc.player);
-            if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
+            mc.options.useKey.setPressed(false);
         }
 
-        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) || BlockFighter.playerManager.isMacing(target)) return;
+        // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
+        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach-0.1) || BlockFighter.playerManager.isMacing(target)) return;
 
         if (target instanceof PlayerEntity targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer)) {
             handleShieldBreak(target);
@@ -39,7 +42,9 @@ public class AuraTool extends Tool {
         if(BlockFighter.fightBot.isMacing() && mc.player.getInventory().getStack(MACE_SLOT).isOf(Items.MACE) && mc.player.fallDistance > 3 && mc.player.getVelocity().getY() < 0.0) {
             if(mc.player.getInventory().getSelectedSlot() != MACE_SLOT) BlockFighter.playerManager.switchSlot(MACE_SLOT);
 
-            BlockFighter.playerManager.lookAt(target);
+            Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
+            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+
             mc.interactionManager.attackEntity(mc.player, target);
             mc.player.swingHand(Hand.MAIN_HAND);
             return;
@@ -48,7 +53,9 @@ public class AuraTool extends Tool {
         if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
 
         if (mc.player.getAttackCooldownProgress(0.5f) >= 1.0f) {
-            BlockFighter.playerManager.lookAt(target);
+            Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
+            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+
 
             if(shouldCrit() && !canCrit()) return;
 
@@ -59,10 +66,16 @@ public class AuraTool extends Tool {
     }
 
     private void handleShieldBreak(Entity target) {
-        if(BlockFighter.playerManager.isBlocking(mc.player)) mc.interactionManager.stopUsingItem(mc.player);
+        if(BlockFighter.playerManager.isBlocking(mc.player)) {
+            mc.interactionManager.stopUsingItem(mc.player);
+            mc.options.useKey.setPressed(false);
+        }
 
         if(mc.player.getInventory().getSelectedSlot() != AXE_SLOT) BlockFighter.playerManager.switchSlot(AXE_SLOT);
-        BlockFighter.playerManager.lookAt(target);
+
+        Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
+        mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+
         mc.interactionManager.attackEntity(mc.player, target);
         mc.player.swingHand(Hand.MAIN_HAND);
     }

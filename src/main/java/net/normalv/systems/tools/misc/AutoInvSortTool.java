@@ -1,6 +1,7 @@
 package net.normalv.systems.tools.misc;
 
 import net.minecraft.screen.slot.SlotActionType;
+import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.util.player.inventory.SlotUtils;
 import net.normalv.util.player.inventory.sorting.InventorySortPlanner;
@@ -31,6 +32,8 @@ public class AutoInvSortTool extends Tool {
             disable();
             return;
         }
+
+        BlockFighter.fightBot.releaseAllKeys();
 
         moves.forEach(move -> {
             if(move.fromSlot() == move.toSlot()) return;

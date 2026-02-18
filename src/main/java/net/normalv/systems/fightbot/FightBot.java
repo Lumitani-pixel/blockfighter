@@ -132,6 +132,7 @@ public class FightBot implements Util {
             if(BlockFighter.playerManager.isWithinHitboxRange(target, maxReach)) {
                 mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
                 mc.interactionManager.attackEntity(mc.player, target);
+                mc.player.swingHand(Hand.MAIN_HAND);
             }
             mc.options.useKey.setPressed(true);
         }
@@ -191,7 +192,7 @@ public class FightBot implements Util {
         macing = false;
     }
 
-    private void releaseAllKeys() {
+    public void releaseAllKeys() {
         mc.options.backKey.setPressed(false);
         mc.options.forwardKey.setPressed(false);
         mc.options.jumpKey.setPressed(false);
