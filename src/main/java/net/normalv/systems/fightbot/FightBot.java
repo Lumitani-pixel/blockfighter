@@ -4,6 +4,7 @@ import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
@@ -22,7 +23,6 @@ import net.normalv.util.Util;
 
 import java.util.Random;
 
-//TODO: Implement POST movementpacket fixes so bot can play on real server without flags (GRIM POST FLAGS)
 public class FightBot implements Util {
     private LivingEntity target;
     private double maxReach = 3.0;
@@ -123,6 +123,7 @@ public class FightBot implements Util {
 
         if (BlockFighter.playerManager.isBlocking(mc.player)) {
             mc.interactionManager.stopUsingItem(mc.player);
+            mc.options.useKey.setPressed(false);
         }
 
         if(mc.player.getInventory().getSelectedSlot() != GAPPLE_SLOT) BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
@@ -132,7 +133,7 @@ public class FightBot implements Util {
                 mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
                 mc.interactionManager.attackEntity(mc.player, target);
             }
-            mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
+            mc.options.useKey.setPressed(true);
         }
 
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), target.getEyePos());
@@ -158,7 +159,7 @@ public class FightBot implements Util {
     private void tickCombat() {
         pathingHelper.stopPathing();
 
-        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach)) {
+        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getStack(BOW_SLOT).isOf(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS)) {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
             if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();

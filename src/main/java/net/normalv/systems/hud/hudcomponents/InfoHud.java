@@ -22,7 +22,7 @@ public class InfoHud implements Util {
 
     public static void render(DrawContext ctx, RenderTickCounter counter) {
         FightBot bot = BlockFighter.fightBot;
-        if (bot == null || !bot.isEnabled() || bot.infoHudTool == null || !bot.infoHudTool.isEnabled()) return;
+        if (bot == null || !bot.isEnabled() || bot.infoHudTool == null || !bot.infoHudTool.isEnabled() || bot.getTarget() == null) return;
 
         int sw = ctx.getScaledWindowWidth();
         int sh = ctx.getScaledWindowHeight();

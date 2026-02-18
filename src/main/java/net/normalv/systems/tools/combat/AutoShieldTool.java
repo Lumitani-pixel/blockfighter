@@ -2,7 +2,6 @@ package net.normalv.systems.tools.combat;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -13,7 +12,7 @@ public class AutoShieldTool extends Tool {
 
     @Override
     public void onDisabled() {
-        if(BlockFighter.playerManager.isBlocking(mc.player)) mc.interactionManager.stopUsingItem(mc.player);
+        if(BlockFighter.playerManager.isBlocking(mc.player)) mc.options.useKey.setPressed(false);
     }
 
     @Override
@@ -28,12 +27,15 @@ public class AutoShieldTool extends Tool {
                 mc.player.getAttackCooldownProgress(0.5f) >= 0.99f && !BlockFighter.playerManager.isMacing(target) ||
                 BlockFighter.fightBot.isMacing()) {
 
-            if(BlockFighter.playerManager.isBlocking(mc.player)) mc.interactionManager.stopUsingItem(mc.player);
+            if(BlockFighter.playerManager.isBlocking(mc.player)) {
+                mc.interactionManager.stopUsingItem(mc.player);
+                mc.options.useKey.setPressed(false);
+            }
             return;
         }
 
         if (!mc.player.isUsingItem()) {
-            mc.interactionManager.interactItem(mc.player, Hand.OFF_HAND);
+            mc.options.useKey.setPressed(true);
         }
     }
 }
