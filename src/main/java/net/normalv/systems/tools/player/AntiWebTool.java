@@ -12,8 +12,8 @@ import net.normalv.systems.tools.Tool;
 import static net.normalv.systems.fightbot.FightBot.WATER_SLOT;
 
 public class AntiWebTool extends Tool {
-    private BlockPos waterPlacePos = null;
-    private int delay = 6;
+    public BlockPos waterPlacePos = null;
+    private int delay = 5;
 
     public AntiWebTool() {
         super("AntiWeb", "Makes sure bot isn't webbed", Category.PLAYER);
@@ -26,6 +26,8 @@ public class AntiWebTool extends Tool {
                 (findIntersectingCobweb() == null && (!mc.world.getBlockState(mc.player.getBlockPos()).isOf(Blocks.WATER))))) return;
 
         if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.WATER_BUCKET) && findIntersectingCobweb() == null) return;
+        // Replace this with a potential sword mining option
+        else if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.BUCKET) && findIntersectingCobweb() != null) return;
 
         if(mc.player.getInventory().getSelectedSlot() != WATER_SLOT) BlockFighter.playerManager.switchSlot(WATER_SLOT);
 
@@ -44,18 +46,18 @@ public class AntiWebTool extends Tool {
         if(waterPlacePos == null) waterPlacePos = blockPos.up();
         else waterPlacePos = null;
 
-        delay = 6;
+        delay = 5;
     }
 
-    private BlockPos findIntersectingCobweb() {
+    public BlockPos findIntersectingCobweb() {
         Box box = mc.player.getBoundingBox();
 
         int minX = MathHelper.floor(box.minX);
         int minY = MathHelper.floor(box.minY);
         int minZ = MathHelper.floor(box.minZ);
-        int maxX = MathHelper.floor(box.maxX);
-        int maxY = MathHelper.floor(box.maxY);
-        int maxZ = MathHelper.floor(box.maxZ);
+        int maxX = MathHelper.ceil(box.maxX);
+        int maxY = MathHelper.ceil(box.maxY);
+        int maxZ = MathHelper.ceil(box.maxZ);
 
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {

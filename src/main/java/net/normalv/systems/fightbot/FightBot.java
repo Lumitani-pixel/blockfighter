@@ -1,7 +1,6 @@
 package net.normalv.systems.fightbot;
 
 import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
 import net.minecraft.registry.tag.ItemTags;
@@ -80,6 +79,8 @@ public class FightBot implements Util {
         // Ensure we can mace when falling a greater distance then 3 blocks
         if (!mc.player.isOnGround() && mc.player.getVelocity().y < 0 && mc.player.fallDistance > 3) {
             macing = true;
+        } else {
+            macing = false;
         }
 
         updateState();
@@ -122,8 +123,8 @@ public class FightBot implements Util {
         disableAllCombatModules();
 
         if (BlockFighter.playerManager.isBlocking(mc.player)) {
-            mc.interactionManager.stopUsingItem(mc.player);
             mc.options.useKey.setPressed(false);
+            mc.interactionManager.stopUsingItem(mc.player);
         }
 
         if(mc.player.getInventory().getSelectedSlot() != GAPPLE_SLOT) BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
@@ -135,6 +136,7 @@ public class FightBot implements Util {
                 mc.player.swingHand(Hand.MAIN_HAND);
             }
             mc.options.useKey.setPressed(true);
+            mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
         }
 
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), target.getEyePos());
@@ -186,7 +188,6 @@ public class FightBot implements Util {
         if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
         if(autoShieldTool.isEnabled()) autoShieldTool.disable();
         if(autoWebTool.isEnabled()) autoWebTool.disable();
-        if(antiWebTool.isEnabled()) antiWebTool.disable();
         if(autoWindChargeTool.isEnabled()) autoWindChargeTool.disable();
 
         macing = false;

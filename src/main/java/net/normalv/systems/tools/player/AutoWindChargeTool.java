@@ -15,7 +15,9 @@ public class AutoWindChargeTool extends Tool {
 
     @Override
     public void onTick() {
-        if(!mc.player.getInventory().getStack(WIND_CHARGE_SLOT).isOf(Items.WIND_CHARGE)) return;
+        if(!mc.player.getInventory().getStack(WIND_CHARGE_SLOT).isOf(Items.WIND_CHARGE) ||
+                BlockFighter.fightBot.antiWebTool.findIntersectingCobweb() != null ||
+        BlockFighter.fightBot.antiWebTool.waterPlacePos != null) return;
 
         if(!mc.options.jumpKey.isPressed()) mc.options.jumpKey.setPressed(true);
 
@@ -23,10 +25,14 @@ public class AutoWindChargeTool extends Tool {
             if(mc.player.getInventory().getSelectedSlot() != WIND_CHARGE_SLOT) BlockFighter.playerManager.switchSlot(WIND_CHARGE_SLOT);
             mc.player.setPitch(90);
 
+            if(!mc.options.useKey.isPressed()) mc.options.useKey.setPressed(true);
             mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
             mc.player.swingHand(Hand.MAIN_HAND);
 
+            BlockFighter.fightBot.setMacing(true);
+
             if(mc.player.getInventory().getSelectedSlot() != MACE_SLOT) BlockFighter.playerManager.switchSlot(MACE_SLOT);
+            if(mc.options.useKey.isPressed()) mc.options.useKey.setPressed(false);
         }
     }
 }

@@ -23,8 +23,8 @@ public class AutoBowTool extends Tool {
     @Override
     public void onDisabled() {
         drawTicks = 0;
-        mc.interactionManager.stopUsingItem(mc.player);
         mc.options.useKey.setPressed(false);
+        mc.interactionManager.stopUsingItem(mc.player);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class AutoBowTool extends Tool {
         // Start drawing
         if (!mc.player.isUsingItem()) {
             mc.options.useKey.setPressed(true);
+            mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
             drawTicks = 0;
             return;
         }
@@ -60,16 +61,16 @@ public class AutoBowTool extends Tool {
         drawTicks++;
 
         if (drawTicks >= MAX_DRAW_TICKS) {
-            mc.interactionManager.stopUsingItem(mc.player);
             mc.options.useKey.setPressed(false);
+            mc.interactionManager.stopUsingItem(mc.player);
             drawTicks = 0;
         }
     }
 
     private void resetBow() {
         if (mc.player.isUsingItem()) {
-            mc.interactionManager.stopUsingItem(mc.player);
             mc.options.useKey.setPressed(false);
+            mc.interactionManager.stopUsingItem(mc.player);
         }
         drawTicks = 0;
     }

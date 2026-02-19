@@ -27,8 +27,8 @@ public class AuraTool extends Tool {
         double maxReach = BlockFighter.fightBot.getMaxReach();
 
         if (BlockFighter.playerManager.isEatingGapple()) {
-            mc.interactionManager.stopUsingItem(mc.player);
             mc.options.useKey.setPressed(false);
+            mc.interactionManager.stopUsingItem(mc.player);
         }
 
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
@@ -50,7 +50,7 @@ public class AuraTool extends Tool {
             return;
         }
 
-        if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
+        if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT && !BlockFighter.fightBot.isMacing()) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
 
         if (mc.player.getAttackCooldownProgress(0.5f) >= 1.0f) {
             Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
@@ -67,8 +67,8 @@ public class AuraTool extends Tool {
 
     private void handleShieldBreak(Entity target) {
         if(BlockFighter.playerManager.isBlocking(mc.player)) {
-            mc.interactionManager.stopUsingItem(mc.player);
             mc.options.useKey.setPressed(false);
+            mc.interactionManager.stopUsingItem(mc.player);
         }
 
         if(mc.player.getInventory().getSelectedSlot() != AXE_SLOT) BlockFighter.playerManager.switchSlot(AXE_SLOT);
@@ -89,7 +89,7 @@ public class AuraTool extends Tool {
     }
 
     private boolean shouldCrit() {
-        return !mc.player.isOnGround() && !BlockFighter.playerManager.isBlocking(target);
+        return !mc.player.isOnGround() && !BlockFighter.playerManager.isBlocking(target) && BlockFighter.fightBot.antiWebTool.findIntersectingCobweb() == null;
     }
 
     private boolean canCrit() {
