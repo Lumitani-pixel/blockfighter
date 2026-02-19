@@ -44,7 +44,8 @@ public class AntiWebTool extends Tool {
         mc.player.swingHand(Hand.MAIN_HAND);
 
         if(waterPlacePos == null) waterPlacePos = blockPos.up();
-        else waterPlacePos = null;
+        // Make sure we actually took the water
+        else if(!mc.world.getBlockState(waterPlacePos).isOf(Blocks.WATER)) waterPlacePos = null;
 
         delay = 5;
     }
