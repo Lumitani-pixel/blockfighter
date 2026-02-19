@@ -26,9 +26,16 @@ public class AutoShieldTool extends Tool {
 
         if (!mc.player.getInventory().getStack(40).isOf(Items.SHIELD)) return;
 
-        if (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach()+0.9) ||
+        if(BlockFighter.playerManager.isMacing(target)) {
+            if (!mc.player.isUsingItem()) {
+                mc.options.useKey.setPressed(true);
+                mc.interactionManager.interactItem(mc.player, Hand.OFF_HAND);
+            }
+            return;
+        }
+        else if (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach()+0.9) ||
                 BlockFighter.playerManager.shouldHeal() ||
-                mc.player.getAttackCooldownProgress(0.5f) >= 0.99f && !BlockFighter.playerManager.isMacing(target) ||
+                mc.player.getAttackCooldownProgress(0.5f) >= 0.99f ||
                 BlockFighter.fightBot.isMacing()) {
 
             if(BlockFighter.playerManager.isBlocking(mc.player)) {
