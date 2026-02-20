@@ -21,6 +21,7 @@ public class InventoryUtils {
         WATER,
         WIND_CHARGE,
         MACE,
+        SPEAR,
         HELMET,
         CHESTPLATE,
         LEGGINGS,

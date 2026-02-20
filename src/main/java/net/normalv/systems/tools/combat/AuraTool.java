@@ -13,6 +13,8 @@ import net.normalv.systems.tools.Tool;
 import static net.normalv.systems.fightbot.FightBot.*;
 
 public class AuraTool extends Tool {
+    private double minSpearVelocity = 20.0;
+
     private LivingEntity target;
 
     public AuraTool() {
@@ -25,10 +27,31 @@ public class AuraTool extends Tool {
         if (target == null || BlockFighter.fightBot.isHealing()) return;
 
         double maxReach = BlockFighter.fightBot.getMaxReach();
+        double spearReach = BlockFighter.fightBot.getSpearReach();
 
         if (BlockFighter.playerManager.isEatingGapple()) {
             mc.options.useKey.setPressed(false);
             mc.interactionManager.stopUsingItem(mc.player);
+        }
+
+        // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
+        if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach-0.1) &&
+                !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach-0.1) ||
+                (mc.player.getVelocity().subtract(target.getVelocity()).length() * 20.0) > minSpearVelocity) {
+
+            if(mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
+
+            Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
+            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+
+            if((mc.player.getVelocity().subtract(target.getVelocity()).length() * 20.0) > minSpearVelocity) {
+                if(!mc.options.useKey.isPressed()) mc.options.useKey.setPressed(true);
+                if(!mc.player.isUsingItem()) mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
+            }
+            else if (mc.player.getAttackCooldownProgress(0.5f) >= 1.0f) {
+                mc.interactionManager.attackEntity(mc.player, target);
+                mc.player.swingHand(Hand.MAIN_HAND);
+            }
         }
 
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)

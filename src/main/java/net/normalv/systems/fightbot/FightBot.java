@@ -25,6 +25,7 @@ import java.util.Random;
 public class FightBot implements Util {
     private LivingEntity target;
     private double maxReach = 3.0;
+    private double spearReach = 4.5;
     private boolean enabled = false;
     private boolean healing = false;
     private boolean macing = false;
@@ -36,6 +37,7 @@ public class FightBot implements Util {
     public static final int BOW_SLOT = 4;
     public static final int WEB_SLOT = 5;
     public static final int WATER_SLOT = 6;
+    public static final int SPEAR_SLOT = 7;
     public static final int GAPPLE_SLOT = 8;
 
     public AuraTool auraTool;
@@ -99,7 +101,8 @@ public class FightBot implements Util {
             return;
         }
 
-        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) && target.getEntity().getHealth() > 10.0f) {
+        if ((mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) && !BlockFighter.playerManager.isWithinHitboxRange(target, spearReach)) ||
+                !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) && target.getEntity().getHealth() > 10.0f) {
             state = FightState.CHASING;
             return;
         }
@@ -153,6 +156,7 @@ public class FightBot implements Util {
 
     private void tickChasing() {
         disableAllCombatModules();
+        if(mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) && mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
         pathingHelper.goToEntity(target);
     }
 
@@ -274,6 +278,10 @@ public class FightBot implements Util {
 
     public double getMaxReach() {
         return maxReach;
+    }
+
+    public double getSpearReach() {
+        return spearReach;
     }
 
     public void setMaxReach(double maxReach) {
