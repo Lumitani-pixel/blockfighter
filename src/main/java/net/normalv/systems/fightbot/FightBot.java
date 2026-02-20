@@ -101,7 +101,8 @@ public class FightBot implements Util {
             return;
         }
 
-        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) && target.getEntity().getHealth() > 10.0f) {
+        if ((mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) && !BlockFighter.playerManager.isWithinHitboxRange(target, spearReach)) ||
+                !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) && target.getEntity().getHealth() > 10.0f) {
             state = FightState.CHASING;
             return;
         }
@@ -155,6 +156,7 @@ public class FightBot implements Util {
 
     private void tickChasing() {
         disableAllCombatModules();
+        if(mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) && mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
         pathingHelper.goToEntity(target);
     }
 
