@@ -1,6 +1,5 @@
 package net.normalv.systems.tools.combat;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;

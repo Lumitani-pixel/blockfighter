@@ -31,7 +31,8 @@ public class AutoWebTool extends Tool {
                 mc.player.distanceTo(target) > BlockFighter.fightBot.getMaxReach() ||
                 mc.world.getBlockState(target.getBlockPos()).isOf(Blocks.COBWEB) ||
                 mc.world.getBlockState(target.getBlockPos()).isOf(Blocks.WATER) ||
-                mc.world.getBlockState(target.getBlockPos().up()).isOf(Blocks.WATER)) return;
+                mc.world.getBlockState(target.getBlockPos().up()).isOf(Blocks.WATER) ||
+                (mc.player.getBlockPos().getX() == target.getBlockPos().getX() && mc.player.getBlockPos().getZ() == target.getBlockPos().getZ())) return;
 
         if(mc.player.getInventory().getSelectedSlot() != WEB_SLOT) BlockFighter.playerManager.switchSlot(WEB_SLOT);
 

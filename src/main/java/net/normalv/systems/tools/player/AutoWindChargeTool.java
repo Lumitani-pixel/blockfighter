@@ -17,7 +17,7 @@ public class AutoWindChargeTool extends Tool {
     public void onTick() {
         if(!mc.player.getInventory().getStack(WIND_CHARGE_SLOT).isOf(Items.WIND_CHARGE) ||
                 BlockFighter.fightBot.antiWebTool.findIntersectingCobweb() != null ||
-        BlockFighter.fightBot.antiWebTool.waterPlacePos != null) return;
+                BlockFighter.fightBot.antiWebTool.waterPlacePos != null) return;
 
         if(!mc.options.jumpKey.isPressed()) mc.options.jumpKey.setPressed(true);
 

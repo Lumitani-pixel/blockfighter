@@ -5,6 +5,7 @@ import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
@@ -35,8 +36,42 @@ public class PlayerManager extends Manager{
     }
 
     public void switchSlot(int to) {
+        int current = mc.player.getInventory().getSelectedSlot();
+        if (current == to) return;
         mc.player.getInventory().setSelectedSlot(to);
         mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().getSelectedSlot()));
+    }
+
+    public void switchToItem(ItemStack matching) {
+        if (matching.isEmpty()) return;
+        for (int i = 0; i <= 8; i++) {
+            if (mc.player.getInventory().getStack(i).isOf(matching.getItem())) {
+                switchSlot(i);
+                return;
+            }
+        }
+    }
+
+    public void switchToItem(Item... items) {
+        for (Item item : items) {
+            for (int i = 0; i <= 8; i++) {
+                if (mc.player.getInventory().getStack(i).isOf(item)) {
+                    switchSlot(i);
+                    return;
+                }
+            }
+        }
+    }
+
+    public int findSlotWithItem(Item... items) {
+        for (Item item : items) {
+            for (int i = 0; i <= 8; i++) {
+                if (mc.player.getInventory().getStack(i).isOf(item)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     public float getHDistanceTo(Entity entity) {

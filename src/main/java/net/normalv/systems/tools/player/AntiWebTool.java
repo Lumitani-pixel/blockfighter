@@ -26,7 +26,7 @@ public class AntiWebTool extends Tool {
                 (findIntersectingCobweb() == null && (!mc.world.getBlockState(mc.player.getBlockPos()).isOf(Blocks.WATER))))) return;
 
         if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.WATER_BUCKET) && findIntersectingCobweb() == null) return;
-        // Replace this with a potential sword mining option
+            // Replace this with a potential sword mining option
         else if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.BUCKET) && findIntersectingCobweb() != null) return;
 
         if(mc.player.getInventory().getSelectedSlot() != WATER_SLOT) BlockFighter.playerManager.switchSlot(WATER_SLOT);
@@ -44,7 +44,7 @@ public class AntiWebTool extends Tool {
         mc.player.swingHand(Hand.MAIN_HAND);
 
         if(waterPlacePos == null) waterPlacePos = blockPos.up();
-        // Make sure we actually took the water
+            // Make sure we actually took the water
         else if(!mc.world.getBlockState(waterPlacePos).isOf(Blocks.WATER)) waterPlacePos = null;
 
         delay = 5;

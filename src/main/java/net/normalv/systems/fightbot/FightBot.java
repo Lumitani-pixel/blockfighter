@@ -56,8 +56,6 @@ public class FightBot implements Util {
 
     private Random random = new Random();
 
-    private int ticksTillInventoryRefresh = 500;
-
     public FightBot() {
         EVENT_BUS.register(this);
     }
@@ -71,11 +69,6 @@ public class FightBot implements Util {
             releaseAllKeys();
             state = FightState.IDLE;
             return;
-        }
-
-        if(--ticksTillInventoryRefresh <= 0) {
-            if(!autoInvSortTool.isEnabled()) autoInvSortTool.enable();
-            ticksTillInventoryRefresh = 500;
         }
 
         // Ensure we can mace when falling a greater distance then 3 blocks
