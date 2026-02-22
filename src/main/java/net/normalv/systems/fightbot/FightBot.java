@@ -156,7 +156,16 @@ public class FightBot implements Util {
 
     private void tickChasing() {
         disableAllCombatModules();
-        if(mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) && mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
+
+        if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isMacing(target)){
+            if(mc.player.getInventory().getSelectedSlot() == SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
+            autoShieldTool.enable();
+        }
+
+        if(mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) &&
+                mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT &&
+                !BlockFighter.playerManager.isMacing(target)) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
+
         pathingHelper.goToEntity(target);
     }
 
@@ -190,7 +199,7 @@ public class FightBot implements Util {
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(auraTool.isEnabled()) auraTool.disable();
         if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
-        if(autoShieldTool.isEnabled()) autoShieldTool.disable();
+        if(autoShieldTool.isEnabled() && !BlockFighter.playerManager.isMacing(target)) autoShieldTool.disable();
         if(autoWebTool.isEnabled()) autoWebTool.disable();
         if(autoWindChargeTool.isEnabled()) autoWindChargeTool.disable();
 

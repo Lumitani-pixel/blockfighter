@@ -15,7 +15,6 @@ import java.util.function.Predicate;
 public class TargetManager extends Manager {
     private LivingEntity currentTarget;
     private TargetSorting targetSorting = TargetSorting.DISTANCE;
-    private List<Class<? extends Entity>> permittedEntities = new ArrayList<>();
 
     public boolean allowPlayer = true;
     public boolean allowHostiles = true;

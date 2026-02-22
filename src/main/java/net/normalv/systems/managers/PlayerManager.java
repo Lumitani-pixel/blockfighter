@@ -21,10 +21,9 @@ public class PlayerManager extends Manager{
         return livingEntity.isUsingItem() && livingEntity.getActiveItem().isOf(Items.SHIELD);
     }
 
-    //FIXME: THIS IS BAD VERY BAD however falldistance stays at 0.0 and velocity is not quiet predictable
     public boolean isMacing(LivingEntity livingEntity) {
         if(livingEntity == null) return false;
-        return !livingEntity.isOnGround() && livingEntity.getMainHandStack().isOf(Items.MACE);
+        return !livingEntity.isOnGround() && livingEntity.getMainHandStack().isOf(Items.MACE) && isWithinHitboxRangeHorizontal(livingEntity, 4);
     }
 
     public boolean isEatingGapple() {
