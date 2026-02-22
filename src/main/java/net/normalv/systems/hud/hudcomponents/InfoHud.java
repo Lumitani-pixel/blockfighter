@@ -32,7 +32,7 @@ public class InfoHud implements Util {
         drawTopStatus(ctx, sw / 2 - 70, 52, bot, accent);
         drawVitals(ctx, 12, sh / 2 - 40, accent);
         drawCombat(ctx, sw - 140, sh / 2 - 40, bot, accent);
-        drawMotion(ctx, sw / 2 - 90, sh - 42, bot, accent);
+        drawMotion(ctx, sw / 2 - 90, sh - 62, bot, accent);
     }
 
     private static void drawTopStatus(DrawContext ctx, int x, int y, FightBot bot, Color accent) {
