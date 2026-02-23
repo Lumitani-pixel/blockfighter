@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.normalv.BlockFighter;
@@ -36,7 +37,8 @@ public class AuraTool extends Tool {
 
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
         if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach-0.1) &&
-                !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach-0.1) ||
+                !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach-0.1) &&
+                mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) ||
                 (mc.player.getVelocity().subtract(target.getVelocity()).length() * 20.0) > minSpearVelocity) {
 
             if(mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
