@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.normalv.BlockFighter;
@@ -25,6 +26,25 @@ public class PlayerManager extends Manager{
     public boolean isMacing(LivingEntity livingEntity) {
         if(livingEntity == null) return false;
         return !livingEntity.isOnGround() && livingEntity.getMainHandStack().isOf(Items.MACE) && isWithinHitboxRangeHorizontal(livingEntity, 4);
+    }
+
+    public boolean isSpearing(LivingEntity entity) {
+        if (entity == null || !entity.getMainHandStack().isIn(ItemTags.SPEARS)) return false;
+
+        double dx = mc.player.getX() - entity.getX();
+        double dz = mc.player.getZ() - entity.getZ();
+        double currentDist = Math.sqrt(dx * dx + dz * dz);
+
+        double lastDx = mc.player.lastX - entity.lastX;
+        double lastDz = mc.player.lastZ - entity.lastZ;
+        double lastDist = Math.sqrt(lastDx * lastDx + lastDz * lastDz);
+
+        if (currentDist >= lastDist) return false;
+
+        double blocksMoved = lastDist - currentDist;
+        double bps = blocksMoved * 20 * 5;
+
+        return bps > 15;
     }
 
     public boolean isEatingGapple() {

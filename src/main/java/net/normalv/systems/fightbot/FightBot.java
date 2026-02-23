@@ -157,14 +157,15 @@ public class FightBot implements Util {
     private void tickChasing() {
         disableAllCombatModules();
 
-        if(!autoShieldTool.isEnabled() && BlockFighter.playerManager.isMacing(target)){
+        if(!autoShieldTool.isEnabled() && (BlockFighter.playerManager.isMacing(target) || BlockFighter.playerManager.isSpearing(target))){
             if(mc.player.getInventory().getSelectedSlot() == SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
             autoShieldTool.enable();
         }
 
         if(mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) &&
                 mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT &&
-                !BlockFighter.playerManager.isMacing(target)) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
+                !BlockFighter.playerManager.isMacing(target) &&
+                !BlockFighter.playerManager.isSpearing(target)) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
 
         pathingHelper.goToEntity(target);
     }
