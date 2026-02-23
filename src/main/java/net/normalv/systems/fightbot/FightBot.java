@@ -54,6 +54,8 @@ public class FightBot implements Util {
     private PathingHelper pathingHelper = new PathingHelper();
     public FightState state = FightState.IDLE;
 
+    private int ticksTillInventoryRefresh = 500;
+
     private Random random = new Random();
 
     public FightBot() {
@@ -64,11 +66,16 @@ public class FightBot implements Util {
         if (!enabled) return;
 
         updateTarget();
-        if (target == null) {
+        if (target == null || !target.isAlive()) {
             disableAllCombatModules();
             releaseAllKeys();
             state = FightState.IDLE;
             return;
+        }
+
+        if(--ticksTillInventoryRefresh <= 0) {
+            if(!autoInvSortTool.isEnabled()) autoInvSortTool.enable();
+            ticksTillInventoryRefresh = 500;
         }
 
         // Ensure we can mace when falling a greater distance then 3 blocks

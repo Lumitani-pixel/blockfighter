@@ -12,6 +12,7 @@ public class AutoInvSortTool extends Tool {
 
     private final InventorySortPlanner planner = new InventorySortPlanner();
     private int rerunCounter = 6;
+    private int initialSlot;
 
     public AutoInvSortTool() {
         super("AutoInvSort", "Sorts inventory for bot to properly use", Category.MISC);
@@ -20,6 +21,12 @@ public class AutoInvSortTool extends Tool {
     @Override
     public void onEnabled() {
         rerunCounter = 6;
+        initialSlot = mc.player.getInventory().getSelectedSlot();
+    }
+
+    @Override
+    public void onDisabled() {
+        BlockFighter.playerManager.switchSlot(initialSlot);
     }
 
     @Override
@@ -38,7 +45,11 @@ public class AutoInvSortTool extends Tool {
         moves.forEach(move -> {
             if(move.fromSlot() == move.toSlot()) return;
 
-            if(move.toSlot() >= 36 && move.toSlot() <= 39)  mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.fromSlot()), 0, SlotActionType.QUICK_MOVE, mc.player);
+            if(move.toSlot() >= 36 && move.toSlot() <= 40)  mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.fromSlot()), 0, SlotActionType.QUICK_MOVE, mc.player);
+            else if(move.toSlot() < 9) {
+                BlockFighter.playerManager.switchSlot(move.toSlot());
+                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.fromSlot()), mc.player.getInventory().getSelectedSlot(), SlotActionType.SWAP, mc.player);
+            }
             else {
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.fromSlot()), 0, SlotActionType.PICKUP, mc.player);
                 mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.toSlot()), 0, SlotActionType.PICKUP, mc.player);

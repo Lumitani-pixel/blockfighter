@@ -42,38 +42,6 @@ public class PlayerManager extends Manager{
         mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().getSelectedSlot()));
     }
 
-    public void switchToItem(ItemStack matching) {
-        if (matching.isEmpty()) return;
-        for (int i = 0; i <= 8; i++) {
-            if (mc.player.getInventory().getStack(i).isOf(matching.getItem())) {
-                switchSlot(i);
-                return;
-            }
-        }
-    }
-
-    public void switchToItem(Item... items) {
-        for (Item item : items) {
-            for (int i = 0; i <= 8; i++) {
-                if (mc.player.getInventory().getStack(i).isOf(item)) {
-                    switchSlot(i);
-                    return;
-                }
-            }
-        }
-    }
-
-    public int findSlotWithItem(Item... items) {
-        for (Item item : items) {
-            for (int i = 0; i <= 8; i++) {
-                if (mc.player.getInventory().getStack(i).isOf(item)) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
     public float getHDistanceTo(Entity entity) {
         float dx = (float) (mc.player.getX() - entity.getX());
         float dz = (float) (mc.player.getZ() - entity.getZ());
