@@ -102,7 +102,7 @@ public class FightBot implements Util {
         }
 
         if ((mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) && !BlockFighter.playerManager.isWithinHitboxRange(target, spearReach)) ||
-                !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) && target.getEntity().getHealth() > 10.0f) {
+                !BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && target.getEntity().getHealth() > 10.0f) {
             state = FightState.CHASING;
             return;
         }
