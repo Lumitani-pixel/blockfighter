@@ -26,7 +26,7 @@ public class AutoShieldTool extends Tool {
 
         if (!mc.player.getInventory().getStack(40).isOf(Items.SHIELD)) return;
 
-        if(BlockFighter.playerManager.isMacing(target) || BlockFighter.playerManager.isSpearing(target)) {
+        if(BlockFighter.playerManager.isMacing(target) || BlockFighter.playerManager.isSpearing(target) && BlockFighter.playerManager.isWithinHitboxRange(target, 5)) {
             if (!mc.player.isUsingItem()) {
                 mc.options.useKey.setPressed(true);
                 mc.interactionManager.interactItem(mc.player, Hand.OFF_HAND);

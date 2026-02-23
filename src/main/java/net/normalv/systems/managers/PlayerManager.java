@@ -25,7 +25,9 @@ public class PlayerManager extends Manager{
 
     public boolean isMacing(LivingEntity livingEntity) {
         if(livingEntity == null) return false;
-        return !livingEntity.isOnGround() && livingEntity.getMainHandStack().isOf(Items.MACE) && isWithinHitboxRangeHorizontal(livingEntity, 4);
+        if(livingEntity.lastY - livingEntity.getY() < 0.2) return false;
+
+        return !livingEntity.isOnGround() && isWithinHitboxRangeHorizontal(livingEntity, 5);
     }
 
     public boolean isSpearing(LivingEntity entity) {
