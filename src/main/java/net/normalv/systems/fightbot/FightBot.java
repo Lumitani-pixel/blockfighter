@@ -162,15 +162,14 @@ public class FightBot implements Util {
             mc.interactionManager.stopUsingItem(mc.player);
         }
 
-        if(!autoShieldTool.isEnabled() && (BlockFighter.playerManager.isMacing(target) || BlockFighter.playerManager.isSpearing(target))){
+        if(!autoShieldTool.isEnabled() && shieldIsRequired()){
             if(mc.player.getInventory().getSelectedSlot() == SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
             autoShieldTool.enable();
         }
 
         if(mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) &&
                 mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT &&
-                !BlockFighter.playerManager.isMacing(target) &&
-                !BlockFighter.playerManager.isSpearing(target)) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
+                !shieldIsRequired()) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
 
         pathingHelper.goToEntity(target);
     }
@@ -205,7 +204,7 @@ public class FightBot implements Util {
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(auraTool.isEnabled()) auraTool.disable();
         if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
-        if(autoShieldTool.isEnabled() && !BlockFighter.playerManager.isMacing(target)) autoShieldTool.disable();
+        if(autoShieldTool.isEnabled() && !shieldIsRequired()) autoShieldTool.disable();
         if(autoWebTool.isEnabled()) autoWebTool.disable();
         if(autoWindChargeTool.isEnabled()) autoWindChargeTool.disable();
 
@@ -218,6 +217,10 @@ public class FightBot implements Util {
         mc.options.jumpKey.setPressed(false);
         mc.options.leftKey.setPressed(false);
         mc.options.rightKey.setPressed(false);
+    }
+
+    public boolean shieldIsRequired() {
+        return BlockFighter.playerManager.isMacing(target) || BlockFighter.playerManager.isSpearing(target) || BlockFighter.playerManager.isUsingBow(target);
     }
 
     public void onAttackBlock(AttackBlockEvent event) {

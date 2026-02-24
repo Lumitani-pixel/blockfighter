@@ -53,6 +53,10 @@ public class PlayerManager extends Manager{
         return mc.player.isUsingItem() && mc.player.getActiveItem().isOf(Items.GOLDEN_APPLE);
     }
 
+    public boolean isUsingBow(LivingEntity livingEntity) {
+        return livingEntity.getMainHandStack().isOf(Items.BOW) && livingEntity.isUsingItem();
+    }
+
     public void lookAt(Entity target) {
         mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
     }
