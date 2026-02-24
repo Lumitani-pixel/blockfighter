@@ -9,7 +9,7 @@ import static net.normalv.systems.fightbot.FightBot.WATER_SLOT;
 
 public class AutoClutchTool extends Tool {
     private int minClutchDistance = 4;
-    private boolean placedWater = false;
+    public boolean placedWater = false;
 
     public AutoClutchTool() {
         super("AutoClutch", "Tries to clutch with water", Category.PLAYER);

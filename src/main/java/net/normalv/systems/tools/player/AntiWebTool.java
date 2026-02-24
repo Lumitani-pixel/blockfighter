@@ -27,7 +27,7 @@ public class AntiWebTool extends Tool {
 
         if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.WATER_BUCKET) && findIntersectingCobweb() == null) return;
             // Replace this with a potential sword mining option
-        else if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.BUCKET) && findIntersectingCobweb() != null) return;
+        else if(mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.BUCKET) && findIntersectingCobweb() != null && waterPlacePos == null) return;
 
         if(mc.player.getInventory().getSelectedSlot() != WATER_SLOT) BlockFighter.playerManager.switchSlot(WATER_SLOT);
 

@@ -197,7 +197,7 @@ public class FightBot implements Util {
 
         if(mc.player.getInventory().getStack(MACE_SLOT).isOf(Items.MACE) && !autoWindChargeTool.isEnabled()) autoWindChargeTool.enable();
 
-        if(autoClutchTool.isEnabled()) autoClutchTool.disable();
+        if(autoClutchTool.isEnabled() && !autoClutchTool.placedWater) autoClutchTool.disable();
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(!auraTool.isEnabled()) auraTool.enable();
         if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
