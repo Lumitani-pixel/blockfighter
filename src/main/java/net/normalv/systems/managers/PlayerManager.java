@@ -120,6 +120,22 @@ public class PlayerManager extends Manager{
         return (dx * dx + dz * dz) <= (range * range);
     }
 
+    public int getDistanceToGround(LivingEntity livingEntity) {
+        BlockPos pos = livingEntity.getBlockPos();
+
+        int distance = 0;
+        for (int y = pos.getY(); y >= 0; y--) {
+            BlockPos checkPos = new BlockPos(pos.getX(), y, pos.getZ());
+            BlockState state = mc.world.getBlockState(checkPos);
+            if (!state.isAir()) {
+                distance = pos.getY() - y;
+                break;
+            }
+        }
+
+        return distance;
+    }
+
     public float getMiningSpeed(ItemStack stack, BlockState state) {
         return stack.getMiningSpeedMultiplier(state);
     }

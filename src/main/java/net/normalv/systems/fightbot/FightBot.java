@@ -16,6 +16,7 @@ import net.normalv.systems.tools.client.SoundTool;
 import net.normalv.systems.tools.combat.*;
 import net.normalv.systems.tools.misc.AutoInvSortTool;
 import net.normalv.systems.tools.player.AntiWebTool;
+import net.normalv.systems.tools.player.AutoClutchTool;
 import net.normalv.systems.tools.player.AutoWindChargeTool;
 import net.normalv.systems.tools.render.TargetHudTool;
 import net.normalv.util.Util;
@@ -48,6 +49,7 @@ public class FightBot implements Util {
     public TargetStrafeTool targetStrafeTool;
     public AutoInvSortTool autoInvSortTool;
     public AutoWindChargeTool autoWindChargeTool;
+    public AutoClutchTool autoClutchTool;
 
     public InfoHudTool infoHudTool;
 
@@ -157,6 +159,8 @@ public class FightBot implements Util {
     private void tickChasing() {
         disableAllCombatModules();
 
+        if(!autoClutchTool.isEnabled()) autoClutchTool.enable();
+
         if(BlockFighter.playerManager.isEatingGapple()) {
             if(mc.options.useKey.isPressed()) mc.options.useKey.setPressed(false);
             mc.interactionManager.stopUsingItem(mc.player);
@@ -182,6 +186,7 @@ public class FightBot implements Util {
 
         if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getStack(BOW_SLOT).isOf(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS)) {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
+            if(!autoClutchTool.isEnabled()) autoClutchTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
             if(targetStrafeTool.isEnabled()) targetStrafeTool.disable();
             if(autoShieldTool.isEnabled() && BlockFighter.playerManager.isBlocking(target)) autoShieldTool.disable();
@@ -192,6 +197,7 @@ public class FightBot implements Util {
 
         if(mc.player.getInventory().getStack(MACE_SLOT).isOf(Items.MACE) && !autoWindChargeTool.isEnabled()) autoWindChargeTool.enable();
 
+        if(autoClutchTool.isEnabled()) autoClutchTool.disable();
         if(autoBowTool.isEnabled()) autoBowTool.disable();
         if(!auraTool.isEnabled()) auraTool.enable();
         if(!targetStrafeTool.isEnabled()) targetStrafeTool.enable();
@@ -240,6 +246,7 @@ public class FightBot implements Util {
         targetStrafeTool = BlockFighter.toolManager.getToolByClass(TargetStrafeTool.class);
         autoInvSortTool = BlockFighter.toolManager.getToolByClass(AutoInvSortTool.class);
         autoWindChargeTool = BlockFighter.toolManager.getToolByClass(AutoWindChargeTool.class);
+        autoClutchTool = BlockFighter.toolManager.getToolByClass(AutoClutchTool.class);
 
         infoHudTool = BlockFighter.toolManager.getToolByClass(InfoHudTool.class);
 
