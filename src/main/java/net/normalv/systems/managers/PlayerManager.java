@@ -11,6 +11,7 @@ import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.math.*;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.normalv.BlockFighter;
 
@@ -59,6 +60,18 @@ public class PlayerManager extends Manager{
 
     public void lookAt(Entity target) {
         mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+    }
+
+    public boolean canSeeEntity(Entity entity) {
+        Vec3d start = mc.player.getEyePos();
+        Vec3d end = entity.getBoundingBox().getCenter();
+
+        return mc.world.raycast(new RaycastContext(
+                start, end,
+                RaycastContext.ShapeType.VISUAL,
+                RaycastContext.FluidHandling.NONE,
+                mc.player
+        )).getBlockPos().equals(entity.getBlockPos());
     }
 
     public void switchSlot(int to) {
