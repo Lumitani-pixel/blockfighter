@@ -35,7 +35,7 @@ public class AuraTool extends Tool {
             mc.interactionManager.stopUsingItem(mc.player);
         }
 
-        if(!BlockFighter.playerManager.canSeeEntity(target)) return;
+        if(!BlockFighter.playerManager.canHit(target)) return;
 
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
         if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach-0.1) &&

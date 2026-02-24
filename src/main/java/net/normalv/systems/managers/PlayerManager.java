@@ -62,13 +62,13 @@ public class PlayerManager extends Manager{
         mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
     }
 
-    public boolean canSeeEntity(Entity entity) {
+    public boolean canHit(Entity entity) {
         Vec3d start = mc.player.getEyePos();
         Vec3d end = entity.getBoundingBox().getCenter();
 
         return mc.world.raycast(new RaycastContext(
                 start, end,
-                RaycastContext.ShapeType.VISUAL,
+                RaycastContext.ShapeType.OUTLINE,
                 RaycastContext.FluidHandling.NONE,
                 mc.player
         )).getBlockPos().equals(entity.getBlockPos());
