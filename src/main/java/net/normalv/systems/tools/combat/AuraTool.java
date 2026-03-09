@@ -16,6 +16,8 @@ import static net.normalv.systems.fightbot.FightBot.*;
 public class AuraTool extends Tool {
     private double minSpearVelocity = 20.0;
 
+    private boolean useShieldBreakWithMace = true;
+
     private LivingEntity target;
 
     public AuraTool() {
@@ -61,7 +63,7 @@ public class AuraTool extends Tool {
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
         if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach-0.1) || BlockFighter.playerManager.isMacing(target)) return;
 
-        if (target instanceof PlayerEntity targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer)) {
+        if (target instanceof PlayerEntity targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer) && (BlockFighter.fightBot.isMacing() && !useShieldBreakWithMace)) {
             handleShieldBreak(target);
             if(!BlockFighter.fightBot.isMacing()) return;
         }
@@ -71,6 +73,14 @@ public class AuraTool extends Tool {
 
             Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
             mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+
+            // Shield break tech
+            if(useShieldBreakWithMace) {
+                for(int i = 0; i<9; i++) {
+                    mc.interactionManager.attackEntity(mc.player, target);
+                    mc.player.swingHand(Hand.MAIN_HAND);
+                }
+            }
 
             mc.interactionManager.attackEntity(mc.player, target);
             mc.player.swingHand(Hand.MAIN_HAND);
