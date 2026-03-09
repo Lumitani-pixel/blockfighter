@@ -40,8 +40,8 @@ public class AuraTool extends Tool {
         if(!BlockFighter.playerManager.canHit(target)) return;
 
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
-        if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach-0.1) &&
-                !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach-0.1) &&
+        if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach) &&
+                !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) &&
                 mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) ||
                 (mc.player.getVelocity().subtract(target.getVelocity()).length() * 20.0) > minSpearVelocity) {
 
@@ -61,7 +61,7 @@ public class AuraTool extends Tool {
         }
 
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
-        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach-0.1) || BlockFighter.playerManager.isMacing(target)) return;
+        if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) || BlockFighter.playerManager.isMacing(target)) return;
 
         if (target instanceof PlayerEntity targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer) && (BlockFighter.fightBot.isMacing() && !useShieldBreakWithMace)) {
             handleShieldBreak(target);
@@ -76,7 +76,7 @@ public class AuraTool extends Tool {
 
             // Shield break tech
             if(useShieldBreakWithMace) {
-                for(int i = 0; i<9; i++) {
+                for(int i = 0; i<10; i++) {
                     mc.interactionManager.attackEntity(mc.player, target);
                     mc.player.swingHand(Hand.MAIN_HAND);
                 }

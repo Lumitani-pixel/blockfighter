@@ -90,11 +90,9 @@ public class PlayerManager extends Manager{
     public Vec3d getHitVec(Entity entity) {
         Box box = entity.getBoundingBox();
 
-        Vec3d eyes = mc.player.getEyePos();
-
-        double x = MathHelper.clamp(eyes.x, box.minX, box.maxX);
-        double y = MathHelper.clamp(eyes.y, box.minY, box.maxY);
-        double z = MathHelper.clamp(eyes.z, box.minZ, box.maxZ);
+        double x = MathHelper.clamp(mc.player.getX(), box.minX, box.maxX);
+        double y = MathHelper.clamp(mc.player.getY(), box.minY, box.maxY);
+        double z = MathHelper.clamp(mc.player.getZ(), box.minZ, box.maxZ);
 
         return new Vec3d(x, y, z);
     }
@@ -102,9 +100,9 @@ public class PlayerManager extends Manager{
     public boolean isWithinHitboxRange(Entity entity, double range) {
         Box box = entity.getBoundingBox();
 
-        double px = mc.player.getEyePos().getX();
-        double py = mc.player.getEyePos().getY();
-        double pz = mc.player.getEyePos().getZ();
+        double px = mc.player.getX();
+        double py = mc.player.getY();
+        double pz = mc.player.getZ();
 
         // Closest point on hitbox to player
         double cx = MathHelper.clamp(px, box.minX, box.maxX);
@@ -121,8 +119,8 @@ public class PlayerManager extends Manager{
     public boolean isWithinHitboxRangeHorizontal(Entity entity, double range) {
         Box box = entity.getBoundingBox();
 
-        double px = mc.player.getEyePos().getX();
-        double pz = mc.player.getEyePos().getZ();;
+        double px = mc.player.getX();
+        double pz = mc.player.getZ();;
 
         double cx = MathHelper.clamp(px, box.minX, box.maxX);
         double cz = MathHelper.clamp(pz, box.minZ, box.maxZ);
