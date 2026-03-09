@@ -104,6 +104,8 @@ public class AuraTool extends Tool {
         mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
 
         mc.interactionManager.attackEntity(mc.player, target);
+        mc.interactionManager.attackEntity(mc.player, target);
+        mc.interactionManager.attackEntity(mc.player, target);
         mc.player.swingHand(Hand.MAIN_HAND);
     }
 

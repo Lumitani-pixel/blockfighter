@@ -5,8 +5,7 @@ import net.minecraft.util.Hand;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
-import static net.normalv.systems.fightbot.FightBot.MACE_SLOT;
-import static net.normalv.systems.fightbot.FightBot.WIND_CHARGE_SLOT;
+import static net.normalv.systems.fightbot.FightBot.*;
 
 public class AutoWindChargeTool extends Tool {
     public AutoWindChargeTool() {
@@ -17,7 +16,7 @@ public class AutoWindChargeTool extends Tool {
     public void onTick() {
         if(!mc.player.getInventory().getStack(WIND_CHARGE_SLOT).isOf(Items.WIND_CHARGE) ||
                 BlockFighter.fightBot.antiWebTool.findIntersectingCobweb() != null ||
-                BlockFighter.fightBot.antiWebTool.waterPlacePos != null) return;
+                BlockFighter.playerManager.isMacing(BlockFighter.fightBot.getTarget())) return;
 
         if(!mc.options.jumpKey.isPressed()) mc.options.jumpKey.setPressed(true);
 
@@ -31,7 +30,7 @@ public class AutoWindChargeTool extends Tool {
 
             BlockFighter.fightBot.setMacing(true);
 
-            if(mc.player.getInventory().getSelectedSlot() != MACE_SLOT) BlockFighter.playerManager.switchSlot(MACE_SLOT);
+            if(mc.player.getInventory().getSelectedSlot() != AXE_SLOT) BlockFighter.playerManager.switchSlot(AXE_SLOT);
             if(mc.options.useKey.isPressed()) mc.options.useKey.setPressed(false);
         }
     }

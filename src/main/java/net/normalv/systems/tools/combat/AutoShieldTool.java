@@ -35,7 +35,7 @@ public class AutoShieldTool extends Tool {
         }
         else if (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach()+0.9) ||
                 BlockFighter.playerManager.shouldHeal() ||
-                mc.player.getAttackCooldownProgress(0.5f) >= 0.99f ||
+                (mc.player.getAttackCooldownProgress(0.5f) >= 0.99f && BlockFighter.fightBot.auraTool.isEnabled()) ||
                 BlockFighter.fightBot.isMacing()) {
 
             if(BlockFighter.playerManager.isBlocking(mc.player)) {

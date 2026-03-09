@@ -1,7 +1,6 @@
 package net.normalv.systems.tools.combat;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
@@ -28,6 +27,7 @@ public class AutoWebTool extends Tool {
         target = BlockFighter.fightBot.getTarget();
         if(target == null ||
                 !target.isOnGround() ||
+                !mc.world.getBlockState(target.getBlockPos().down()).isSolid() ||
                 mc.player.distanceTo(target) > BlockFighter.fightBot.getMaxReach() ||
                 mc.world.getBlockState(target.getBlockPos()).isOf(Blocks.COBWEB) ||
                 mc.world.getBlockState(target.getBlockPos()).isOf(Blocks.WATER) ||
