@@ -34,6 +34,7 @@ public class PathingHelper implements Util {
             mc.options.forwardKey.setPressed(true);
             mc.options.jumpKey.setPressed(allowJumping);
             mc.options.backKey.setPressed(false);
+
         } else if(mc.player.distanceTo(target) < 2.9) {
             mc.options.sprintKey.setPressed(false);
             mc.options.forwardKey.setPressed(false);

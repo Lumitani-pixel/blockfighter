@@ -75,7 +75,7 @@ public class AuraTool extends Tool {
             mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
 
             // Shield break tech
-            if(useShieldBreakWithMace) {
+            if(useShieldBreakWithMace && BlockFighter.playerManager.isBlocking(target)) {
                 for(int i = 0; i<10; i++) {
                     mc.interactionManager.attackEntity(mc.player, target);
                     mc.player.swingHand(Hand.MAIN_HAND);
