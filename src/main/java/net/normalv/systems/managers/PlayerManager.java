@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -69,15 +70,13 @@ public class PlayerManager extends Manager{
         Vec3 start = mc.player.getEyePosition();
         Vec3 end = entity.getBoundingBox().getCenter();
 
-        return true;
-
-        //FIXME idk this for new mappings
-//        return mc.level.raycast(new RaycastContext(
-//                start, end,
-//                RaycastContext.ShapeType.OUTLINE,
-//                RaycastContext.FluidHandling.NONE,
-//                mc.player
-//        )).getBlockPos().equals(entity.getBlockPos());
+        return mc.level.clip(new ClipContext(
+                start,
+                end,
+                ClipContext.Block.OUTLINE,
+                ClipContext.Fluid.NONE,
+                mc.player
+        )).getBlockPos().equals(entity.blockPosition());
     }
 
     public void switchSlot(int to) {
