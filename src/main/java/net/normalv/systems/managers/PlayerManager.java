@@ -16,6 +16,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 
@@ -77,6 +78,10 @@ public class PlayerManager extends Manager{
                 ClipContext.Fluid.NONE,
                 mc.player
         )).getBlockPos().equals(entity.blockPosition());
+    }
+
+    public boolean isViewBLocked(Entity entity) {
+        return mc.getCameraEntity().pick(Math.sqrt(mc.player.distanceToSqr(entity)) / 2, 1.0f, false).getType() == HitResult.Type.BLOCK;
     }
 
     public void switchSlot(int to) {

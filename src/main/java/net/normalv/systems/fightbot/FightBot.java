@@ -184,7 +184,7 @@ public class FightBot implements Util {
     private void tickCombat() {
         pathingHelper.stopPathing();
 
-        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS)) {
+        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS) && !BlockFighter.playerManager.isViewBLocked(target)) {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(!autoClutchTool.isEnabled()) autoClutchTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
