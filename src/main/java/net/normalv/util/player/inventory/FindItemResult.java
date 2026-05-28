@@ -1,6 +1,6 @@
 package net.normalv.util.player.inventory;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class FindItemResult {
     private int slot;

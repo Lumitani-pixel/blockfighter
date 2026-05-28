@@ -1,6 +1,6 @@
 package net.normalv.systems.command;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.ChatEvent;
 import net.normalv.event.system.Subscribe;
@@ -42,7 +42,7 @@ public class CommandExecutor implements Util {
 
         Command command = findCommand(name);
         if (command == null) {
-            BlockFighter.textManager.sendTextClientSide(Text.literal("Unknown command: " + name));
+            BlockFighter.textManager.sendTextClientSide(Component.literal("Unknown command: " + name));
             return;
         }
 

@@ -75,7 +75,7 @@ public class ToolManager extends Manager{
     }
 
     public List<Tool> getSortedByLength(List<Tool> unsortedTools) {
-        unsortedTools.sort(Comparator.comparingInt(tool -> mc.textRenderer.getWidth(tool.getDisplayName())));
+        unsortedTools.sort(Comparator.comparingInt(tool -> mc.font.width(tool.getDisplayName())));
         return unsortedTools;
     }
 

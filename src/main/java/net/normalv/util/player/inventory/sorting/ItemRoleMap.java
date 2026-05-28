@@ -1,7 +1,7 @@
 package net.normalv.util.player.inventory.sorting;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.normalv.util.player.inventory.InventoryUtils;
 
 import java.util.Set;

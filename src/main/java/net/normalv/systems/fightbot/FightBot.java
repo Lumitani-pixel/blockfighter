@@ -1,11 +1,11 @@
 package net.normalv.systems.fightbot;
 
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Items;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
@@ -81,7 +81,7 @@ public class FightBot implements Util {
         }
 
         // Ensure we can mace when falling a greater distance then 3 blocks
-        if (!mc.player.isOnGround() && mc.player.getVelocity().y < 0 && mc.player.fallDistance > 3) {
+        if (!mc.player.onGround() && mc.player.getDeltaMovement().y < 0 && mc.player.fallDistance > 3) {
             macing = true;
         } else {
             macing = false;
@@ -103,8 +103,8 @@ public class FightBot implements Util {
             return;
         }
 
-        if ((mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) && !BlockFighter.playerManager.isWithinHitboxRange(target, spearReach)) ||
-                !BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && target.getEntity().getHealth() > 10.0f) {
+        if ((mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) && !BlockFighter.playerManager.isWithinHitboxRange(target, spearReach)) ||
+                !BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && target.asLivingEntity().getHealth() > 10.0f) {
             state = FightState.CHASING;
             return;
         }
@@ -128,32 +128,32 @@ public class FightBot implements Util {
         disableAllCombatModules();
 
         if (BlockFighter.playerManager.isBlocking(mc.player)) {
-            mc.options.useKey.setPressed(false);
-            mc.interactionManager.stopUsingItem(mc.player);
+            mc.options.keyUse.setDown(false);
+            mc.gameMode.releaseUsingItem(mc.player);
         }
 
         if(mc.player.getInventory().getSelectedSlot() != GAPPLE_SLOT) BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
 
         if (!BlockFighter.playerManager.isEatingGapple()) {
             if(BlockFighter.playerManager.isWithinHitboxRange(target, maxReach)) {
-                mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
-                mc.interactionManager.attackEntity(mc.player, target);
-                mc.player.swingHand(Hand.MAIN_HAND);
+                mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+                mc.gameMode.attack(mc.player, target);
+                mc.player.swing(InteractionHand.MAIN_HAND);
             }
-            mc.options.useKey.setPressed(true);
-            mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
+            mc.options.keyUse.setDown(true);
+            mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
         }
 
-        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), target.getEyePos());
+        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
         rotation[0] = BlockFighter.playerManager.wrapYaw(rotation[0] + 180 + random.nextFloat(-20f, 20f));
 
-        mc.player.setYaw(rotation[0]);
-        mc.player.setPitch(rotation[1]);
-        mc.player.setHeadYaw(rotation[0]);
-        mc.options.sprintKey.setPressed(true);
-        mc.options.forwardKey.setPressed(true);
-        mc.options.jumpKey.setPressed(true);
-        mc.options.backKey.setPressed(false);
+        mc.player.setYRot(rotation[0]);
+        mc.player.setXRot(rotation[1]);
+        mc.player.setYHeadRot(rotation[0]);
+        mc.options.keySprint.setDown(true);
+        mc.options.keyUp.setDown(true);
+        mc.options.keyJump.setDown(true);
+        mc.options.keyDown.setDown(false);
     }
 
     private void tickChasing() {
@@ -162,8 +162,8 @@ public class FightBot implements Util {
         if(!autoClutchTool.isEnabled()) autoClutchTool.enable();
 
         if(BlockFighter.playerManager.isEatingGapple()) {
-            if(mc.options.useKey.isPressed()) mc.options.useKey.setPressed(false);
-            mc.interactionManager.stopUsingItem(mc.player);
+            if(mc.options.keyUse.isDown()) mc.options.keyUse.setDown(false);
+            mc.gameMode.releaseUsingItem(mc.player);
         }
 
         if(!autoShieldTool.isEnabled() && shieldIsRequired()){
@@ -171,7 +171,7 @@ public class FightBot implements Util {
             autoShieldTool.enable();
         }
 
-        if(mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) &&
+        if(mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) &&
                 mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT &&
                 !shieldIsRequired()) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
 
@@ -184,7 +184,7 @@ public class FightBot implements Util {
     private void tickCombat() {
         pathingHelper.stopPathing();
 
-        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getStack(BOW_SLOT).isOf(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS)) {
+        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS)) {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(!autoClutchTool.isEnabled()) autoClutchTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
@@ -195,7 +195,7 @@ public class FightBot implements Util {
             return;
         }
 
-        if(mc.player.getInventory().getStack(MACE_SLOT).isOf(Items.MACE) && !autoWindChargeTool.isEnabled()) autoWindChargeTool.enable();
+        if(mc.player.getInventory().getItem(MACE_SLOT).is(Items.MACE) && !autoWindChargeTool.isEnabled()) autoWindChargeTool.enable();
 
         if(autoClutchTool.isEnabled() && !autoClutchTool.placedWater) autoClutchTool.disable();
         if(autoBowTool.isEnabled()) autoBowTool.disable();
@@ -218,11 +218,11 @@ public class FightBot implements Util {
     }
 
     public void releaseAllKeys() {
-        mc.options.backKey.setPressed(false);
-        mc.options.forwardKey.setPressed(false);
-        mc.options.jumpKey.setPressed(false);
-        mc.options.leftKey.setPressed(false);
-        mc.options.rightKey.setPressed(false);
+        mc.options.keyDown.setDown(false);
+        mc.options.keyUp.setDown(false);
+        mc.options.keyJump.setDown(false);
+        mc.options.keyLeft.setDown(false);
+        mc.options.keyRight.setDown(false);
     }
 
     public boolean shieldIsRequired() {
@@ -265,13 +265,13 @@ public class FightBot implements Util {
     }
 
     private void enable(){
-        BlockFighter.textManager.sendTextClientSide(Text.literal("FightBot enabled"));
+        BlockFighter.textManager.sendTextClientSide(Component.literal("FightBot enabled"));
         enabled = true;
         onEnable();
     }
 
     private void disable() {
-        BlockFighter.textManager.sendTextClientSide(Text.literal("FightBot disabled"));
+        BlockFighter.textManager.sendTextClientSide(Component.literal("FightBot disabled"));
         enabled = false;
         onDisable();
     }

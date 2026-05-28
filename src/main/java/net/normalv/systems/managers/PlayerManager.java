@@ -1,18 +1,21 @@
 package net.normalv.systems.managers;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.util.math.*;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ServerboundContainerSlotStateChangedPacket;
+import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 
 public class PlayerManager extends Manager{
@@ -21,25 +24,25 @@ public class PlayerManager extends Manager{
 
     public boolean isBlocking(LivingEntity livingEntity) {
         if(livingEntity == null) return false;
-        return livingEntity.isUsingItem() && livingEntity.getActiveItem().isOf(Items.SHIELD);
+        return livingEntity.isUsingItem() && livingEntity.getActiveItem().is(Items.SHIELD);
     }
 
     public boolean isMacing(LivingEntity livingEntity) {
         if(livingEntity == null) return false;
-        if(livingEntity.lastY - livingEntity.getY() < 0.2) return false;
+        if(livingEntity.yOld - livingEntity.getY() < 0.2) return false;
 
-        return !livingEntity.isOnGround() && isWithinHitboxRangeHorizontal(livingEntity, 5);
+        return !livingEntity.onGround() && isWithinHitboxRangeHorizontal(livingEntity, 5);
     }
 
     public boolean isSpearing(LivingEntity entity) {
-        if (entity == null || !entity.getMainHandStack().isIn(ItemTags.SPEARS)) return false;
+        if (entity == null || !entity.getMainHandItem().is(ItemTags.SPEARS)) return false;
 
         double dx = mc.player.getX() - entity.getX();
         double dz = mc.player.getZ() - entity.getZ();
         double currentDist = Math.sqrt(dx * dx + dz * dz);
 
-        double lastDx = mc.player.lastX - entity.lastX;
-        double lastDz = mc.player.lastZ - entity.lastZ;
+        double lastDx = mc.player.xOld - entity.xOld;
+        double lastDz = mc.player.yOld - entity.yOld;
         double lastDist = Math.sqrt(lastDx * lastDx + lastDz * lastDz);
 
         if (currentDist >= lastDist) return false;
@@ -51,63 +54,66 @@ public class PlayerManager extends Manager{
     }
 
     public boolean isEatingGapple() {
-        return mc.player.isUsingItem() && mc.player.getActiveItem().isOf(Items.GOLDEN_APPLE);
+        return mc.player.isUsingItem() && mc.player.getActiveItem().is(Items.GOLDEN_APPLE);
     }
 
     public boolean isUsingBow(LivingEntity livingEntity) {
-        return livingEntity.getMainHandStack().isOf(Items.BOW) && livingEntity.isUsingItem();
+        return livingEntity.getMainHandItem().is(Items.BOW) && livingEntity.isUsingItem();
     }
 
     public void lookAt(Entity target) {
-        mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
+        mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, mc.player.getEyePosition());
     }
 
     public boolean canHit(Entity entity) {
-        Vec3d start = mc.player.getEyePos();
-        Vec3d end = entity.getBoundingBox().getCenter();
+        Vec3 start = mc.player.getEyePosition();
+        Vec3 end = entity.getBoundingBox().getCenter();
 
-        return mc.world.raycast(new RaycastContext(
-                start, end,
-                RaycastContext.ShapeType.OUTLINE,
-                RaycastContext.FluidHandling.NONE,
-                mc.player
-        )).getBlockPos().equals(entity.getBlockPos());
+        return true;
+
+        //FIXME idk this for new mappings
+//        return mc.level.raycast(new RaycastContext(
+//                start, end,
+//                RaycastContext.ShapeType.OUTLINE,
+//                RaycastContext.FluidHandling.NONE,
+//                mc.player
+//        )).getBlockPos().equals(entity.getBlockPos());
     }
 
     public void switchSlot(int to) {
         int current = mc.player.getInventory().getSelectedSlot();
         if (current == to) return;
         mc.player.getInventory().setSelectedSlot(to);
-        mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().getSelectedSlot()));
+        mc.getConnection().send(new ServerboundSetCreativeModeSlotPacket(mc.player.getInventory().getSelectedSlot(), mc.player.getMainHandItem()));
     }
 
     public float getHDistanceTo(Entity entity) {
         float dx = (float) (mc.player.getX() - entity.getX());
         float dz = (float) (mc.player.getZ() - entity.getZ());
-        return MathHelper.sqrt(dx * dx + dz * dz);
+        return Mth.sqrt(dx * dx + dz * dz);
     }
 
-    public Vec3d getHitVec(Entity entity) {
-        Box box = entity.getBoundingBox();
+    public Vec3 getHitVec(Entity entity) {
+        AABB aabb = entity.getBoundingBox();
 
-        double x = MathHelper.clamp(mc.player.getX(), box.minX, box.maxX);
-        double y = MathHelper.clamp(mc.player.getY(), box.minY, box.maxY);
-        double z = MathHelper.clamp(mc.player.getZ(), box.minZ, box.maxZ);
+        double x = Mth.clamp(mc.player.getX(), aabb.minX, aabb.maxX);
+        double y = Mth.clamp(mc.player.getY(), aabb.minY, aabb.maxY);
+        double z = Mth.clamp(mc.player.getZ(), aabb.minZ, aabb.maxZ);
 
-        return new Vec3d(x, y, z);
+        return new Vec3(x, y, z);
     }
 
     public boolean isWithinHitboxRange(Entity entity, double range) {
-        Box box = entity.getBoundingBox();
+        AABB aabb = entity.getBoundingBox();
 
         double px = mc.player.getX();
         double py = mc.player.getY();
         double pz = mc.player.getZ();
 
         // Closest point on hitbox to player
-        double cx = MathHelper.clamp(px, box.minX, box.maxX);
-        double cy = MathHelper.clamp(py, box.minY, box.maxY);
-        double cz = MathHelper.clamp(pz, box.minZ, box.maxZ);
+        double cx = Mth.clamp(px, aabb.minX, aabb.maxX);
+        double cy = Mth.clamp(py, aabb.minY, aabb.maxY);
+        double cz = Mth.clamp(pz, aabb.minZ, aabb.maxZ);
 
         double dx = px - cx;
         double dy = py - cy;
@@ -117,13 +123,13 @@ public class PlayerManager extends Manager{
     }
 
     public boolean isWithinHitboxRangeHorizontal(Entity entity, double range) {
-        Box box = entity.getBoundingBox();
+        AABB aabb = entity.getBoundingBox();
 
         double px = mc.player.getX();
         double pz = mc.player.getZ();;
 
-        double cx = MathHelper.clamp(px, box.minX, box.maxX);
-        double cz = MathHelper.clamp(pz, box.minZ, box.maxZ);
+        double cx = Mth.clamp(px, aabb.minX, aabb.maxX);
+        double cz = Mth.clamp(pz, aabb.minZ, aabb.maxZ);
 
         double dx = px - cx;
         double dz = pz - cz;
@@ -132,12 +138,12 @@ public class PlayerManager extends Manager{
     }
 
     public int getDistanceToGround(LivingEntity livingEntity) {
-        BlockPos pos = livingEntity.getBlockPos();
+        BlockPos pos = livingEntity.getBlockPosBelowThatAffectsMyMovement();
 
         int distance = 0;
         for (int y = pos.getY(); y >= 0; y--) {
             BlockPos checkPos = new BlockPos(pos.getX(), y, pos.getZ());
-            BlockState state = mc.world.getBlockState(checkPos);
+            BlockState state = mc.level.getBlockState(checkPos);
             if (!state.isAir()) {
                 distance = pos.getY() - y;
                 break;
@@ -148,18 +154,18 @@ public class PlayerManager extends Manager{
     }
 
     public float getMiningSpeed(ItemStack stack, BlockState state) {
-        return stack.getMiningSpeedMultiplier(state);
+        return stack.getDestroySpeed(state);
     }
 
     public static boolean isSuitableFor(ItemStack stack, BlockState state) {
         if (stack == null || stack.isEmpty()) return false;
-        return stack.isSuitableFor(state);
+        return stack.isCorrectToolForDrops(state);
     }
 
     public static Direction getDirectionToEntity(Entity target) {
         if (mc.player == null || target == null) return Direction.NORTH;
 
-        Vec3d diff = target.getEntityPos().subtract(mc.player.getEntityPos());
+        Vec3 diff = target.position().subtract(mc.player.position());
 
         double absX = Math.abs(diff.x);
         double absZ = Math.abs(diff.z);
@@ -171,24 +177,19 @@ public class PlayerManager extends Manager{
         }
     }
 
-    public BlockPos getOffsetBlockToEntity(Entity target, double distance) {
-        Direction dirFromTarget = getDirectionToEntity(target).getOpposite();
-        return target.getBlockPos().offset(dirFromTarget, (int) distance);
+    boolean canStandOn(Level level, BlockPos pos) {
+        BlockPos below = pos.below();
+        return level.getBlockState(below).entityCanStandOn(level, below, mc.player)
+                && level.getBlockState(pos).isAir()
+                && level.getBlockState(pos.above()).isAir();
     }
 
-    boolean canStandOn(World world, BlockPos pos) {
-        BlockPos below = pos.down();
-        return world.getBlockState(below).isSolidBlock(world, below)
-                && world.getBlockState(pos).isAir()
-                && world.getBlockState(pos.up()).isAir();
-    }
-
-    public float[] calcAngle(Vec3d from, Vec3d to) {
+    public float[] calcAngle(Vec3 from, Vec3 to) {
         double difX = to.x - from.x;
         double difY = (to.y - from.y) * -1.0;
         double difZ = to.z - from.z;
         double dist = Math.sqrt(difX * difX + difZ * difZ);
-        return new float[]{(float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0), (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
+        return new float[]{(float) Mth.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0), (float) Mth.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
     }
 
     public float[] invertRotation(float[] rotation) {
@@ -207,7 +208,7 @@ public class PlayerManager extends Manager{
 
     //This math looks a bit overkill I'm not sure if we need coefficient for MINECRAFT CALCULATIONS
     public float[] getBowRotationsTo(Entity entity) {
-        float duration = (float) (mc.player.getActiveItem().getMaxUseTime(mc.player) - mc.player.getItemUseTime()) / 20.0f;
+        float duration = (float) (mc.player.getActiveItem().getUseDuration(mc.player) - mc.player.getTicksUsingItem()) / 20.0f;
         duration = (duration * duration + duration * 2.0f) / 3.0f;
 
         if (duration >= 1.0f) {
@@ -217,8 +218,8 @@ public class PlayerManager extends Manager{
         double duration1 = duration * 3.0f;
         double coeff = 0.05000000074505806;
         float pitch = (float) (-Math.toDegrees(calculateArc(entity, duration1, coeff)));
-        double ix = entity.getX() - entity.lastX;
-        double iz = entity.getZ() - entity.lastZ;
+        double ix = entity.getX() - entity.xOld;
+        double iz = entity.getZ() - entity.zOld;
         double d = mc.player.distanceTo(entity);
 
         d -= d % 2.0;
@@ -231,7 +232,7 @@ public class PlayerManager extends Manager{
     }
 
     public float calculateArc(Entity target, double duration, double coeff) {
-        double yArc = target.getY() + (double) (target.getStandingEyeHeight() / 2.0f) - (mc.player.getY() + (double) mc.player.getStandingEyeHeight());
+        double yArc = target.getY() + (double) (target.getEyeHeight() / 2.0f) - (mc.player.getY() + (double) mc.player.getEyeHeight());
         double dX = target.getX() - mc.player.getX();
         double dZ = target.getZ() - mc.player.getZ();
         double dirRoot = Math.sqrt(dX * dX + dZ * dZ);
@@ -254,7 +255,7 @@ public class PlayerManager extends Manager{
 
     public boolean shouldHeal() {
         if(mc.player.getHealth()<=minHealth ||
-                (BlockFighter.fightBot.getTarget() instanceof PlayerEntity player && player.getActiveItem().isOf(Items.GOLDEN_APPLE) && player.isUsingItem() && mc.player.getHealth() < secondaryHealth)) return true;
+                (BlockFighter.fightBot.getTarget() instanceof Player player && player.getActiveItem().is(Items.GOLDEN_APPLE) && player.isUsingItem() && mc.player.getHealth() < secondaryHealth)) return true;
         return false;
     }
 

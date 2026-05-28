@@ -1,13 +1,13 @@
 package net.normalv.util;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.normalv.event.system.EventBus;
 import net.normalv.systems.tools.setting.EnumUtils;
 
 import java.util.Random;
 
 public interface Util {
-    MinecraftClient mc = MinecraftClient.getInstance();
+    Minecraft mc = Minecraft.getInstance();
     EnumUtils enumUtils = new EnumUtils();
     Random jrandom = new Random();
     EventBus EVENT_BUS = new EventBus();

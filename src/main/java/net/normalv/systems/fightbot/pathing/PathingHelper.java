@@ -1,7 +1,7 @@
 package net.normalv.systems.fightbot.pathing;
 
 import baritone.api.BaritoneAPI;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import net.normalv.BlockFighter;
 import net.normalv.util.Util;
 
@@ -20,26 +20,26 @@ public class PathingHelper implements Util {
         }
         else if(BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) stopPathing();
 
-        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), target.getEyePos());
+        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
         manualPathing(rotation, target);
     }
 
     public void manualPathing(float[] rotation, Entity target) {
-        mc.player.setYaw(rotation[0]);
-        mc.player.setPitch(rotation[1]);
-        mc.player.setHeadYaw(rotation[0]);
+        mc.player.setYRot(rotation[0]);
+        mc.player.setXRot(rotation[1]);
+        mc.player.setYHeadRot(rotation[0]);
 
         if(mc.player.distanceTo(target) > 3.1) {
-            mc.options.sprintKey.setPressed(true);
-            mc.options.forwardKey.setPressed(true);
-            mc.options.jumpKey.setPressed(allowJumping);
-            mc.options.backKey.setPressed(false);
+            mc.options.keySprint.setDown(true);
+            mc.options.keyUp.setDown(true);
+            mc.options.keyJump.setDown(allowJumping);
+            mc.options.keyDown.setDown(false);
 
         } else if(mc.player.distanceTo(target) < 2.9) {
-            mc.options.sprintKey.setPressed(false);
-            mc.options.forwardKey.setPressed(false);
-            mc.options.jumpKey.setPressed(false);
-            mc.options.backKey.setPressed(true);
+            mc.options.keySprint.setDown(false);
+            mc.options.keyUp.setDown(false);
+            mc.options.keyJump.setDown(false);
+            mc.options.keyDown.setDown(true);
         }
     }
 

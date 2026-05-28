@@ -41,7 +41,7 @@ public class SoundTool extends Tool {
 
     private void handleWalkSound() {
         soundDelay--;
-        if(!mc.player.isOnGround() || soundDelay>0 || !customWalkSound.getValue() || mc.player.getVelocity().lengthSquared()<0.01) return;
+        if(!mc.player.onGround() || soundDelay>0 || !customWalkSound.getValue() || mc.player.getDeltaMovement().horizontalDistanceSqr()<0.01) return;
         SoundUtils.playSound(SoundUtils.SPONGE_WALK, jrandom.nextFloat(0.2f, 0.30001f), jrandom.nextFloat(0.9f, 1.0001f));
         soundDelay=12;
     }

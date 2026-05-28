@@ -1,8 +1,8 @@
 package net.normalv.systems.tools.combat;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Items;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -22,14 +22,14 @@ public class AutoBowTool extends Tool {
     @Override
     public void onDisabled() {
         drawTicks = 0;
-        mc.options.useKey.setPressed(false);
-        mc.interactionManager.stopUsingItem(mc.player);
+        mc.options.keyUse.setDown(false);
+        mc.gameMode.releaseUsingItem(mc.player);
     }
 
     @Override
     public void onTick() {
         if (mc.player == null) return;
-        if (!mc.player.getInventory().getStack(BOW_SLOT).isOf(Items.BOW)) return;
+        if (!mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW)) return;
 
         target = BlockFighter.fightBot.getTarget();
         if (target == null) {
@@ -41,18 +41,18 @@ public class AutoBowTool extends Tool {
         if(mc.player.getInventory().getSelectedSlot() != BOW_SLOT) BlockFighter.playerManager.switchSlot(BOW_SLOT);
 
         // Stop Jumping
-        if(mc.options.jumpKey.isPressed()) mc.options.jumpKey.setPressed(false);
+        if(mc.options.keyJump.isDown()) mc.options.keyJump.setDown(false);
 
         // Aim
         float[] bowRotations = BlockFighter.playerManager.getBowRotationsTo(target);
-        mc.player.setYaw(bowRotations[0]);
-        mc.player.setPitch(bowRotations[1]);
-        mc.player.setHeadYaw(bowRotations[0]);
+        mc.player.setYRot(bowRotations[0]);
+        mc.player.setXRot(bowRotations[1]);
+        mc.player.setYHeadRot(bowRotations[0]);
 
         // Start drawing
         if (!mc.player.isUsingItem()) {
-            mc.options.useKey.setPressed(true);
-            mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
+            mc.options.keyUse.setDown(true);
+            mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
             drawTicks = 0;
             return;
         }
@@ -60,16 +60,16 @@ public class AutoBowTool extends Tool {
         drawTicks++;
 
         if (drawTicks >= MAX_DRAW_TICKS) {
-            mc.options.useKey.setPressed(false);
-            mc.interactionManager.stopUsingItem(mc.player);
+            mc.options.keyUse.setDown(false);
+            mc.gameMode.releaseUsingItem(mc.player);
             drawTicks = 0;
         }
     }
 
     private void resetBow() {
         if (mc.player.isUsingItem()) {
-            mc.options.useKey.setPressed(false);
-            mc.interactionManager.stopUsingItem(mc.player);
+            mc.options.keyUse.setDown(false);
+            mc.gameMode.releaseUsingItem(mc.player);
         }
         drawTicks = 0;
     }

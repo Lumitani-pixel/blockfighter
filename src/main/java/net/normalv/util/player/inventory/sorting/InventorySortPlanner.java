@@ -1,6 +1,6 @@
 package net.normalv.util.player.inventory.sorting;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.normalv.util.player.inventory.FindItemResult;
 import net.normalv.util.player.inventory.InventoryUtils.SlotAssignment;
 import net.normalv.util.player.inventory.InventoryUtils.SlotRoles;
@@ -36,7 +36,7 @@ public class InventorySortPlanner implements Util {
 
     private FindItemResult findItemForRole(SlotRoles role) {
         for (int i = 0; i <= SlotUtils.MAIN_END; i++) {
-            ItemStack stack = mc.player.getInventory().getStack(i);
+            ItemStack stack = mc.player.getInventory().getItem(i);
             if (stack.isEmpty()) continue;
 
             if (ItemRoleMap.itemsForRole(role).contains(stack.getItem())) {

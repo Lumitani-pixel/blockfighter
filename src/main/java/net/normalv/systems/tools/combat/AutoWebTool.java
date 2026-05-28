@@ -1,13 +1,13 @@
 package net.normalv.systems.tools.combat;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -22,22 +22,24 @@ public class AutoWebTool extends Tool {
 
     @Override
     public void onTick() {
-        if(!mc.player.getInventory().getStack(WEB_SLOT).isOf(Items.COBWEB)) return;
+        if(!mc.player.getInventory().getItem(WEB_SLOT).is(Items.COBWEB)) return;
 
         target = BlockFighter.fightBot.getTarget();
+        BlockPos targetBlockPos = target.getBlockPosBelowThatAffectsMyMovement();
+
         if(target == null ||
-                !target.isOnGround() ||
-                !mc.world.getBlockState(target.getBlockPos().down()).isSolid() ||
+                !target.onGround() ||
+                !mc.level.getBlockState(targetBlockPos.below()).isSolid() ||
                 mc.player.distanceTo(target) > BlockFighter.fightBot.getMaxReach() ||
-                mc.world.getBlockState(target.getBlockPos()).isOf(Blocks.COBWEB) ||
-                mc.world.getBlockState(target.getBlockPos()).isOf(Blocks.WATER) ||
-                mc.world.getBlockState(target.getBlockPos().up()).isOf(Blocks.WATER) ||
-                (mc.player.getBlockPos().getX() == target.getBlockPos().getX() && mc.player.getBlockPos().getZ() == target.getBlockPos().getZ())) return;
+                mc.level.getBlockState(targetBlockPos).is(Blocks.COBWEB) ||
+                mc.level.getBlockState(targetBlockPos).is(Blocks.WATER) ||
+                mc.level.getBlockState(targetBlockPos.above()).is(Blocks.WATER) ||
+                (mc.player.getBlockPosBelowThatAffectsMyMovement().getX() == targetBlockPos.getX() && mc.player.getBlockPosBelowThatAffectsMyMovement().getZ() == targetBlockPos.getZ())) return;
 
         if(mc.player.getInventory().getSelectedSlot() != WEB_SLOT) BlockFighter.playerManager.switchSlot(WEB_SLOT);
 
-        BlockPos below = target.getBlockPos().down();
-        Vec3d hitPos = Vec3d.ofCenter(below).add(0, 0.5, 0);
+        BlockPos below = target.getBlockPosBelowThatAffectsMyMovement().below();
+        Vec3 hitPos = Vec3.atCenterOf(below).add(0, 0.5, 0);
 
         BlockHitResult hit = new BlockHitResult(
                 hitPos,
@@ -46,12 +48,12 @@ public class AutoWebTool extends Tool {
                 false
         );
 
-        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePos(), hitPos);
-        mc.player.setYaw(rotation[0]);
-        mc.player.setPitch(rotation[1]);
-        mc.player.setHeadYaw(rotation[0]);
+        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), hitPos);
+        mc.player.setYRot(rotation[0]);
+        mc.player.setXRot(rotation[1]);
+        mc.player.setYHeadRot(rotation[0]);
 
-        mc.interactionManager.interactBlock(mc.player, Hand.MAIN_HAND, hit);
-        mc.player.swingHand(Hand.MAIN_HAND);
+        mc.gameMode.useItemOn(mc.player, InteractionHand.MAIN_HAND, hit);
+        mc.player.swing(InteractionHand.MAIN_HAND);
     }
 }

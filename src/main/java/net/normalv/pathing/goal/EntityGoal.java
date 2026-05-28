@@ -1,19 +1,20 @@
 package net.normalv.pathing.goal;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.entity.Entity;
 
 public class EntityGoal extends Goal{
     private Entity entity;
 
     public EntityGoal(Entity entity) {
-        super(entity.getBlockPos());
+        super(entity.getBlockPosBelowThatAffectsMyMovement());
         this.entity = entity;
     }
 
     @Override
     public void update() {
-        blockPos = entity.getBlockPos();
-        vec3d = entity.getEntityPos();
+        blockPos = entity.getBlockPosBelowThatAffectsMyMovement();
+        vec3i = new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
     public Entity getEntity() {

@@ -1,15 +1,16 @@
 package net.normalv.systems.tools.combat;
 
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
+import org.lwjgl.system.ffm.mapping.Mapping;
 
 import static net.normalv.systems.fightbot.FightBot.*;
 
@@ -33,8 +34,8 @@ public class AuraTool extends Tool {
         double spearReach = BlockFighter.fightBot.getSpearReach();
 
         if (BlockFighter.playerManager.isEatingGapple()) {
-            mc.options.useKey.setPressed(false);
-            mc.interactionManager.stopUsingItem(mc.player);
+            mc.options.keyUse.setDown(false);
+            mc.gameMode.releaseUsingItem(mc.player);
         }
 
         if(!BlockFighter.playerManager.canHit(target)) return;
@@ -42,96 +43,96 @@ public class AuraTool extends Tool {
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
         if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach) &&
                 !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) &&
-                mc.player.getInventory().getStack(SPEAR_SLOT).isIn(ItemTags.SPEARS) ||
-                (mc.player.getVelocity().subtract(target.getVelocity()).length() * 20.0) > minSpearVelocity) {
+                mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) ||
+                (mc.player.getDeltaMovement().subtract(target.getDeltaMovement()).length() * 20.0) > minSpearVelocity) {
 
             if(mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
 
-            Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
-            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+            Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
+            mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
-            if((mc.player.getVelocity().subtract(target.getVelocity()).length() * 20.0) > minSpearVelocity) {
-                if(!mc.options.useKey.isPressed()) mc.options.useKey.setPressed(true);
-                if(!mc.player.isUsingItem()) mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
+            if((mc.player.getDeltaMovement().subtract(target.getDeltaMovement()).length() * 20.0) > minSpearVelocity) {
+                if(!mc.options.keyUse.isDown()) mc.options.keyUse.setDown(true);
+                if(!mc.player.isUsingItem()) mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
             }
-            else if (mc.player.getAttackCooldownProgress(0.5f) >= 1.0f) {
-                mc.interactionManager.attackEntity(mc.player, target);
-                mc.player.swingHand(Hand.MAIN_HAND);
+            else if (mc.player.getAttackStrengthScale(0.5f) >= 1.0f) {
+                mc.gameMode.attack(mc.player, target);
+                mc.player.swing(InteractionHand.MAIN_HAND);
             }
         }
 
         // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
         if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) || BlockFighter.playerManager.isMacing(target)) return;
 
-        if (target instanceof PlayerEntity targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer) && (BlockFighter.fightBot.isMacing() && !useShieldBreakWithMace)) {
+        if (target instanceof Player targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer) && (BlockFighter.fightBot.isMacing() && !useShieldBreakWithMace)) {
             handleShieldBreak(target);
             if(!BlockFighter.fightBot.isMacing()) return;
         }
 
-        if(BlockFighter.fightBot.isMacing() && mc.player.getInventory().getStack(MACE_SLOT).isOf(Items.MACE) && mc.player.fallDistance > 3 && mc.player.getVelocity().getY() < 0.0) {
+        if(BlockFighter.fightBot.isMacing() && mc.player.getInventory().getItem(MACE_SLOT).is(Items.MACE) && mc.player.fallDistance > 3 && mc.player.getDeltaMovement().y() < 0.0) {
             if(mc.player.getInventory().getSelectedSlot() != MACE_SLOT) BlockFighter.playerManager.switchSlot(MACE_SLOT);
 
-            Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
-            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+            Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
+            mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
             // Shield break tech
             if(useShieldBreakWithMace && BlockFighter.playerManager.isBlocking(target)) {
                 for(int i = 0; i<10; i++) {
-                    mc.interactionManager.attackEntity(mc.player, target);
-                    mc.player.swingHand(Hand.MAIN_HAND);
+                    mc.gameMode.attack(mc.player, target);
+                    mc.player.swing(InteractionHand.MAIN_HAND);
                 }
             }
 
-            mc.interactionManager.attackEntity(mc.player, target);
-            mc.player.swingHand(Hand.MAIN_HAND);
+            mc.gameMode.attack(mc.player, target);
+            mc.player.swing(InteractionHand.MAIN_HAND);
             return;
         }
 
         if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT && !BlockFighter.fightBot.isMacing()) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
 
-        if (mc.player.getAttackCooldownProgress(0.5f) >= 1.0f) {
-            Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
-            mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+        if (mc.player.getAttackStrengthScale(0.5f) >= 1.0f) {
+            Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
+            mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
 
             if(shouldCrit() && !canCrit()) return;
 
             startWTap();
-            mc.interactionManager.attackEntity(mc.player, target);
-            mc.player.swingHand(Hand.MAIN_HAND);
+            mc.gameMode.attack(mc.player, target);
+            mc.player.swing(InteractionHand.MAIN_HAND);
         }
     }
 
     private void handleShieldBreak(Entity target) {
         if(BlockFighter.playerManager.isBlocking(mc.player)) {
-            mc.options.useKey.setPressed(false);
-            mc.interactionManager.stopUsingItem(mc.player);
+            mc.options.keyUse.setDown(false);
+            mc.gameMode.releaseUsingItem(mc.player);
         }
 
         if(mc.player.getInventory().getSelectedSlot() != AXE_SLOT) BlockFighter.playerManager.switchSlot(AXE_SLOT);
 
-        Vec3d hitVec = BlockFighter.playerManager.getHitVec(target);
-        mc.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, hitVec);
+        Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
+        mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
-        mc.interactionManager.attackEntity(mc.player, target);
-        mc.interactionManager.attackEntity(mc.player, target);
-        mc.interactionManager.attackEntity(mc.player, target);
-        mc.player.swingHand(Hand.MAIN_HAND);
+        mc.gameMode.attack(mc.player, target);
+        mc.gameMode.attack(mc.player, target);
+        mc.gameMode.attack(mc.player, target);
+        mc.player.swing(InteractionHand.MAIN_HAND);
     }
 
     private void startWTap() {
         // Release sprint + forward and press again
-        mc.options.sprintKey.setPressed(false);
-        mc.options.forwardKey.setPressed(false);
-        mc.options.sprintKey.setPressed(true);
-        mc.options.forwardKey.setPressed(true);
+        mc.options.keySprint.setDown(false);
+        mc.options.keyUp.setDown(false);
+        mc.options.keySprint.setDown(true);
+        mc.options.keyUp.setDown(true);
     }
 
     private boolean shouldCrit() {
-        return !mc.player.isOnGround() && !BlockFighter.playerManager.isBlocking(target) && BlockFighter.fightBot.antiWebTool.findIntersectingCobweb() == null;
+        return !mc.player.onGround() && !BlockFighter.playerManager.isBlocking(target) && BlockFighter.fightBot.antiWebTool.findIntersectingCobweb() == null;
     }
 
     private boolean canCrit() {
-        return !mc.player.isOnGround() && mc.player.getVelocity().getY() < -0.08;
+        return !mc.player.onGround() && mc.player.getDeltaMovement().y() < -0.08;
     }
 }

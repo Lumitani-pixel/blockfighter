@@ -1,7 +1,6 @@
 package net.normalv.systems.tools.combat;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -25,8 +24,8 @@ public class TargetStrafeTool extends Tool {
         if (target == null) return;
 
         if (!BlockFighter.playerManager.isWithinHitboxRange(target, 4.2)) return;
-        else if(BlockFighter.playerManager.isWithinHitboxRange(target, BlockFighter.fightBot.getMaxReach() - 0.1)) mc.options.backKey.setPressed(true);
-        else if(mc.options.backKey.isPressed()) mc.options.backKey.setPressed(false);
+        else if(BlockFighter.playerManager.isWithinHitboxRange(target, BlockFighter.fightBot.getMaxReach() - 0.1)) mc.options.keyDown.setDown(true);
+        else if(mc.options.keyDown.isDown()) mc.options.keyDown.setDown(false);
 
         // Randomly swap strafe direction
         if (++switchTicks > 20 + random.nextInt(20)) {
@@ -34,19 +33,19 @@ public class TargetStrafeTool extends Tool {
             switchTicks = 0;
         }
 
-        mc.options.leftKey.setPressed(strafeLeft);
-        mc.options.rightKey.setPressed(!strafeLeft);
-        mc.options.forwardKey.setPressed(true);
+        mc.options.keyLeft.setDown(strafeLeft);
+        mc.options.keyRight.setDown(!strafeLeft);
+        mc.options.keyUp.setDown(true);
 
         // Occasional hop for crit chaining
-        if (allowJump && mc.player.isOnGround() && random.nextFloat() < 0.02f) {
-            mc.options.jumpKey.setPressed(true);
+        if (allowJump && mc.player.onGround() && random.nextFloat() < 0.02f) {
+            mc.options.keyJump.setDown(true);
         }
     }
 
     @Override
     public void onDisabled() {
-        mc.options.leftKey.setPressed(false);
-        mc.options.rightKey.setPressed(false);
+        mc.options.keyLeft.setDown(false);
+        mc.options.keyRight.setDown(false);
     }
 }

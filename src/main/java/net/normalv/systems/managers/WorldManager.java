@@ -1,12 +1,12 @@
 package net.normalv.systems.managers;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 
 public class WorldManager extends Manager{
@@ -14,10 +14,10 @@ public class WorldManager extends Manager{
     private BlockPos breakPos;
 
     public boolean breakBlock(BlockPos pos) {
-        if (mc.player == null || mc.interactionManager == null) return false;
+        if (mc.player == null || mc.gameMode == null) return false;
         breakPos = pos;
-        if(!mc.world.getBlockState(breakPos).isAir() && !isBreakingBlock && !isBlockOutOfReach(pos)) {
-            mc.interactionManager.attackBlock(breakPos, mc.player.getFacing());
+        if(!mc.level.getBlockState(breakPos).isAir() && !isBreakingBlock && !isBlockOutOfReach(pos)) {
+            mc.gameMode.startDestroyBlock(breakPos, mc.player.getDirection());
             isBreakingBlock = true;
             return true;
         }
@@ -25,22 +25,22 @@ public class WorldManager extends Manager{
     }
 
     public boolean placeBlock(BlockPos base, Direction face) {
-        if (mc.player == null || mc.interactionManager == null) return false;
+        if (mc.player == null || mc.gameMode == null) return false;
 
-        Vec3d hitVec = Vec3d.ofCenter(base).add(Vec3d.of(face.getVector()).multiply(0.5));
+        Vec3 hitVec = Vec3.atCenterOf(base).add(Vec3.atLowerCornerOf(face.getUnitVec3i()).scale(0.5));
         BlockHitResult hit = new BlockHitResult(hitVec, face, base, false);
 
-        ActionResult result = mc.interactionManager.interactBlock(mc.player, Hand.MAIN_HAND, hit);
+        InteractionResult result = mc.gameMode.useItemOn(mc.player, InteractionHand.MAIN_HAND, hit);
 
-        return result.isAccepted();
+        return result.consumesAction();
     }
 
     public boolean isBlockOutOfReach(BlockPos pos) {
-        return mc.player.squaredDistanceTo(Vec3d.ofCenter(pos).add(Vec3d.of(mc.player.getFacing().getVector())).multiply(0.5))>BlockFighter.fightBot.getMaxReach();
+        return mc.player.distanceToSqr(Vec3.atCenterOf(pos).add(Vec3.atLowerCornerOf(mc.player.getDirection().getUnitVec3i()).scale(0.5)))>BlockFighter.fightBot.getMaxReach();
     }
 
     public Entity getNearestEntityByClass(Class<Entity> clazz) {
-        for(Entity entity : mc.world.getEntities()) {
+        for(Entity entity : mc.level.entitiesForRendering()) {
             if(!clazz.isInstance(entity)) continue;
             return entity;
         }
@@ -49,8 +49,8 @@ public class WorldManager extends Manager{
 
     public void onTick() {
         if(isBreakingBlock) {
-            assert mc.interactionManager != null;
-            mc.interactionManager.updateBlockBreakingProgress(breakPos, mc.player.getFacing());
+            assert mc.gameMode != null;
+            mc.gameMode.continueDestroyBlock(breakPos, mc.player.getDirection());
         }
     }
 }

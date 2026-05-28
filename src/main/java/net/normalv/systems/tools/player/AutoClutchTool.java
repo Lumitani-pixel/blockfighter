@@ -1,7 +1,7 @@
 package net.normalv.systems.tools.player;
 
-import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Items;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
@@ -17,14 +17,14 @@ public class AutoClutchTool extends Tool {
 
     @Override
     public void onTick() {
-        if(placedWater && mc.player.isOnGround()) {
+        if(placedWater && mc.player.onGround()) {
             placeWater();
             placedWater = false;
             return;
         }
-        if(mc.player.isOnGround() ||
+        if(mc.player.onGround() ||
                 mc.player.fallDistance <= minClutchDistance ||
-                !mc.player.getInventory().getStack(WATER_SLOT).isOf(Items.WATER_BUCKET)) return;
+                !mc.player.getInventory().getItem(WATER_SLOT).is(Items.WATER_BUCKET)) return;
 
 
         if(BlockFighter.playerManager.getDistanceToGround(mc.player) <= BlockFighter.fightBot.getMaxReach()) {
@@ -36,9 +36,9 @@ public class AutoClutchTool extends Tool {
     private void placeWater() {
         if(mc.player.getInventory().getSelectedSlot() != WATER_SLOT) BlockFighter.playerManager.switchSlot(WATER_SLOT);
 
-        mc.player.setPitch(90);
-        mc.options.useKey.setPressed(true);
-        mc.interactionManager.interactItem(mc.player, Hand.MAIN_HAND);
-        mc.options.useKey.setPressed(false);
+        mc.player.setXRot(90);
+        mc.options.keyUse.setDown(true);
+        mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND.MAIN_HAND);
+        mc.options.keyUse.setDown(false);
     }
 }

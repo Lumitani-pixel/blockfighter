@@ -1,10 +1,10 @@
 package net.normalv.systems.hud.hudcomponents;
 
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.ColorHelper;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.color.ColorLerper;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ToolHud implements Util {
     private static final Identifier hudElement = VanillaHudElements.MISC_OVERLAYS;
-    private static final Identifier hudId = Identifier.of(BlockFighter.MOD_ID, "tool_hud");
+    private static final Identifier hudId = Identifier.fromNamespaceAndPath(BlockFighter.MOD_ID, "tool_hud");
 
     private static float colorCycleSpeed = 0.3f;
     private static boolean rainbow = false;
@@ -41,7 +41,7 @@ public class ToolHud implements Util {
         activatedTools = BlockFighter.toolManager.getActivatedTools(true);
     }
 
-    public static void render(DrawContext context, RenderTickCounter tickCounter) {
+    public static void render(GuiGraphicsExtractor context, DeltaTracker tickCounter) {
         if (hudTool == null) {
             hudTool = BlockFighter.toolManager.getToolByClass(HudTool.class);
             if (hudTool == null) return;
@@ -57,12 +57,12 @@ public class ToolHud implements Util {
         int color = getCurrentColor(tickCounter);
 
         for (Tool tool : activatedTools) {
-            context.drawText(mc.textRenderer, tool.getDisplayName(), 10, startY, rainbow ? color : Color.WHITE.getRGB(), true);
+            context.text(mc.font, tool.getDisplayName(), 10, startY, rainbow ? color : Color.WHITE.getRGB(), true);
             startY += TOOL_SPACING;
         }
     }
 
-    private static int getCurrentColor(RenderTickCounter tickCounter) {
+    private static int getCurrentColor(DeltaTracker tickCounter) {
         if (!rainbow) return Color.WHITE.getRGB();
 
         float progress = (System.currentTimeMillis() / 1000f) * colorCycleSpeed;
@@ -70,7 +70,7 @@ public class ToolHud implements Util {
         int j = (i + 1) % COLORS.length;
         float t = progress % 1f;
 
-        return ColorHelper.lerp(t, COLORS[i].getRGB(), COLORS[j].getRGB());
+        return ColorLerper.getLerpedColor(ColorLerper.Type.SHEEP, tickCounter.getGameTimeDeltaTicks());
     }
 
     public static void setRainbow(boolean rainbow) {

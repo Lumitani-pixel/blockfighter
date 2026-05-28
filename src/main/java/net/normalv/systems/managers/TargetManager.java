@@ -1,16 +1,15 @@
 package net.normalv.systems.managers;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.GameMode;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class TargetManager extends Manager {
     private LivingEntity currentTarget;
@@ -28,17 +27,17 @@ public class TargetManager extends Manager {
     public List<Entity> getEntities(TargetSorting sorting) {
         List<LivingEntity> targets = new ArrayList<>();
 
-        for (Entity entity : mc.world.getEntities()) {
+        for (Entity entity : mc.level.entitiesForRendering()) {
             if (entity == mc.player) continue;
             if (!(entity instanceof LivingEntity living)) continue;
 
             boolean allowed = false;
 
-            if (allowPlayer && entity instanceof PlayerEntity) {
+            if (allowPlayer && entity instanceof Player) {
                 allowed = true;
-            } else if (allowHostiles && entity instanceof HostileEntity) {
+            } else if (allowHostiles && entity instanceof Monster) {
                 allowed = true;
-            } else if (allowAnimals && entity instanceof AnimalEntity) {
+            } else if (allowAnimals && entity instanceof Animal) {
                 allowed = true;
             }
 
@@ -49,7 +48,7 @@ public class TargetManager extends Manager {
 
         switch (sorting) {
             case HEALTH -> targets.sort(Comparator.comparingDouble(LivingEntity::getHealth));
-            case DISTANCE -> targets.sort(Comparator.comparingDouble(entity -> mc.player.squaredDistanceTo(entity)));
+            case DISTANCE -> targets.sort(Comparator.comparingDouble(entity -> mc.player.distanceToSqr(entity)));
         }
 
         return new ArrayList<>(targets);
@@ -59,7 +58,7 @@ public class TargetManager extends Manager {
      * Called every tick to update the current target.
      */
     public void update() {
-        if (mc.world == null || mc.player == null) return;
+        if (mc.level == null || mc.player == null) return;
 
         List<Entity> targets = getEntities(targetSorting);
 

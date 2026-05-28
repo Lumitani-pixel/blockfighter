@@ -1,6 +1,6 @@
 package net.normalv.mixin;
 
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import net.normalv.event.events.impl.TickEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,10 +9,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.normalv.util.Util.EVENT_BUS;
 
-@Mixin(ClientPlayerEntity.class)
+@Mixin(LocalPlayer.class)
 public abstract class ClientPlayerEntityMixin {
-
-    @Inject(method = "tick", at = @At(value = "TAIL"))
+    @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         EVENT_BUS.post(new TickEvent());
     }

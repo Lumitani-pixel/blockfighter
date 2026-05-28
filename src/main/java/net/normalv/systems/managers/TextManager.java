@@ -1,36 +1,33 @@
 package net.normalv.systems.managers;
 
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
 public class TextManager extends Manager{
 
-    public Text getToggleMsg(Tool tool, boolean enabled) {
-        return Text.literal(BlockFighter.MOD_NAME+" ").formatted(Formatting.DARK_GREEN)
-                .append(Text.literal(tool.getName()+" ").formatted(Formatting.BLUE))
-                .append(Text.literal(": ").formatted(Formatting.WHITE))
-                .append(enabled ? Text.literal("On").formatted(Formatting.GREEN) : Text.literal("Off").formatted(Formatting.RED)
+    public Component getToggleMsg(Tool tool, boolean enabled) {
+        return Component.literal(BlockFighter.MOD_NAME+" ").withStyle(ChatFormatting.DARK_GREEN)
+                .append(Component.literal(tool.getName()+" ").withStyle(ChatFormatting.BLUE))
+                .append(Component.literal(": ").withStyle(ChatFormatting.WHITE))
+                .append(enabled ? Component.literal("On").withStyle(ChatFormatting.GREEN) : Component.literal("Off").withStyle(ChatFormatting.RED)
                 );
     }
 
-    public Text getInfoMsg(Tool tool, String info) {
-        return Text.literal(BlockFighter.MOD_NAME+" ").formatted(Formatting.DARK_GREEN)
-                .append(Text.literal(tool.getName()+" ").formatted(Formatting.BLUE))
-                .append(Text.literal(info).formatted(Formatting.WHITE)
+    public Component getInfoMsg(Tool tool, String info) {
+        return Component.literal(BlockFighter.MOD_NAME+" ").withStyle(ChatFormatting.DARK_GREEN)
+                .append(Component.literal(tool.getName()+" ").withStyle(ChatFormatting.BLUE))
+                .append(Component.literal(info).withStyle(ChatFormatting.WHITE)
                 );
     }
 
-    public void sendTextClientSide(Text text) {
+    public void sendTextClientSide(Component component) {
         assert mc.player != null;
-        mc.player.sendMessage(
-                text,
-                false
-        );
+        mc.player.sendSystemMessage(component);
     }
 
-    public void sendTextServerSide(Text text) {
-        mc.getNetworkHandler().sendChatMessage(text.getLiteralString());
+    public void sendTextServerSide(Component component) {
+        mc.getConnection().sendChat(component.getString());
     }
 }

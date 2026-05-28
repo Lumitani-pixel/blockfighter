@@ -1,6 +1,6 @@
 package net.normalv.systems.tools.misc;
 
-import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.util.player.inventory.SlotUtils;
@@ -45,15 +45,16 @@ public class AutoInvSortTool extends Tool {
         moves.forEach(move -> {
             if(move.fromSlot() == move.toSlot()) return;
 
-            if(move.toSlot() >= 36 && move.toSlot() <= 40)  mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.fromSlot()), 0, SlotActionType.QUICK_MOVE, mc.player);
+            if(move.toSlot() >= 36 && move.toSlot() <= 40)  mc.gameMode.handleContainerInput(mc.player.containerMenu.containerId, SlotUtils.indexToId(move.fromSlot()), 0, ContainerInput.QUICK_MOVE, mc.player);
             else if(move.toSlot() < 9) {
                 BlockFighter.playerManager.switchSlot(move.toSlot());
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.fromSlot()), mc.player.getInventory().getSelectedSlot(), SlotActionType.SWAP, mc.player);
+                mc.gameMode.handleContainerInput(mc.player.containerMenu.containerId, SlotUtils.indexToId(move.fromSlot()), mc.player.getInventory().getSelectedSlot(), ContainerInput.SWAP, mc.player);
             }
             else {
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.fromSlot()), 0, SlotActionType.PICKUP, mc.player);
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.toSlot()), 0, SlotActionType.PICKUP, mc.player);
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, SlotUtils.indexToId(move.fromSlot()), 0, SlotActionType.PICKUP, mc.player);
+
+                mc.gameMode.handleContainerInput(mc.player.containerMenu.containerId, SlotUtils.indexToId(move.fromSlot()), 0, ContainerInput.PICKUP, mc.player);
+                mc.gameMode.handleContainerInput(mc.player.containerMenu.containerId, SlotUtils.indexToId(move.toSlot()), 0, ContainerInput.PICKUP, mc.player);
+                mc.gameMode.handleContainerInput(mc.player.containerMenu.containerId, SlotUtils.indexToId(move.fromSlot()), 0, ContainerInput.PICKUP, mc.player);
             }
         });
 

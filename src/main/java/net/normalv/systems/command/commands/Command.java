@@ -1,6 +1,6 @@
 package net.normalv.systems.command.commands;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import net.normalv.BlockFighter;
 import net.normalv.systems.command.Arg;
 import net.normalv.systems.command.ArgValues;
@@ -31,7 +31,7 @@ public abstract class Command {
                     value = def.parse(input[i]);
                 } catch (IllegalArgumentException e) {
                     BlockFighter.textManager.sendTextClientSide(
-                            Text.literal("Invalid value for " + def.getName() + ": " + input[i])
+                            Component.literal("Invalid value for " + def.getName() + ": " + input[i])
                     );
                     return null;
                 }
@@ -39,7 +39,7 @@ public abstract class Command {
                 value = def.getDefaultValue();
             } else {
                 BlockFighter.textManager.sendTextClientSide(
-                        Text.literal("Missing argument: " + def.getName())
+                        Component.literal("Missing argument: " + def.getName())
                 );
                 return null;
             }

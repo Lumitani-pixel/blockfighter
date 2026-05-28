@@ -60,6 +60,6 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
     }
 
     public static boolean isInGame() {
-        return mc.world!=null && mc.player != null;
+        return mc.level!=null && mc.player != null;
     }
 }

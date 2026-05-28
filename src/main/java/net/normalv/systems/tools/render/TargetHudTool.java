@@ -1,9 +1,9 @@
 package net.normalv.systems.tools.render;
 
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.SkinTextures;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerSkin;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.setting.Setting;
@@ -12,8 +12,8 @@ public class TargetHudTool extends Tool {
     Setting<Boolean> renderPlayerHead;
 
     private Entity target;
-    private PlayerListEntry entry;
-    private static SkinTextures headTexture = null;
+    private PlayerInfo entry;
+    private static PlayerSkin headTexture = null;
 
     public TargetHudTool() {
         super("TargetHud", "Displays info on the current target", Category.RENDER);
@@ -28,13 +28,13 @@ public class TargetHudTool extends Tool {
     public void onTick() {
         target = BlockFighter.targetManager.getCurrentTarget();
 
-        if(renderPlayerHead.getValue() && target instanceof PlayerEntity) {
-            entry = mc.getNetworkHandler().getPlayerListEntry(target.getName().getString());
-            if(entry!=null) headTexture = entry.getSkinTextures();
+        if(renderPlayerHead.getValue() && target instanceof Player) {
+            entry = mc.getConnection().getPlayerInfo(target.getName().getString());
+            if(entry!=null) headTexture = entry.getSkin();
         }
     }
 
-    public static SkinTextures getHeadTexture() {
+    public static PlayerSkin getHeadTexture() {
         return headTexture;
     }
 
