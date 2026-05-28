@@ -1,6 +1,7 @@
 # BlockFighter
 
 An experimental combat and AI mod for Minecraft built with Fabric.
+I WILL CREATE RELEASES ONCE THE BOT IS UNDETECTED
 
 ## Overview
 BlockFighter is a combat automation mod that lets you create and customize an in-game fighting bot for PvP battles. Built with Fabric, it's designed to be extensible—tweak combat styles, add new techniques, and experiment with AI behaviors.
@@ -14,7 +15,7 @@ BlockFighter is a combat automation mod that lets you create and customize an in
 ## Getting Started
 
 ### Prerequisites
-- Java 17+
+- Java 25+
 - Gradle
 - Minecraft with Fabric loader
 
