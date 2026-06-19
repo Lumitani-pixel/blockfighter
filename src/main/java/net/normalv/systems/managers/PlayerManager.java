@@ -3,8 +3,7 @@ package net.normalv.systems.managers;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.ServerboundContainerSlotStateChangedPacket;
-import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -88,7 +87,7 @@ public class PlayerManager extends Manager{
         int current = mc.player.getInventory().getSelectedSlot();
         if (current == to) return;
         mc.player.getInventory().setSelectedSlot(to);
-        mc.getConnection().send(new ServerboundSetCreativeModeSlotPacket(mc.player.getInventory().getSelectedSlot(), mc.player.getMainHandItem()));
+        mc.getConnection().send(new ServerboundSetCarriedItemPacket(to));
     }
 
     public float getHDistanceTo(Entity entity) {

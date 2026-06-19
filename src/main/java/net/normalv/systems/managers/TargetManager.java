@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.normalv.event.events.impl.TargetChangeEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,8 +29,7 @@ public class TargetManager extends Manager {
         List<LivingEntity> targets = new ArrayList<>();
 
         for (Entity entity : mc.level.entitiesForRendering()) {
-            if (entity == mc.player) continue;
-            if (!(entity instanceof LivingEntity living)) continue;
+            if (entity == mc.player || !(entity instanceof LivingEntity living) || living.isDeadOrDying()) continue;
 
             boolean allowed = false;
 
@@ -63,6 +63,9 @@ public class TargetManager extends Manager {
         List<Entity> targets = getEntities(targetSorting);
 
         if (!targets.isEmpty()) {
+            if(currentTarget == targets.getFirst()) return;
+
+            EVENT_BUS.post(new TargetChangeEvent(currentTarget, targets.getFirst()));
             currentTarget = (LivingEntity) targets.getFirst();
         } else {
             currentTarget = null;

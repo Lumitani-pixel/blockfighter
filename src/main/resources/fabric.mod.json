@@ -13,6 +13,7 @@
 	"license": "CC0-1.0",
 	"icon": "assets/blockfighter/icon.png",
 	"environment": "*",
+    "accessWidener": "blockfighter.accesswidener",
 	"entrypoints": {
 		"main": [
           "net.normalv.BlockFighter"
