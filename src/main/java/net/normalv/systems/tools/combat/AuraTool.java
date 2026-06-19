@@ -10,7 +10,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
-import org.lwjgl.system.ffm.mapping.Mapping;
 
 import static net.normalv.systems.fightbot.FightBot.*;
 
@@ -61,7 +60,6 @@ public class AuraTool extends Tool {
             }
         }
 
-        // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
         if (!BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) || BlockFighter.playerManager.isMacing(target)) return;
 
         if (target instanceof Player targetPlayer && BlockFighter.playerManager.isBlocking(targetPlayer) && (BlockFighter.fightBot.isMacing() && !useShieldBreakWithMace)) {

@@ -10,6 +10,7 @@ import net.normalv.systems.tools.misc.AutoInvSortTool;
 import net.normalv.systems.tools.misc.TestTool;
 import net.normalv.systems.tools.player.AntiWebTool;
 import net.normalv.systems.tools.player.AutoClutchTool;
+import net.normalv.systems.tools.player.AutoEatTool;
 import net.normalv.systems.tools.player.AutoWindChargeTool;
 import net.normalv.systems.tools.render.TargetHudTool;
 
@@ -36,6 +37,7 @@ public class ToolManager extends Manager{
         tools.add(new AntiWebTool());
         tools.add(new AutoWindChargeTool());
         tools.add(new AutoClutchTool());
+        tools.add(new AutoEatTool());
 
         tools.sort(Comparator.comparing(Tool::getName));
     }
