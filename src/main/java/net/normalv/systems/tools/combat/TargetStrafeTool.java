@@ -1,5 +1,6 @@
 package net.normalv.systems.tools.combat;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.entity.LivingEntity;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
@@ -8,8 +9,11 @@ import java.util.Random;
 
 public class TargetStrafeTool extends Tool {
     private final Random random = new Random();
+    private boolean lookAtTarget = true;
     private boolean strafeLeft = true;
     private boolean allowJump = true;
+    private int minTicksToSwitch = 10;
+    private int maxTicksToSwitch = 25;
     private int switchTicks = 0;
 
     private LivingEntity target;
@@ -27,8 +31,10 @@ public class TargetStrafeTool extends Tool {
         else if(BlockFighter.playerManager.isWithinHitboxRange(target, BlockFighter.fightBot.getMaxReach() - 0.1)) mc.options.keyDown.setDown(true);
         else if(mc.options.keyDown.isDown()) mc.options.keyDown.setDown(false);
 
+        if(lookAtTarget) mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+
         // Randomly swap strafe direction
-        if (++switchTicks > 20 + random.nextInt(20)) {
+        if (++switchTicks > 20 + random.nextInt(minTicksToSwitch, maxTicksToSwitch)) {
             strafeLeft = !strafeLeft;
             switchTicks = 0;
         }

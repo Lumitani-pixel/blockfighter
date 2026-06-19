@@ -27,7 +27,7 @@ public class PathingHelper implements Util {
         }
 
         if(!useBaritone) {
-            if(BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+            if(BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) stopPathing();
 
             float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
             manualPathing(rotation, target);
