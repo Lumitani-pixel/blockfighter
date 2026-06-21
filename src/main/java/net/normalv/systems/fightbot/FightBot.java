@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Items;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
@@ -104,7 +105,7 @@ public class FightBot implements Util {
         }
 
         if ((mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) && !BlockFighter.playerManager.isWithinHitboxRange(target, spearReach)) ||
-                !BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && target.asLivingEntity().getHealth() > 10.0f) {
+                (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && target.asLivingEntity().getHealth() > 10.0f) || !mc.player.hasLineOfSight(target)) {
             state = FightState.CHASING;
             return;
         }
@@ -167,13 +168,9 @@ public class FightBot implements Util {
         }
 
         if(!autoShieldTool.isEnabled() && shieldIsRequired()){
-            if(mc.player.getInventory().getSelectedSlot() == SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
+            BlockFighter.playerManager.switchSlot(SWORD_SLOT);
             autoShieldTool.enable();
         }
-
-        if(mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) &&
-                mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT &&
-                !shieldIsRequired()) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
 
         pathingHelper.goToEntity(target);
     }
@@ -184,7 +181,7 @@ public class FightBot implements Util {
     private void tickCombat() {
         pathingHelper.stopPathing();
 
-        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS) && !BlockFighter.playerManager.isViewBLocked(target)) {
+        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS) && mc.player.hasLineOfSight(target)) {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(!autoClutchTool.isEnabled()) autoClutchTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();
@@ -226,7 +223,7 @@ public class FightBot implements Util {
     }
 
     public boolean shieldIsRequired() {
-        return BlockFighter.playerManager.isMacing(target) || BlockFighter.playerManager.isSpearing(target) || BlockFighter.playerManager.isUsingBow(target);
+        return BlockFighter.playerManager.isMacing(target) || BlockFighter.playerManager.isSpearing(target);
     }
 
     public void onAttackBlock(AttackBlockEvent event) {
