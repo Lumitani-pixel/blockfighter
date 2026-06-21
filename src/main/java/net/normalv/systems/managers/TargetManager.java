@@ -6,6 +6,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
+import net.minecraft.world.entity.projectile.arrow.SpectralArrow;
 import net.normalv.event.events.impl.TargetChangeEvent;
 
 import java.util.ArrayList;
@@ -15,6 +18,8 @@ import java.util.List;
 public class TargetManager extends Manager {
     private LivingEntity currentTarget;
     private TargetSorting targetSorting = TargetSorting.DISTANCE;
+
+    private List<AbstractArrow> arrows = new ArrayList<>();
 
     public boolean allowPlayer = true;
     public boolean allowHostiles = true;
@@ -29,7 +34,11 @@ public class TargetManager extends Manager {
         List<LivingEntity> targets = new ArrayList<>();
 
         for (Entity entity : mc.level.entitiesForRendering()) {
-            if (entity == mc.player || !(entity instanceof LivingEntity living) || living.isDeadOrDying()) continue;
+            if(entity == mc.player) continue;
+
+            if(entity instanceof AbstractArrow arrow) arrows.add(arrow);
+
+            if (!(entity instanceof LivingEntity living) || living.isDeadOrDying()) continue;
 
             boolean allowed = false;
 
@@ -51,6 +60,8 @@ public class TargetManager extends Manager {
             case DISTANCE -> targets.sort(Comparator.comparingDouble(entity -> mc.player.distanceToSqr(entity)));
         }
 
+        arrows.sort(Comparator.comparingDouble(arrow -> mc.player.distanceToSqr(arrow)));
+
         return new ArrayList<>(targets);
     }
 
@@ -60,6 +71,7 @@ public class TargetManager extends Manager {
     public void update() {
         if (mc.level == null || mc.player == null) return;
 
+        arrows.clear();
         List<Entity> targets = getEntities(targetSorting);
 
         if (!targets.isEmpty()) {
@@ -78,6 +90,10 @@ public class TargetManager extends Manager {
 
     public void setTargetSorting(TargetSorting targetSorting) {
         this.targetSorting = targetSorting;
+    }
+
+    public List<AbstractArrow> getArrows() {
+        return arrows;
     }
 
     public enum TargetSorting {
