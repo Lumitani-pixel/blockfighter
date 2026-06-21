@@ -57,8 +57,8 @@ public class PlayerManager extends Manager{
         return bps > 15;
     }
 
-    public boolean isEatingGapple() {
-        return mc.player.isUsingItem() && mc.player.getActiveItem().is(Items.GOLDEN_APPLE);
+    public boolean isEatingFood() {
+        return mc.player.isUsingItem() && isFood(mc.player.getActiveItem().getItem());
     }
 
     public void lookAt(Entity target) {
@@ -271,11 +271,11 @@ public class PlayerManager extends Manager{
         return (float) Math.min(yArc, duration);
     }
 
-    public boolean hasGapples() {
+    public boolean hasFoodItem() {
         for (int i = 0; i <= SlotUtils.MAIN_END; i++) {
             ItemStack stack = mc.player.getInventory().getItem(i);
             if (stack.isEmpty()) continue;
-            if (ItemRoleMap.itemsForRole(SlotRoles.GAPPLE).contains(stack.getItem())) {
+            if (isFood(stack.getItem())) {
                 return true;
             }
         }
@@ -283,7 +283,7 @@ public class PlayerManager extends Manager{
     }
 
     public boolean shouldHeal() {
-        if(!hasGapples()) return false;
+        if(!hasFoodItem()) return false;
         if(mc.player.getHealth()<=minHealth ||
                 (BlockFighter.fightBot.getTarget() instanceof Player player && player.getActiveItem().is(Items.GOLDEN_APPLE) && player.isUsingItem() && mc.player.getHealth() < secondaryHealth)) return true;
         return false;

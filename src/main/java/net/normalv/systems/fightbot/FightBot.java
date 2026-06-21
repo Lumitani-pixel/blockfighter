@@ -18,6 +18,7 @@ import net.normalv.systems.tools.combat.*;
 import net.normalv.systems.tools.misc.AutoInvSortTool;
 import net.normalv.systems.tools.player.AntiWebTool;
 import net.normalv.systems.tools.player.AutoClutchTool;
+import net.normalv.systems.tools.player.AutoEatTool;
 import net.normalv.systems.tools.player.AutoWindChargeTool;
 import net.normalv.systems.tools.render.TargetHudTool;
 import net.normalv.util.Util;
@@ -133,16 +134,12 @@ public class FightBot implements Util {
             mc.gameMode.releaseUsingItem(mc.player);
         }
 
-        if(mc.player.getInventory().getSelectedSlot() != GAPPLE_SLOT) BlockFighter.playerManager.switchSlot(GAPPLE_SLOT);
+        if(!BlockFighter.toolManager.getToolByClass(AutoEatTool.class).isEnabled()) BlockFighter.toolManager.getToolByClass(AutoEatTool.class).enable();
 
-        if (!BlockFighter.playerManager.isEatingGapple()) {
-            if(BlockFighter.playerManager.isWithinHitboxRange(target, maxReach)) {
-                mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
-                mc.gameMode.attack(mc.player, target);
-                mc.player.swing(InteractionHand.MAIN_HAND);
-            }
-            mc.options.keyUse.setDown(true);
-            mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
+        if(BlockFighter.playerManager.isWithinHitboxRange(target, maxReach)) {
+            mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+            mc.gameMode.attack(mc.player, target);
+            mc.player.swing(InteractionHand.MAIN_HAND);
         }
 
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
@@ -160,9 +157,10 @@ public class FightBot implements Util {
     private void tickChasing() {
         disableAllCombatModules();
 
+        if(BlockFighter.toolManager.getToolByClass(AutoEatTool.class).isEnabled()) BlockFighter.toolManager.getToolByClass(AutoEatTool.class).disable();
         if(!autoClutchTool.isEnabled()) autoClutchTool.enable();
 
-        if(BlockFighter.playerManager.isEatingGapple()) {
+        if(BlockFighter.playerManager.isEatingFood()) {
             if(mc.options.keyUse.isDown()) mc.options.keyUse.setDown(false);
             mc.gameMode.releaseUsingItem(mc.player);
         }
@@ -175,11 +173,13 @@ public class FightBot implements Util {
         pathingHelper.goToEntity(target);
     }
 
+    // We dont run :). At least yet
     private void tickRunning() {
     }
 
     private void tickCombat() {
         pathingHelper.stopPathing();
+        if(BlockFighter.toolManager.getToolByClass(AutoEatTool.class).isEnabled()) BlockFighter.toolManager.getToolByClass(AutoEatTool.class).disable();
 
         if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS) && mc.player.hasLineOfSight(target)) {
             if(!autoBowTool.isEnabled()) autoBowTool.enable();

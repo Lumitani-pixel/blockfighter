@@ -7,10 +7,8 @@ import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
-import net.normalv.systems.managers.TargetManager;
 import net.normalv.systems.tools.Tool;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AutoShieldTool extends Tool {

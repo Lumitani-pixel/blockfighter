@@ -32,7 +32,7 @@ public class AuraTool extends Tool {
         double maxReach = BlockFighter.fightBot.getMaxReach();
         double spearReach = BlockFighter.fightBot.getSpearReach();
 
-        if (BlockFighter.playerManager.isEatingGapple()) {
+        if (BlockFighter.playerManager.isEatingFood()) {
             mc.options.keyUse.setDown(false);
             mc.gameMode.releaseUsingItem(mc.player);
         }
