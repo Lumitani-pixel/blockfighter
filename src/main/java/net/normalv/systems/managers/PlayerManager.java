@@ -18,6 +18,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
+import net.normalv.util.player.inventory.InventoryUtils.SlotRoles;
+import net.normalv.util.player.inventory.SlotUtils;
+import net.normalv.util.player.inventory.sorting.ItemRoleMap;
 
 public class PlayerManager extends Manager{
     private static float minHealth = 9.0f;
@@ -268,7 +271,19 @@ public class PlayerManager extends Manager{
         return (float) Math.min(yArc, duration);
     }
 
+    public boolean hasGapples() {
+        for (int i = 0; i <= SlotUtils.MAIN_END; i++) {
+            ItemStack stack = mc.player.getInventory().getItem(i);
+            if (stack.isEmpty()) continue;
+            if (ItemRoleMap.itemsForRole(SlotRoles.GAPPLE).contains(stack.getItem())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean shouldHeal() {
+        if(!hasGapples()) return false;
         if(mc.player.getHealth()<=minHealth ||
                 (BlockFighter.fightBot.getTarget() instanceof Player player && player.getActiveItem().is(Items.GOLDEN_APPLE) && player.isUsingItem() && mc.player.getHealth() < secondaryHealth)) return true;
         return false;
