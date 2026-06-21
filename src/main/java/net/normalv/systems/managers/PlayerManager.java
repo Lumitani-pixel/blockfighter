@@ -58,10 +58,6 @@ public class PlayerManager extends Manager{
         return mc.player.isUsingItem() && mc.player.getActiveItem().is(Items.GOLDEN_APPLE);
     }
 
-    public boolean isUsingBow(LivingEntity livingEntity) {
-        return livingEntity.getMainHandItem().is(Items.BOW) && livingEntity.isUsingItem();
-    }
-
     public void lookAt(Entity target) {
         mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, mc.player.getEyePosition());
     }
@@ -145,6 +141,22 @@ public class PlayerManager extends Manager{
 
         int distance = 0;
         for (int y = pos.getY(); y >= 0; y--) {
+            BlockPos checkPos = new BlockPos(pos.getX(), y, pos.getZ());
+            BlockState state = mc.level.getBlockState(checkPos);
+            if (!state.isAir()) {
+                distance = pos.getY() - y;
+                break;
+            }
+        }
+
+        return distance;
+    }
+
+    public int getDistanceToCeiling(LivingEntity livingEntity) {
+        BlockPos pos = livingEntity.getBlockPosBelowThatAffectsMyMovement();
+
+        int distance = 0;
+        for (int y = pos.getY(); y >= 256; y++) {
             BlockPos checkPos = new BlockPos(pos.getX(), y, pos.getZ());
             BlockState state = mc.level.getBlockState(checkPos);
             if (!state.isAir()) {
