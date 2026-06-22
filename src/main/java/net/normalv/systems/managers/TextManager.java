@@ -24,7 +24,7 @@ public class TextManager extends Manager{
 
     public void sendTextClientSide(Component component) {
         assert mc.player != null;
-        mc.player.sendSystemMessage(component);
+        mc.player.sendSystemMessage(Component.literal(BlockFighter.MOD_NAME+" ").withStyle(ChatFormatting.DARK_GREEN).append(Component.literal(component.getString()).withStyle(ChatFormatting.WHITE)));
     }
 
     public void sendTextServerSide(Component component) {

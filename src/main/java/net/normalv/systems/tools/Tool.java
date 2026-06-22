@@ -56,19 +56,19 @@ public class Tool implements Util, SettingFactory {
     }
 
     public void enable() {
-        BlockFighter.textManager.sendTextClientSide(BlockFighter.textManager.getToggleMsg(this, true));
+        mc.player.sendSystemMessage(BlockFighter.textManager.getToggleMsg(this, true));
         isEnabled = true;
         onEnabled();
     }
 
     public void disable() {
-        BlockFighter.textManager.sendTextClientSide(BlockFighter.textManager.getToggleMsg(this, false));
+        mc.player.sendSystemMessage(BlockFighter.textManager.getToggleMsg(this, false));
         isEnabled = false;
         onDisabled();
     }
 
     public void info(String info) {
-        BlockFighter.textManager.sendTextClientSide(BlockFighter.textManager.getInfoMsg(this, info));
+        mc.player.sendSystemMessage(BlockFighter.textManager.getInfoMsg(this, info));
     }
 
     public boolean isEnabled() {

@@ -1,5 +1,6 @@
 package net.normalv.systems.tools.player;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 import net.normalv.BlockFighter;

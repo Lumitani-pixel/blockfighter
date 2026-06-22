@@ -155,20 +155,18 @@ public class PlayerManager extends Manager{
         return distance;
     }
 
-    public int getDistanceToCeiling(LivingEntity livingEntity) {
-        BlockPos pos = livingEntity.getBlockPosBelowThatAffectsMyMovement();
+    public int getDistanceToCeiling(LivingEntity entity) {
+        BlockPos pos = entity.blockPosition();
 
-        int distance = 0;
-        for (int y = pos.getY(); y >= 256; y++) {
+        for (int y = pos.getY() + 1; y <= 256; y++) {
             BlockPos checkPos = new BlockPos(pos.getX(), y, pos.getZ());
-            BlockState state = mc.level.getBlockState(checkPos);
-            if (!state.isAir()) {
-                distance = pos.getY() - y;
-                break;
+
+            if (!mc.level.getBlockState(checkPos).isAir()) {
+                return y - pos.getY();
             }
         }
 
-        return distance;
+        return 256; // no ceiling found
     }
 
     public float getMiningSpeed(ItemStack stack, BlockState state) {
