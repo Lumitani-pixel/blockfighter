@@ -1,6 +1,6 @@
 package net.normalv.systems.tools.player;
 
-import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 import net.normalv.BlockFighter;
@@ -34,7 +34,7 @@ public class AutoWindChargeTool extends Tool {
 
             BlockFighter.fightBot.setMacing(true);
 
-            if(mc.player.getInventory().getSelectedSlot() != AXE_SLOT) BlockFighter.playerManager.switchSlot(AXE_SLOT);
+            if(mc.player.getInventory().getSelectedSlot() != AXE_SLOT && mc.player.getInventory().getItem(AXE_SLOT).is(ItemTags.AXES)) BlockFighter.playerManager.switchSlot(AXE_SLOT);
             if(mc.options.keyUse.isDown()) mc.options.keyUse.setDown(false);
         }
     }
