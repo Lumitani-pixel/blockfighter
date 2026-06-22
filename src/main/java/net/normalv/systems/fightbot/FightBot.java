@@ -5,7 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Items;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
@@ -106,7 +105,7 @@ public class FightBot implements Util {
         }
 
         if ((mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) && !BlockFighter.playerManager.isWithinHitboxRange(target, spearReach)) ||
-                (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && target.asLivingEntity().getHealth() > 10.0f) || !mc.player.hasLineOfSight(target)) {
+                (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && target.asLivingEntity().getHealth() > 10.0f && !mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW)) || (!mc.player.hasLineOfSight(target) && !BlockFighter.playerManager.canHit(target))) {
             state = FightState.CHASING;
             return;
         }
