@@ -4,6 +4,7 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.entity.LivingEntity;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
+import net.normalv.systems.tools.player.AutoWindChargeTool;
 
 import java.util.Random;
 
@@ -27,9 +28,15 @@ public class TargetStrafeTool extends Tool {
         target = BlockFighter.targetManager.getCurrentTarget();
         if (target == null) return;
 
-        if (!BlockFighter.playerManager.isWithinHitboxRange(target, 4.2)) return;
-        else if(BlockFighter.playerManager.isWithinHitboxRange(target, BlockFighter.fightBot.getMaxReach() - 0.1)) mc.options.keyDown.setDown(true);
-        else if(mc.options.keyDown.isDown()) mc.options.keyDown.setDown(false);
+        if (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, 4.2)) return;
+        else if(BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach() - 0.1)){
+            mc.options.keyDown.setDown(true);
+            mc.options.keyUp.setDown(false);
+        }
+        else if(mc.options.keyDown.isDown()) {
+            mc.options.keyDown.setDown(false);
+            mc.options.keyUp.setDown(true);
+        }
 
         if(lookAtTarget) mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
 
@@ -39,12 +46,17 @@ public class TargetStrafeTool extends Tool {
             switchTicks = 0;
         }
 
-        mc.options.keyLeft.setDown(strafeLeft);
-        mc.options.keyRight.setDown(!strafeLeft);
-        mc.options.keyUp.setDown(true);
+        if(BlockFighter.fightBot.isMacing()) {
+            mc.options.keyRight.setDown(false);
+            mc.options.keyLeft.setDown(false);
+        }else {
+            mc.options.keyLeft.setDown(strafeLeft);
+            mc.options.keyRight.setDown(!strafeLeft);
+            mc.options.keyUp.setDown(true);
+        }
 
         // Occasional hop for crit chaining
-        if (allowJump && mc.player.onGround() && random.nextFloat() < 0.02f) {
+        if (allowJump && mc.player.onGround() && random.nextBoolean()) {
             mc.options.keyJump.setDown(true);
         }
     }
