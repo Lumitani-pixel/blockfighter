@@ -180,7 +180,13 @@ public class FightBot implements Util {
         pathingHelper.stopPathing();
         if(BlockFighter.toolManager.getToolByClass(AutoEatTool.class).isEnabled()) BlockFighter.toolManager.getToolByClass(AutoEatTool.class).disable();
 
-        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW) && mc.player.getInventory().contains(ItemTags.ARROWS) && mc.player.hasLineOfSight(target)) {
+        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) &&
+                mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW) &&
+                mc.player.getInventory().contains(ItemTags.ARROWS) &&
+                mc.player.hasLineOfSight(target) &&
+                !BlockFighter.playerManager.isBlocking(target) &&
+                target.getHealth() < 9.0f) {
+
             if(!autoBowTool.isEnabled()) autoBowTool.enable();
             if(!autoClutchTool.isEnabled()) autoClutchTool.enable();
             if(auraTool.isEnabled()) auraTool.disable();

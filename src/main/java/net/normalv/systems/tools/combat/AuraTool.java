@@ -39,7 +39,7 @@ public class AuraTool extends Tool {
 
         if(!BlockFighter.playerManager.canHit(target)) return;
 
-        // If we are withing hit disntance of the enemy we hit the best hitVector (place on the hitbox nearest to us)
+        // If we are withing hit distance of the enemy we hit the best hitVector (place on the hitbox nearest to us)
         if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach) &&
                 !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) &&
                 mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) ||
