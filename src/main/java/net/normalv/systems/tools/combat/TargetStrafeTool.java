@@ -1,6 +1,7 @@
 package net.normalv.systems.tools.combat;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
@@ -11,6 +12,7 @@ import java.util.Random;
 public class TargetStrafeTool extends Tool {
     private final Random random = new Random();
     private boolean lookAtTarget = true;
+    private boolean strafe = false;
     private boolean strafeLeft = true;
     private boolean allowJump = true;
     private int minTicksToSwitch = 10;
@@ -28,8 +30,7 @@ public class TargetStrafeTool extends Tool {
         target = BlockFighter.targetManager.getCurrentTarget();
         if (target == null) return;
 
-        if (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, 4.2)) return;
-        else if(BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach())){
+        if(BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach())){
             mc.options.keyDown.setDown(true);
             mc.options.keyUp.setDown(false);
         }
@@ -41,24 +42,25 @@ public class TargetStrafeTool extends Tool {
         if(lookAtTarget) mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
 
         // Randomly swap strafe direction
-        if (++switchTicks > 20 + random.nextInt(minTicksToSwitch, maxTicksToSwitch)) {
+        if (BlockFighter.playerManager.isWithinHitboxRange(target, 4.2) && ++switchTicks > 20 + random.nextInt(minTicksToSwitch, maxTicksToSwitch)) {
+            strafe = true;
             strafeLeft = !strafeLeft;
             switchTicks = 0;
-        }
+        }else strafe = false;
 
-        if(BlockFighter.fightBot.isMacing()) {
+        if(BlockFighter.fightBot.isMacing() || !strafe) {
             mc.options.keyRight.setDown(false);
             mc.options.keyLeft.setDown(false);
         }else {
             mc.options.keyLeft.setDown(strafeLeft);
             mc.options.keyRight.setDown(!strafeLeft);
-            mc.options.keyUp.setDown(true);
         }
 
         // Occasional hop for crit chaining
-        if (allowJump && mc.player.onGround() && random.nextBoolean()) {
+        if(!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, 4.2)) {
             mc.options.keyJump.setDown(true);
         }
+        else mc.options.keyJump.setDown(allowJump && mc.player.onGround() && random.nextBoolean());
     }
 
     @Override
