@@ -39,7 +39,7 @@ public class AuraTool extends Tool {
 
         if(!BlockFighter.playerManager.canHit(target)) return;
 
-        // We subtract a little buffer to not set off ac flags (Still getting some reach flags HOW??)
+        // If we are withing hit disntance of the enemy we hit the best hitVector (place on the hitbox nearest to us)
         if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach) &&
                 !BlockFighter.playerManager.isWithinHitboxRange(target, maxReach) &&
                 mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) ||
@@ -55,8 +55,8 @@ public class AuraTool extends Tool {
                 if(!mc.player.isUsingItem()) mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
             }
             else if (mc.player.getAttackStrengthScale(0.5f) >= 1.0f) {
-                mc.gameMode.attack(mc.player, target);
-                mc.player.swing(InteractionHand.MAIN_HAND);
+                useKey(mc.options.keyAttack);
+                //mc.player.swing(InteractionHand.MAIN_HAND);
             }
         }
 
@@ -76,13 +76,13 @@ public class AuraTool extends Tool {
             // Shield break tech
             if(useShieldBreakWithMace && BlockFighter.playerManager.isBlocking(target)) {
                 for(int i = 0; i<10; i++) {
-                    mc.gameMode.attack(mc.player, target);
-                    mc.player.swing(InteractionHand.MAIN_HAND);
+                    useKey(mc.options.keyAttack);
+                    //mc.player.swing(InteractionHand.MAIN_HAND);
                 }
             }
 
-            mc.gameMode.attack(mc.player, target);
-            mc.player.swing(InteractionHand.MAIN_HAND);
+            useKey(mc.options.keyAttack);
+            //mc.player.swing(InteractionHand.MAIN_HAND);
             return;
         }
 
@@ -96,8 +96,8 @@ public class AuraTool extends Tool {
             if(shouldCrit() && !canCrit()) return;
 
             startWTap();
-            mc.gameMode.attack(mc.player, target);
-            mc.player.swing(InteractionHand.MAIN_HAND);
+            useKey(mc.options.keyAttack);
+            //mc.player.swing(InteractionHand.MAIN_HAND);
         }
     }
 
@@ -112,10 +112,9 @@ public class AuraTool extends Tool {
         Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
         mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
-        mc.gameMode.attack(mc.player, target);
-        mc.gameMode.attack(mc.player, target);
-        mc.gameMode.attack(mc.player, target);
-        mc.player.swing(InteractionHand.MAIN_HAND);
+        useKey(mc.options.keyAttack);
+        useKey(mc.options.keyAttack);
+        //mc.player.swing(InteractionHand.MAIN_HAND);
     }
 
     private void startWTap() {

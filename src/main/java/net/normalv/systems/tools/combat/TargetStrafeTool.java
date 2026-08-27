@@ -29,11 +29,11 @@ public class TargetStrafeTool extends Tool {
         if (target == null) return;
 
         if (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, 4.2)) return;
-        else if(BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach() - 0.1)){
+        else if(BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach())){
             mc.options.keyDown.setDown(true);
             mc.options.keyUp.setDown(false);
         }
-        else if(mc.options.keyDown.isDown()) {
+        else {
             mc.options.keyDown.setDown(false);
             mc.options.keyUp.setDown(true);
         }
