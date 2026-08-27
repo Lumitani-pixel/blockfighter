@@ -137,8 +137,8 @@ public class FightBot implements Util {
 
         if(BlockFighter.playerManager.isWithinHitboxRange(target, maxReach)) {
             mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
-            mc.gameMode.attack(mc.player, target);
-            mc.player.swing(InteractionHand.MAIN_HAND);
+            useKey(mc.options.keyAttack);
+            //mc.player.swing(InteractionHand.MAIN_HAND);
         }
 
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
