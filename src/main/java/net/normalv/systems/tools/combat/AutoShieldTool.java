@@ -13,6 +13,8 @@ import net.normalv.systems.tools.Tool;
 import java.util.List;
 
 public class AutoShieldTool extends Tool {
+    int arrowShieldingCooldown = 0;
+
     public AutoShieldTool() {
         super("AutoShield", "Shields when needed", Category.COMBAT);
     }
@@ -49,6 +51,7 @@ public class AutoShieldTool extends Tool {
                 if(mc.player.distanceTo(arrow) < 5) {
                     startShielding();
                     mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, arrow.position());
+                    arrowShieldingCooldown = 5;
                     return;
                 }
             }
@@ -58,6 +61,11 @@ public class AutoShieldTool extends Tool {
                 BlockFighter.playerManager.shouldHeal() ||
                 (mc.player.getAttackStrengthScale(0.5f) >= 1.0f && BlockFighter.fightBot.auraTool.isEnabled()) ||
                 BlockFighter.fightBot.isMacing()) {
+
+            if(arrowShieldingCooldown <= 0) {
+                arrowShieldingCooldown--;
+                return;
+            }
 
             stopShielding();
         }
