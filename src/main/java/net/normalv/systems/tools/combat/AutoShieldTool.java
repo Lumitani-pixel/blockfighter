@@ -1,6 +1,7 @@
 package net.normalv.systems.tools.combat;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
@@ -34,6 +35,7 @@ public class AutoShieldTool extends Tool {
 
         if(BlockFighter.fightBot.shieldIsRequired()) {
             startShielding();
+            return;
         }
         else if(!arrowList.isEmpty()) {
             for(AbstractArrow arrow : arrowList) {
@@ -47,13 +49,14 @@ public class AutoShieldTool extends Tool {
                 if(mc.player.distanceTo(arrow) < 5) {
                     startShielding();
                     mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, arrow.position());
-                    break;
+                    return;
                 }
             }
         }
-        else if (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach()+0.9) ||
+
+        if (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach()+0.9) ||
                 BlockFighter.playerManager.shouldHeal() ||
-                (mc.player.getAttackStrengthScale(0.5f) >= 0.99f && BlockFighter.fightBot.auraTool.isEnabled()) ||
+                (mc.player.getAttackStrengthScale(0.5f) >= 1.0f && BlockFighter.fightBot.auraTool.isEnabled()) ||
                 BlockFighter.fightBot.isMacing()) {
 
             stopShielding();
@@ -67,6 +70,7 @@ public class AutoShieldTool extends Tool {
         }
     }
 
+    // TEMP NOTE: Bot isn't trying to stop shielding
     private void stopShielding() {
         if(BlockFighter.playerManager.isBlocking(mc.player)) {
             mc.options.keyUse.setDown(false);
