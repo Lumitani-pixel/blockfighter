@@ -30,7 +30,7 @@ public class TargetStrafeTool extends Tool {
         target = BlockFighter.targetManager.getCurrentTarget();
         if (target == null) return;
 
-        if(BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, BlockFighter.fightBot.getMaxReach())){
+        if(BlockFighter.playerManager.isWithinHitboxRange(target, BlockFighter.fightBot.getMaxReach())){
             mc.options.keyDown.setDown(true);
             mc.options.keyUp.setDown(false);
         }
