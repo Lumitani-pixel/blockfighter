@@ -37,8 +37,6 @@ public class AutoClutchTool extends Tool {
         if(mc.player.getInventory().getSelectedSlot() != WATER_SLOT) BlockFighter.playerManager.switchSlot(WATER_SLOT);
 
         mc.player.setXRot(90);
-        mc.options.keyUse.setDown(true);
-        mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND.MAIN_HAND);
-        mc.options.keyUse.setDown(false);
+        BlockFighter.interactionManager.singleUseItem();
     }
 }

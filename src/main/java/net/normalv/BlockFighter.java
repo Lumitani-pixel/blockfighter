@@ -21,6 +21,7 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
 
     public static TextManager textManager;
     public static PlayerManager playerManager;
+    public static InteractionManager interactionManager;
     public static TargetManager targetManager;
     public static WorldManager worldManager;
     public static ToolManager toolManager;
@@ -39,6 +40,7 @@ public class BlockFighter implements ModInitializer, ClientModInitializer, Util 
 
         textManager = new TextManager();
         playerManager = new PlayerManager();
+        interactionManager = new InteractionManager();
         targetManager = new TargetManager();
         worldManager = new WorldManager();
         toolManager = new ToolManager();

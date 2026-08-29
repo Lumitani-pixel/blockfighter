@@ -36,6 +36,7 @@ public class AutoShieldTool extends Tool {
         if (!mc.player.getInventory().getItem(40).is(Items.SHIELD)) return;
 
         if(BlockFighter.fightBot.shieldIsRequired()) {
+            BlockFighter.textManager.sendTextClientSide(Component.literal("Blocking because of shieldIsRequired flag"));
             startShielding();
             return;
         }
@@ -49,6 +50,7 @@ public class AutoShieldTool extends Tool {
                 }
 
                 if(mc.player.distanceTo(arrow) < 5) {
+                    BlockFighter.textManager.sendTextClientSide(Component.literal("Blocking because of arrows"));
                     startShielding();
                     mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, arrow.position());
                     arrowShieldingCooldown = 5;

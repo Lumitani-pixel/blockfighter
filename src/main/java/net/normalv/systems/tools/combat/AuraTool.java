@@ -1,6 +1,7 @@
 package net.normalv.systems.tools.combat;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -55,8 +56,7 @@ public class AuraTool extends Tool {
                 if(!mc.player.isUsingItem()) mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
             }
             else if (mc.player.getAttackStrengthScale(0.5f) >= 1.0f) {
-                useKey(mc.options.keyAttack);
-                //mc.player.swing(InteractionHand.MAIN_HAND);
+                BlockFighter.interactionManager.attack(target);
             }
         }
 
@@ -76,13 +76,11 @@ public class AuraTool extends Tool {
             // Shield break tech
             if(useShieldBreakWithMace && BlockFighter.playerManager.isBlocking(target)) {
                 for(int i = 0; i<10; i++) {
-                    useKey(mc.options.keyAttack);
-                    //mc.player.swing(InteractionHand.MAIN_HAND);
+                    BlockFighter.interactionManager.attack(target);
                 }
             }
 
-            useKey(mc.options.keyAttack);
-            //mc.player.swing(InteractionHand.MAIN_HAND);
+            BlockFighter.interactionManager.attack(target);
             return;
         }
 
@@ -96,8 +94,7 @@ public class AuraTool extends Tool {
             if(shouldCrit() && !canCrit()) return;
 
             startWTap();
-            useKey(mc.options.keyAttack);
-            //mc.player.swing(InteractionHand.MAIN_HAND);
+            BlockFighter.interactionManager.attack(target);
         }
     }
 
@@ -112,9 +109,8 @@ public class AuraTool extends Tool {
         Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
         mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
-        useKey(mc.options.keyAttack);
-        useKey(mc.options.keyAttack);
-        //mc.player.swing(InteractionHand.MAIN_HAND);
+        BlockFighter.interactionManager.attack(target);
+        BlockFighter.interactionManager.attack(target);
     }
 
     private void startWTap() {

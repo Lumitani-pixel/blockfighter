@@ -1,7 +1,6 @@
 package net.normalv.systems.tools.player;
 
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
@@ -27,7 +26,7 @@ public class AutoWindChargeTool extends Tool {
         if(mc.player.onGround() && BlockFighter.playerManager.getDistanceToCeiling(mc.player) > minCeilingHeight) {
             if(mc.player.getInventory().getSelectedSlot() != WIND_CHARGE_SLOT) BlockFighter.playerManager.switchSlot(WIND_CHARGE_SLOT);
             mc.player.setXRot(90);
-            useKey(mc.options.keyUse);
+            BlockFighter.interactionManager.singleUseItem();
 
             BlockFighter.fightBot.setMacing(true);
 
