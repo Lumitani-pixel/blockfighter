@@ -19,7 +19,8 @@ public class AutoWindChargeTool extends Tool {
         if(!mc.player.getInventory().getItem(WIND_CHARGE_SLOT).is(Items.WIND_CHARGE) ||
                 BlockFighter.fightBot.antiWebTool.findIntersectingCobweb() != null ||
                 BlockFighter.playerManager.isMacing(BlockFighter.fightBot.getTarget()) ||
-                mc.player.distanceTo(BlockFighter.fightBot.getTarget()) > 8) return;
+                mc.player.distanceTo(BlockFighter.fightBot.getTarget()) > 8 ||
+                !mc.player.onGround()) return;
 
         if(!mc.options.keyJump.isDown()) mc.options.keyJump.setDown(true);
 
