@@ -105,13 +105,12 @@ public class PlayerManager extends Manager{
         return new Vec3(x, y, z);
     }
 
-    // Small Offset in the end because we are somehow always out of reach
     public boolean isWithinHitboxRange(Entity entity, double range) {
         AABB aabb = entity.getBoundingBox();
 
-        double px = mc.player.getX();
-        double py = mc.player.getY();
-        double pz = mc.player.getZ();
+        double px = mc.player.getEyePosition().x();
+        double py = mc.player.getEyePosition().y();
+        double pz = mc.player.getEyePosition().z();
 
         // Closest point on hitbox to player
         double cx = Mth.clamp(px, aabb.minX, aabb.maxX);
@@ -122,15 +121,14 @@ public class PlayerManager extends Manager{
         double dy = py - cy;
         double dz = pz - cz;
 
-        return (dx * dx + dy * dy + dz * dz) - 0.1 <= (range * range);
+        return (dx * dx + dy * dy + dz * dz) <= (range * range);
     }
 
-    // Small Offset in the end because we are somehow always out of reach
     public boolean isWithinHitboxRangeHorizontal(Entity entity, double range) {
         AABB aabb = entity.getBoundingBox();
 
-        double px = mc.player.getX();
-        double pz = mc.player.getZ();;
+        double px = mc.player.getEyePosition().x();
+        double pz = mc.player.getEyePosition().z();;
 
         double cx = Mth.clamp(px, aabb.minX, aabb.maxX);
         double cz = Mth.clamp(pz, aabb.minZ, aabb.maxZ);
@@ -138,7 +136,7 @@ public class PlayerManager extends Manager{
         double dx = px - cx;
         double dz = pz - cz;
 
-        return (dx * dx + dz * dz) - 0.1 <= (range * range);
+        return (dx * dx + dz * dz) <= (range * range);
     }
 
     public int getDistanceToGround(LivingEntity livingEntity) {
