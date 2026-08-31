@@ -24,6 +24,10 @@ import net.normalv.util.Util;
 
 import java.util.Random;
 
+/**
+ * This is the main class of the fightbot basically the brain of the bot where everything the bot needs to know is combined.
+ * This class controls the tools to be able to fight entities
+ */
 public class FightBot implements Util {
     private LivingEntity target;
     private double maxReach = 3.0;
@@ -137,8 +141,7 @@ public class FightBot implements Util {
 
         if(BlockFighter.playerManager.isWithinHitboxRange(target, maxReach)) {
             mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
-            useKey(mc.options.keyAttack);
-            //mc.player.swing(InteractionHand.MAIN_HAND);
+            BlockFighter.interactionManager.attack(target);
         }
 
         float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
