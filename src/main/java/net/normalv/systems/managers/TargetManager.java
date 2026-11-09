@@ -75,7 +75,7 @@ public class TargetManager extends Manager {
         List<Entity> targets = getEntities(targetSorting);
 
         if (!targets.isEmpty()) {
-            if(currentTarget == targets.getFirst()) return;
+            if(currentTarget != null && currentTarget.getId() == targets.getFirst().getId()) return;
 
             EVENT_BUS.post(new TargetChangeEvent(currentTarget, targets.getFirst()));
             currentTarget = (LivingEntity) targets.getFirst();
