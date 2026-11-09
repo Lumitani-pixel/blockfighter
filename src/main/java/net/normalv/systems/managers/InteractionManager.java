@@ -2,6 +2,7 @@ package net.normalv.systems.managers;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.component.SwingAnimation;
 
 public class InteractionManager extends Manager{
     private boolean simulateKeyPresses = false; // ONLY WORKS IF mc.screen == null and the game isn't paused otherwise minecraft will catch input
@@ -11,7 +12,7 @@ public class InteractionManager extends Manager{
             useKey(mc.options.keyAttack);
         } else {
             mc.gameMode.attack(mc.player, entity);
-            mc.player.swing(InteractionHand.MAIN_HAND);
+            mc.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
         }
     }
 
@@ -20,7 +21,7 @@ public class InteractionManager extends Manager{
             useKey(mc.options.keyUse);
         } else {
             mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
-            mc.player.swing(InteractionHand.MAIN_HAND);
+            mc.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
         }
     }
 }

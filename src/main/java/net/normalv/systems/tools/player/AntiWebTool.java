@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +42,7 @@ public class AntiWebTool extends Tool {
         mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, MathUtil.clamp(mc.player.getEyePosition(), new AABB(blockPos)));
 
         mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
-        mc.player.swing(InteractionHand.MAIN_HAND);
+        mc.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
 
         if(waterPlacePos == null) waterPlacePos = blockPos.above();
             // Make sure we actually took the water
