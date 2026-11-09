@@ -12,6 +12,7 @@ public class AutoBowTool extends Tool {
 
     private LivingEntity target;
     private int drawTicks = 0;
+    boolean eyeHeight = true;
 
     private static final int MAX_DRAW_TICKS = 20;
 
@@ -44,7 +45,7 @@ public class AutoBowTool extends Tool {
         if(mc.options.keyJump.isDown()) mc.options.keyJump.setDown(false);
 
         // Aim
-        float[] bowRotations = BlockFighter.playerManager.getBowRotationsTo(target);
+        float[] bowRotations = BlockFighter.playerManager.getBowRotationsTo(target, eyeHeight);
         mc.player.setYRot(bowRotations[0]);
         mc.player.setXRot(bowRotations[1]);
         mc.player.setYHeadRot(bowRotations[0]);

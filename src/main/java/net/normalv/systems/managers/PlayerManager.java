@@ -1,6 +1,5 @@
 package net.normalv.systems.managers;
 
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
@@ -15,13 +14,12 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 import net.normalv.util.MathUtil;
-import net.normalv.util.player.inventory.InventoryUtils.SlotRoles;
 import net.normalv.util.player.inventory.SlotUtils;
-import net.normalv.util.player.inventory.sorting.ItemRoleMap;
 
 public class PlayerManager extends Manager{
     private static float minHealth = 9.0f;
@@ -60,19 +58,6 @@ public class PlayerManager extends Manager{
 
     public boolean isEatingFood() {
         return mc.player.isUsingItem() && isFood(mc.player.getActiveItem().getItem());
-    }
-
-    public boolean canHit(Entity entity) {
-        Vec3 start = mc.player.getEyePosition();
-        Vec3 end = entity.getBoundingBox().getCenter();
-
-        return mc.level.clip(new ClipContext(
-                start,
-                end,
-                ClipContext.Block.OUTLINE,
-                ClipContext.Fluid.NONE,
-                mc.player
-        )).getBlockPos().equals(entity.blockPosition());
     }
 
     public boolean isViewBLocked(Entity entity) {
@@ -160,8 +145,62 @@ public class PlayerManager extends Manager{
                 && level.getBlockState(pos.above()).isAir();
     }
 
+    public Vec3 getNearestVisiblePoint(Vec3 source, AABB box) {
+        int stepsX = Math.max(1, (int) Math.ceil((box.maxX - box.minX) / 0.15));
+        int stepsY = Math.max(1, (int) Math.ceil((box.maxY - box.minY) / 0.15));
+        int stepsZ = Math.max(1, (int) Math.ceil((box.maxZ - box.minZ) / 0.15));
+
+        double maxReach = BlockFighter.fightBot.getMaxReach();
+        double maxReachSqr = maxReach * maxReach;
+
+        Vec3 bestHitVec = null;
+        double bestDistance = Double.POSITIVE_INFINITY;
+
+        for (int ix = 0; ix <= stepsX; ix++) {
+            double x = Mth.lerp(ix / (double) stepsX, box.minX, box.maxX);
+
+            for (int iy = 0; iy <= stepsY; iy++) {
+                double y = Mth.lerp(iy / (double) stepsY, box.minY, box.maxY);
+
+                for (int iz = 0; iz <= stepsZ; iz++) {
+                    if (ix != 0 && ix != stepsX && iy != 0 && iy != stepsY && iz != 0 && iz != stepsZ)
+                        continue;
+
+                    double z = Mth.lerp(iz / (double) stepsZ, box.minZ, box.maxZ);
+                    Vec3 sample = new Vec3(x, y, z);
+                    double distance = source.distanceToSqr(sample);
+
+                    if (distance > maxReachSqr || distance >= bestDistance)
+                        continue;
+
+                    if (!isVisible(source, sample))
+                        continue;
+
+                    bestDistance = distance;
+                    bestHitVec = sample;
+                }
+            }
+        }
+
+        return bestHitVec;
+    }
+
+    public boolean isVisible(Vec3 from, Vec3 to) {
+        BlockHitResult result = mc.level.clip(
+                new ClipContext(
+                        from,
+                        to,
+                        ClipContext.Block.COLLIDER,
+                        ClipContext.Fluid.NONE,
+                        mc.player
+                )
+        );
+
+        return result.getType() == HitResult.Type.MISS;
+    }
+
     //This math looks a bit overkill I'm not sure if we need coefficient for MINECRAFT CALCULATIONS
-    public float[] getBowRotationsTo(Entity entity) {
+    public float[] getBowRotationsTo(Entity entity, boolean eyeHeight) {
         float duration = (float) (mc.player.getActiveItem().getUseDuration(mc.player) - mc.player.getTicksUsingItem()) / 20.0f;
         duration = (duration * duration + duration * 2.0f) / 3.0f;
 
@@ -171,7 +210,7 @@ public class PlayerManager extends Manager{
 
         double duration1 = duration * 3.0f;
         double coeff = 0.05000000074505806;
-        float pitch = (float) (-Math.toDegrees(calculateArc(entity, duration1, coeff)));
+        float pitch = (float) (-Math.toDegrees(calculateArc(entity, duration1, coeff, eyeHeight)));
         double ix = entity.getX() - entity.xOld;
         double iz = entity.getZ() - entity.zOld;
         double d = mc.player.distanceTo(entity);
@@ -185,8 +224,8 @@ public class PlayerManager extends Manager{
         return new float[]{yaw, pitch};
     }
 
-    public float calculateArc(Entity target, double duration, double coeff) {
-        double yArc = target.getY() + (double) (target.getEyeHeight() / 2.0f) - (mc.player.getY() + (double) mc.player.getEyeHeight());
+    public float calculateArc(Entity target, double duration, double coeff, boolean eyeHeight) {
+        double yArc = target.getY() + (double) (target.getEyeHeight() / (eyeHeight ? 1.0f : 2.0f)) - (mc.player.getY() + (double) mc.player.getEyeHeight());
         double dX = target.getX() - mc.player.getX();
         double dZ = target.getZ() - mc.player.getZ();
         double dirRoot = Math.sqrt(dX * dX + dZ * dZ);

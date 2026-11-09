@@ -39,7 +39,8 @@ public class AuraTool extends Tool {
             mc.gameMode.releaseUsingItem(mc.player);
         }
 
-        if(!BlockFighter.playerManager.canHit(target)) return;
+        Vec3 hitVec = BlockFighter.playerManager.getNearestVisiblePoint(mc.player.getEyePosition(), target.getBoundingBox());
+        if(hitVec == null) return;
 
         // If we are withing hit distance of the enemy we hit the best hitVector (place on the hitbox nearest to us)
         if (BlockFighter.playerManager.isWithinHitboxRange(target, spearReach) &&
@@ -49,7 +50,6 @@ public class AuraTool extends Tool {
 
             if(mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
 
-            Vec3 hitVec = MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox());
             mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
             if((mc.player.getDeltaMovement().subtract(target.getDeltaMovement()).length() * 20.0) > minSpearVelocity) {
@@ -71,7 +71,6 @@ public class AuraTool extends Tool {
         if(BlockFighter.fightBot.isMacing() && mc.player.getInventory().getItem(MACE_SLOT).is(Items.MACE) && mc.player.fallDistance > 3 && mc.player.getDeltaMovement().y() < 0.0) {
             if(mc.player.getInventory().getSelectedSlot() != MACE_SLOT) BlockFighter.playerManager.switchSlot(MACE_SLOT);
 
-            Vec3 hitVec = MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox());
             mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
             // Shield break tech
@@ -88,7 +87,6 @@ public class AuraTool extends Tool {
         if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT && !BlockFighter.fightBot.isMacing()) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
 
         if (mc.player.getAttackStrengthScale(0.5f) >= 1.0f) {
-            Vec3 hitVec = MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox());
             mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
 

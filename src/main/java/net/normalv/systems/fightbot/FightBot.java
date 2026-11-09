@@ -110,7 +110,10 @@ public class FightBot implements Util {
         }
 
         if ((mc.player.getInventory().getItem(SPEAR_SLOT).is(ItemTags.SPEARS) && !BlockFighter.playerManager.isWithinHitboxRange(target, spearReach)) ||
-                (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) && target.asLivingEntity().getHealth() > 10.0f && !mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW)) || (!mc.player.hasLineOfSight(target) && !BlockFighter.playerManager.canHit(target))) {
+                (!BlockFighter.playerManager.isWithinHitboxRangeHorizontal(target, maxReach) &&
+                        target.asLivingEntity().getHealth() > 10.0f &&
+                        !mc.player.getInventory().getItem(BOW_SLOT).is(Items.BOW)) ||
+                (!mc.player.hasLineOfSight(target) && !BlockFighter.playerManager.isVisible(mc.player.getEyePosition(), MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox())))) {
             state = FightState.CHASING;
             return;
         }
