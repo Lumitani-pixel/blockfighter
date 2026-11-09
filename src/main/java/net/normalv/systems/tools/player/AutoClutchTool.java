@@ -4,6 +4,7 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 import net.normalv.util.MathUtil;
@@ -49,6 +50,11 @@ public class AutoClutchTool extends Tool {
     }
 
     private void placeWater() {
+        if(mc.player.getEyePosition().distanceToSqr(MathUtil.clamp(mc.player.getEyePosition(), new AABB(clutchPos))) > BlockFighter.fightBot.getMaxReachSqr()) {
+            clutchPos = null;
+            placedWater = false;
+            return;
+        }
         if(mc.player.getInventory().getSelectedSlot() != WATER_SLOT) BlockFighter.playerManager.switchSlot(WATER_SLOT);
 
         mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, MathUtil.clamp(mc.player.getEyePosition(), new AABB(clutchPos)));
@@ -56,5 +62,9 @@ public class AutoClutchTool extends Tool {
 
         if(placedWater) clutchPos = null;
         placedWater = !placedWater;
+    }
+
+    public BlockPos getClutchPos() {
+        return clutchPos;
     }
 }

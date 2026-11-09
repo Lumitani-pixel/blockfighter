@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
+import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
 
 public class AutoEatTool extends Tool {
@@ -21,6 +22,8 @@ public class AutoEatTool extends Tool {
         if (mc.player == null || mc.gameMode == null) {
             return;
         }
+
+        if(BlockFighter.toolManager.getToolByClass(AutoClutchTool.class).getClutchPos() != null) return;
 
         // Could make both values configurable
         if (mc.player.getHealth() >= 19.0F) {

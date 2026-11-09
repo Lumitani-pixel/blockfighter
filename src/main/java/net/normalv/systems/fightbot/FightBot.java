@@ -10,6 +10,7 @@ import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.AttackBlockEvent;
 import net.normalv.event.events.impl.AttackEntityEvent;
 import net.normalv.systems.fightbot.pathing.PathingHelper;
+import net.normalv.systems.tools.Tool;
 import net.normalv.systems.tools.client.HudTool;
 import net.normalv.systems.tools.client.InfoHudTool;
 import net.normalv.systems.tools.client.SoundTool;
@@ -269,7 +270,7 @@ public class FightBot implements Util {
 
     private void onDisable() {
         pathingHelper.stopPathing();
-        disableAllCombatModules();
+        BlockFighter.toolManager.getTools().forEach(Tool::disable);
         releaseAllKeys();
     }
 
