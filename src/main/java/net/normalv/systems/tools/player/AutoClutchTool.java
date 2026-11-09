@@ -16,6 +16,14 @@ public class AutoClutchTool extends Tool {
     }
 
     @Override
+    public void onDisabled() {
+        if(placedWater) {
+            placeWater();
+            placedWater = false;
+        }
+    }
+
+    @Override
     public void onTick() {
         if(placedWater && mc.player.onGround()) {
             placeWater();

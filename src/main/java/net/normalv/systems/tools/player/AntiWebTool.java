@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
+import net.normalv.systems.fightbot.FightBot;
 import net.normalv.systems.tools.Tool;
 import net.normalv.util.MathUtil;
 
@@ -21,6 +22,14 @@ public class AntiWebTool extends Tool {
 
     public AntiWebTool() {
         super("AntiWeb", "Makes sure bot isn't webbed", Category.PLAYER);
+    }
+
+    @Override
+    public void onDisabled() {
+        if(waterPlacePos == null || !mc.level.getBlockState(waterPlacePos).is(Blocks.WATER)) return;
+        mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, MathUtil.clamp(mc.player.getEyePosition(), new AABB(waterPlacePos)));
+        BlockFighter.interactionManager.singleUseItem();
+        waterPlacePos = null;
     }
 
     @Override
@@ -40,9 +49,7 @@ public class AntiWebTool extends Tool {
         if(blockPos == null) return;
 
         mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, MathUtil.clamp(mc.player.getEyePosition(), new AABB(blockPos)));
-
-        mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
-        mc.player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
+        BlockFighter.interactionManager.singleUseItem();
 
         if(waterPlacePos == null) waterPlacePos = blockPos.above();
             // Make sure we actually took the water
