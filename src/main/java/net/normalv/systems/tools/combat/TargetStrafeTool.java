@@ -33,10 +33,12 @@ public class TargetStrafeTool extends Tool {
         if(BlockFighter.playerManager.isWithinHitboxRange(target, BlockFighter.fightBot.getMaxReach())){
             mc.options.keyDown.setDown(true);
             mc.options.keyUp.setDown(false);
+            mc.options.keySprint.setDown(false);
         }
         else {
             mc.options.keyDown.setDown(false);
             mc.options.keyUp.setDown(true);
+            mc.options.keySprint.setDown(true);
         }
 
         if(lookAtTarget) mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());

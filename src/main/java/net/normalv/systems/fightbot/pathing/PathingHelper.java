@@ -55,7 +55,7 @@ public class PathingHelper implements Util {
     }
 
     public void updateUseBaritone(Entity target) {
-        useBaritone = mc.player.distanceTo(target)>=baritoneUseDistance || !mc.player.hasLineOfSight(target) || onlyUseBaritone;
+        useBaritone = mc.player.distanceToSqr(target)>=baritoneUseDistance*baritoneUseDistance || !mc.player.hasLineOfSight(target) || onlyUseBaritone;
     }
 
     public void stopPathing() {
