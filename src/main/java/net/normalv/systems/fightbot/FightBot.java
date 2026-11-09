@@ -311,6 +311,10 @@ public class FightBot implements Util {
         return maxReach;
     }
 
+    public double getMaxReachSqr() {
+        return maxReach*maxReach;
+    }
+
     public double getSpearReach() {
         return spearReach;
     }

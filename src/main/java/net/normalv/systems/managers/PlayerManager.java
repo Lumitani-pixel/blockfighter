@@ -105,20 +105,14 @@ public class PlayerManager extends Manager{
         return (dx * dx + dz * dz) <= (range * range);
     }
 
-    public int getDistanceToGround(LivingEntity livingEntity) {
-        BlockPos pos = livingEntity.getBlockPosBelowThatAffectsMyMovement();
+    public BlockPos getGroundPos(LivingEntity livingEntity) {
+        BlockPos.MutableBlockPos pos = livingEntity.getBlockPosBelowThatAffectsMyMovement().mutable();
 
-        int distance = 0;
-        for (int y = pos.getY(); y >= 0; y--) {
-            BlockPos checkPos = new BlockPos(pos.getX(), y, pos.getZ());
-            BlockState state = mc.level.getBlockState(checkPos);
-            if (!state.isAir()) {
-                distance = pos.getY() - y;
-                break;
-            }
+        while(mc.level.getBlockState(pos).isAir()) {
+            pos.move(pos.getX(), pos.getY()-1, pos.getZ());
         }
 
-        return distance;
+        return pos.immutable();
     }
 
     public int getDistanceToCeiling(LivingEntity entity) {
