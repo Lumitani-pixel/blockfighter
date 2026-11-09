@@ -11,6 +11,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
+import net.normalv.util.MathUtil;
 
 import static net.normalv.systems.fightbot.FightBot.*;
 
@@ -48,7 +49,7 @@ public class AuraTool extends Tool {
 
             if(mc.player.getInventory().getSelectedSlot() != SPEAR_SLOT) BlockFighter.playerManager.switchSlot(SPEAR_SLOT);
 
-            Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
+            Vec3 hitVec = MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox());
             mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
             if((mc.player.getDeltaMovement().subtract(target.getDeltaMovement()).length() * 20.0) > minSpearVelocity) {
@@ -70,7 +71,7 @@ public class AuraTool extends Tool {
         if(BlockFighter.fightBot.isMacing() && mc.player.getInventory().getItem(MACE_SLOT).is(Items.MACE) && mc.player.fallDistance > 3 && mc.player.getDeltaMovement().y() < 0.0) {
             if(mc.player.getInventory().getSelectedSlot() != MACE_SLOT) BlockFighter.playerManager.switchSlot(MACE_SLOT);
 
-            Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
+            Vec3 hitVec = MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox());
             mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
             // Shield break tech
@@ -87,7 +88,7 @@ public class AuraTool extends Tool {
         if(mc.player.getInventory().getSelectedSlot() != SWORD_SLOT && !BlockFighter.fightBot.isMacing()) BlockFighter.playerManager.switchSlot(SWORD_SLOT);
 
         if (mc.player.getAttackStrengthScale(0.5f) >= 1.0f) {
-            Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
+            Vec3 hitVec = MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox());
             mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
 
@@ -106,7 +107,7 @@ public class AuraTool extends Tool {
 
         if(mc.player.getInventory().getSelectedSlot() != AXE_SLOT) BlockFighter.playerManager.switchSlot(AXE_SLOT);
 
-        Vec3 hitVec = BlockFighter.playerManager.getHitVec(target);
+        Vec3 hitVec = MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox());
         mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, hitVec);
 
         BlockFighter.interactionManager.attack(target);

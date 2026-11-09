@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.normalv.BlockFighter;
 import net.normalv.event.events.impl.TargetChangeEvent;
 import net.normalv.event.system.Subscribe;
+import net.normalv.util.MathUtil;
 import net.normalv.util.Util;
 
 public class PathingHelper implements Util {
@@ -29,7 +30,7 @@ public class PathingHelper implements Util {
         if(!useBaritone) {
             if(BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().isPathing()) stopPathing();
 
-            float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
+            float[] rotation = MathUtil.calcAngle(mc.player.getEyePosition(), MathUtil.clamp(mc.player.getEyePosition(), target.getBoundingBox()));
             manualPathing(rotation, target);
         }
     }

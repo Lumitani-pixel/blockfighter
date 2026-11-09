@@ -6,10 +6,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
+import net.normalv.util.MathUtil;
 
 import static net.normalv.systems.fightbot.FightBot.WEB_SLOT;
 
@@ -39,7 +41,7 @@ public class AutoWebTool extends Tool {
         if(mc.player.getInventory().getSelectedSlot() != WEB_SLOT) BlockFighter.playerManager.switchSlot(WEB_SLOT);
 
         BlockPos below = target.getBlockPosBelowThatAffectsMyMovement().below();
-        Vec3 hitPos = Vec3.atCenterOf(below).add(0, 0.5, 0);
+        Vec3 hitPos = MathUtil.clamp(mc.player.getEyePosition(), new AABB(below));
 
         BlockHitResult hit = new BlockHitResult(
                 hitPos,
@@ -48,7 +50,7 @@ public class AutoWebTool extends Tool {
                 false
         );
 
-        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), hitPos);
+        float[] rotation = MathUtil.calcAngle(mc.player.getEyePosition(), hitPos);
         mc.player.setYRot(rotation[0]);
         mc.player.setXRot(rotation[1]);
         mc.player.setYHeadRot(rotation[0]);

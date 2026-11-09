@@ -1,5 +1,6 @@
 package net.normalv.systems.tools.player;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -9,6 +10,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
 import net.normalv.systems.tools.Tool;
+import net.normalv.util.MathUtil;
 
 import static net.normalv.systems.fightbot.FightBot.WATER_SLOT;
 
@@ -36,10 +38,7 @@ public class AntiWebTool extends Tool {
 
         if(blockPos == null) return;
 
-        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), Vec3.atCenterOf(blockPos));
-        mc.player.setYRot(rotation[0]);
-        mc.player.setXRot(rotation[1]);
-        mc.player.setYHeadRot(rotation[0]);
+        mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, MathUtil.clamp(mc.player.getEyePosition(), new AABB(blockPos)));
 
         mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND);
         mc.player.swing(InteractionHand.MAIN_HAND);

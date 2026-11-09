@@ -18,6 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.normalv.BlockFighter;
+import net.normalv.util.MathUtil;
 import net.normalv.util.player.inventory.InventoryUtils.SlotRoles;
 import net.normalv.util.player.inventory.SlotUtils;
 import net.normalv.util.player.inventory.sorting.ItemRoleMap;
@@ -61,10 +62,6 @@ public class PlayerManager extends Manager{
         return mc.player.isUsingItem() && isFood(mc.player.getActiveItem().getItem());
     }
 
-    public void lookAt(Entity target) {
-        mc.player.lookAt(EntityAnchorArgument.Anchor.EYES, mc.player.getEyePosition());
-    }
-
     public boolean canHit(Entity entity) {
         Vec3 start = mc.player.getEyePosition();
         Vec3 end = entity.getBoundingBox().getCenter();
@@ -89,39 +86,8 @@ public class PlayerManager extends Manager{
         mc.getConnection().send(new ServerboundSetCarriedItemPacket(to));
     }
 
-    public float getHDistanceTo(Entity entity) {
-        float dx = (float) (mc.player.getX() - entity.getX());
-        float dz = (float) (mc.player.getZ() - entity.getZ());
-        return Mth.sqrt(dx * dx + dz * dz);
-    }
-
-    public Vec3 getHitVec(Entity entity) {
-        AABB aabb = entity.getBoundingBox();
-
-        double x = Mth.clamp(mc.player.getX(), aabb.minX, aabb.maxX);
-        double y = Mth.clamp(mc.player.getY(), aabb.minY, aabb.maxY);
-        double z = Mth.clamp(mc.player.getZ(), aabb.minZ, aabb.maxZ);
-
-        return new Vec3(x, y, z);
-    }
-
     public boolean isWithinHitboxRange(Entity entity, double range) {
-        AABB aabb = entity.getBoundingBox();
-
-        double px = mc.player.getEyePosition().x();
-        double py = mc.player.getEyePosition().y();
-        double pz = mc.player.getEyePosition().z();
-
-        // Closest point on hitbox to player
-        double cx = Mth.clamp(px, aabb.minX, aabb.maxX);
-        double cy = Mth.clamp(py, aabb.minY, aabb.maxY);
-        double cz = Mth.clamp(pz, aabb.minZ, aabb.maxZ);
-
-        double dx = px - cx;
-        double dy = py - cy;
-        double dz = pz - cz;
-
-        return (dx * dx + dy * dy + dz * dz) <= (range * range);
+        return mc.player.getEyePosition().distanceToSqr(MathUtil.clamp(mc.player.getEyePosition(), entity.getBoundingBox())) <= range * range;
     }
 
     public boolean isWithinHitboxRangeHorizontal(Entity entity, double range) {
@@ -198,28 +164,6 @@ public class PlayerManager extends Manager{
         return level.getBlockState(below).entityCanStandOn(level, below, mc.player)
                 && level.getBlockState(pos).isAir()
                 && level.getBlockState(pos.above()).isAir();
-    }
-
-    public float[] calcAngle(Vec3 from, Vec3 to) {
-        double difX = to.x - from.x;
-        double difY = (to.y - from.y) * -1.0;
-        double difZ = to.z - from.z;
-        double dist = Math.sqrt(difX * difX + difZ * difZ);
-        return new float[]{(float) Mth.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0), (float) Mth.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
-    }
-
-    public float[] invertRotation(float[] rotation) {
-        float invertedYaw = wrapYaw(rotation[0] + 180.0f);
-        float invertedPitch = -rotation[1];
-
-        return new float[]{invertedYaw, invertedPitch};
-    }
-
-    public float wrapYaw(float yaw) {
-        yaw %= 360.0f;
-        if (yaw >= 180.0f) yaw -= 360.0f;
-        if (yaw < -180.0f) yaw += 360.0f;
-        return yaw;
     }
 
     //This math looks a bit overkill I'm not sure if we need coefficient for MINECRAFT CALCULATIONS

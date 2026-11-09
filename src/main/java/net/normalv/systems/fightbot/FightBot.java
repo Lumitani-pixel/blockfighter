@@ -20,6 +20,7 @@ import net.normalv.systems.tools.player.AutoClutchTool;
 import net.normalv.systems.tools.player.AutoEatTool;
 import net.normalv.systems.tools.player.AutoWindChargeTool;
 import net.normalv.systems.tools.render.TargetHudTool;
+import net.normalv.util.MathUtil;
 import net.normalv.util.Util;
 
 import java.util.Random;
@@ -144,8 +145,8 @@ public class FightBot implements Util {
             BlockFighter.interactionManager.attack(target);
         }
 
-        float[] rotation = BlockFighter.playerManager.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
-        rotation[0] = BlockFighter.playerManager.wrapYaw(rotation[0] + 180 + random.nextFloat(-20f, 20f));
+        float[] rotation = MathUtil.calcAngle(mc.player.getEyePosition(), target.getEyePosition());
+        rotation[0] = MathUtil.wrapDegrees(rotation[0] + 180);
 
         mc.player.setYRot(rotation[0]);
         mc.player.setXRot(rotation[1]);
